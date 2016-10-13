@@ -41,7 +41,7 @@ _dir_siplom_v_31="/3.1"
 
 ## Versoes
 
-_tomcat="$_dir_opt_dev_server/apache-tomcat-7.0.47"
+_tomcat="$_dir_opt_dev_server/tomcat"
 _maven="$_dir_opt_dev_support/maven"
 _ant="$_dir_opt_dev_support/ant"
 

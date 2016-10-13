@@ -32,13 +32,19 @@ personal() {
 	apt-get install -y gtk2-engines-murrine:i386 gtk2-engines-pixbuf:i386
 	apt-get install -y skype
 
-	#wget https://download.sublimetext.com/sublime-text_build-3103_amd64.deb
-	#dpkg -i sublime-text_build-3103_amd64.deb
-	#rm sublime-text_build-3103_amd64.deb
-
 	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 	dpkg -i google-chrome-stable_current_amd64.deb
 	rm google-chrome-stable_current_amd64.deb
+
+	# 1. Add the Spotify repository signing key to be able to verify downloaded packages
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
+	# 2. Add the Spotify repository
+	echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+	# 3. Update list of available packages
+	sudo apt-get update
+	# 4. Install Spotify
+	sudo apt-get install spotify-client
+        
 }
 
 ## Desenv
@@ -53,13 +59,13 @@ desenv() {
 	apt-get install -y build-essential libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip
 	apt-get install -y git
 
-	#echo "Enter Your Git Name: "
-	#read git_name
-	#git config --global user.name $git_name
+	echo "Enter Your Git Name: "
+	read git_name
+	git config --global user.name $git_name
 
-	#echo "Enter Your Git E-mail: "
-	#read git_email
-	#git config --global user.email $git_email
+	echo "Enter Your Git E-mail: "
+	read git_email
+	git config --global user.email $git_email
 
 	git config --list
 
@@ -81,10 +87,12 @@ desenv() {
 	#MySQL
 	apt-get install -y mysql-server-5.7 mysql-workbench
 
-	#Android
+	#DevTools
 	add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
 	apt-get update
 	apt-get install ubuntu-make -y #See more at: http://www.diolinux.com.br/2015/07/como-instalar-o-android-studio-no-ubuntu-corretamente.html#sthash.AGYOjSQG.dpuf
+	
+	#Android
 	umake android
 	sudo apt-get install android-tools-adb
 	umake android --remove
@@ -106,6 +114,15 @@ study() {
 	apt-get install -y stellarium
 }
 
+## Academic
+academic() {
+	apt-get install texlive texlive-latex-extra texlive-lang-portuguese 
+	apt-get install texlive-math-extra
+
+	apt-get install kile  
+	apt-get install kile-i18n-ptbr
+}
+
 ## Pre Configuration
 __init__() {
 	apt-get update
@@ -121,14 +138,18 @@ __init__
 
 
 #TODO
+	#wget https://download.sublimetext.com/sublime-text_build-3103_amd64.deb
+	#dpkg -i sublime-text_build-3103_amd64.deb
+	#rm sublime-text_build-3103_amd64.deb
+
 #Eclipse
-#Chrome
-#Skype
-#Vivaldi
-#Dropbox
+#skype					Falta criar uma regra para alterar o arquivo de fontes
+#Spotify 				Falta verificar se a chave é pessoal
+#Vivaldi				Realmente usar?
 #Google Drive
-#Spotify
 #Atom
 #Android Studio
-#Mongo
 #PostgreSQL
+
+
+#DBeaver
