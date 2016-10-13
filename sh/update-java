@@ -98,7 +98,7 @@ for j in ${JAVADIRS[*]}; do
     fi
 done
 
-#Grab the new Java link from the radio dialog box 
+#Grab the new Java link from the radio dialog box
 NEWDIR=`$RADIO`;
 
 if [ $? -gt 0 ]; then exit 2; fi                #cancel clicked
@@ -126,3 +126,8 @@ gksudo -m "$LINKS_MSG" echo>/dev/null
 [ -f $NEWDIR/bin/libnpjp2.so ] && sudo update-alternatives --install /usr/lib/mozilla/plugins/libnpjp2.so libnpjp2.so $NEWDIR/jre/lib/i386/libnpjp2.so $LATEST
 
 #update-alternatives --remove libnpjp2.so $NEWDIR/jre/lib/i386/libnpjp2.so
+
+# Creste a link to use on JAVA_HOME
+LINK="$SUN_ROOT/current"
+sudo rm -f LINK
+sudo ln -s $NEWDIR $LINK
