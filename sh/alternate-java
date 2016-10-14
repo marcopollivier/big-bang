@@ -35,13 +35,6 @@ VERSION_MSG='Version';                               #JAVA listing column
 
 #END User Customizations
 
-#If it's necessary change the Java Path.
-NEW_ROOT=$(zenity --entry --title="Root" --ok-label=Yes --cancel-label=No --text="The default root is $UBUNTU_ROOT. \n\nDo you want to change it?")
-if test -n "$NEW_ROOT"; then
-  UBUNTU_ROOT=$NEW_ROOT
-  SUN_ROOT=$NEW_ROOT
-fi
-
 #If locate is active for this system, then we must add the new install.
 #Running in background to avoid waiting, but might not progress adequately, before its use, below
 if [ ! -z /var/lib/mlocate/mlocate.db ]; then
@@ -53,6 +46,13 @@ which zenity > /dev/null;
 if [ $? -gt 0 ]; then
     gksudo 'apt-get install zenity';
 #    gksudo -m $REQUIRES_MSG 'apt-get install zenity';
+fi
+
+#If it's necessary change the Java Path.
+NEW_ROOT=$(zenity --entry --title="Root" --ok-label=Yes --cancel-label=No --text="The default root is $UBUNTU_ROOT. \n\nDo you want to change it?")
+if test -n "$NEW_ROOT"; then
+  UBUNTU_ROOT=$NEW_ROOT
+  SUN_ROOT=$NEW_ROOT
 fi
 
 #load current java link
