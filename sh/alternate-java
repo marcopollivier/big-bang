@@ -35,8 +35,8 @@ VERSION_MSG='Version';                               #JAVA listing column
 
 #END User Customizations
 
-#Ask the alternative path
-NEW_ROOT=$(zenity --entry --title="Root" --ok-label=Yes --cancel-label=No --text="The default root is $UBUNTU_ROOT. \n\nDo you want change it?")
+#If it's necessary change the Java Path.
+NEW_ROOT=$(zenity --entry --title="Root" --ok-label=Yes --cancel-label=No --text="The default root is $UBUNTU_ROOT. \n\nDo you want to change it?")
 if test -n "$NEW_ROOT"; then
   UBUNTU_ROOT=$NEW_ROOT
   SUN_ROOT=$NEW_ROOT
