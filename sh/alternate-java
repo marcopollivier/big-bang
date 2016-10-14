@@ -35,6 +35,13 @@ VERSION_MSG='Version';                               #JAVA listing column
 
 #END User Customizations
 
+#Ask the alternative path
+NEW_ROOT=$(zenity --entry --title="Root" --ok-label=Yes --cancel-label=No --text="The default root is $UBUNTU_ROOT. \n\nDo you want change it?")
+if test -n "$NEW_ROOT"; then
+  UBUNTU_ROOT=$NEW_ROOT
+  SUN_ROOT=$NEW_ROOT
+fi
+
 #If locate is active for this system, then we must add the new install.
 #Running in background to avoid waiting, but might not progress adequately, before its use, below
 if [ ! -z /var/lib/mlocate/mlocate.db ]; then
