@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 #alternate-java VERSION 0.1-ALPHA
 #Linux Java alternate script: Chose the version what you want.
@@ -14,6 +14,12 @@
 #  Gksudo msgs cannot handle spaces
 #  Does not check for Japanese environment & man pages
 
+# Make sure only root can run our script
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as a root" 1>&2
+   exit 1
+fi
+
 #BEGIN User Customizations
 #SUN_ROOT='/usr/local';
 SUN_ROOT='/usr/lib/jvm';
@@ -21,8 +27,6 @@ UBUNTU_ROOT='/usr/lib/jvm';
 
 #i18n. Change for non-english
 CHOOSE_MSG='Choose';                                 #button column
-DELETE_CONFIRM_MSG='OK_to_delete_these_Java_directories?';
-DELETE_JAVA_MSG='Choose_Java_versions_to_DELETE_(if_any)!'; #Title, with no spaces!
 LINKS_MSG='Enter_sudo_password_to_update_links_to_Java';
 #REQUIRES_MSG='Enter_sudo_password_to_install_Zenity_package';
 SELECT_JAVA_MSG='Choose_Java_version_to_update_to'; #Title, with no spaces!
@@ -47,9 +51,6 @@ fi
 #load current java link
 jdefault=`ls -dog /etc/alternatives/java 2>/dev/null | awk '{print $8}' | sed 's|/bin/java||'`
 
-#Prepare a Zenity check button dialog box
-CHECK="zenity --list --checklist --text $DELETE_JAVA_MSG --column $CHOOSE_MSG --column $VERSION_MSG"
-
 #Prepare a Zenity radio button dialog box
 RADIO="zenity --list --radiolist --text $SELECT_JAVA_MSG --column $CHOOSE_MSG --column $VERSION_MSG"
 
@@ -61,34 +62,6 @@ JAVADIRS=$(
     locate bin/java_vm | grep jre1. | sed 's|/bin/java_vm||'  ||
     beagle-query bin/java_vm | grep jre1. | sed 's|/bin/java_vm||' | sed 's|file://||' 2>/dev/null
     )
-
-for j in ${JAVADIRS[*]}; do
-    CHECK=$CHECK" FALSE "$j;
-done
-
-#Grab all the Java directories to be uninstalled
-DELDIR=`$CHECK`;
-if [ ${#DELDIR} -gt 0 ]; then
-    zenity --question --text $DELETE_CONFIRM_MSG;
-    if [ $? -eq 0 ]; then
-        DELETE=`echo ${DELDIR[*]}|tr '|' ' '`;
-        `gksudo "rm -fr $DELETE"`;
-        for j in ${deldir[*]}; do
-            sudo update-alternatives --remove java $j/bin/java
-            sudo update-alternatives --remove java_vm $j/bin/java_vm
-            sudo update-alternatives --remove javaws $j/bin/javaws
-            sudo update-alternatives --remove jcontrol $j/bin/jcontrol
-            sudo update-alternatives --remove keytool $j/bin/keytool
-            sudo update-alternatives --remove pack200 $j/bin/pack200
-            sudo update-alternatives --remove policytool $j/bin/policytool
-            sudo update-alternatives --remove rmid $j/bin/rmid
-            sudo update-alternatives --remove rmiregistry $j/bin/rmiregistry
-            sudo update-alternatives --remove servertool $j/bin/servertool
-            sudo update-alternatives --remove tnameserv $j/bin/tnameserv
-            sudo update-alternatives --remove unpack200 $j/bin/unpack200
-        done
-    fi
-fi
 
 for j in ${JAVADIRS[*]}; do
     if [ $j == $jdefault ];then
