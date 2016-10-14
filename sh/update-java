@@ -127,7 +127,7 @@ gksudo -m "$LINKS_MSG" echo>/dev/null
 
 #update-alternatives --remove libnpjp2.so $NEWDIR/jre/lib/i386/libnpjp2.so
 
-# Creste a link to use on JAVA_HOME
+# Create a link to use on JAVA_HOME
 LINK="$SUN_ROOT/current"
-sudo rm -f LINK
-sudo ln -s $NEWDIR $LINK
+unlink $LINK
+ln -s $NEWDIR $LINK
