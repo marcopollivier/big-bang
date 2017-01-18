@@ -21,3 +21,7 @@ $ vagrant init
 $ vagrant up
 $ vagrant ssh
 ```
+## Ubuntu 16.04 
+--TODO
+
+http://terokarvinen.com/2015/virtualbox-and-vagrant-on-ubuntu-14-04-lts-trusty-fix-for-virtualbox-dkms-kernel-module-failed-to-build
