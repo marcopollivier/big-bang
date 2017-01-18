@@ -6,8 +6,9 @@ Para criar uma máquina virtual utilizando o Vagrant é necessário que já tenh
 Este exemplo é baseado em uma máquina Ubuntu 
 
 ```sh
+$ sudo apt-get install virtualbox
 $ sudo apt-get install vagrant
-$ sudo apt-get install virtualbox   
+$ sudo apt-get install virtualbox-dkms
 ```
 
 ## Iniciar
