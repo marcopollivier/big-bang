@@ -1,155 +1,167 @@
 #!/bin/bash
 
-# Init
-FILE="/tmp/out.$$"
-GREP="/bin/grep"
+##### pendencias 
+#Atom - https://atom.io/download/deb
 
+#DevTools - http://www.diolinux.com.br/2015/07/como-instalar-o-android-studio-no-ubuntu-corretamente.html#sthash.AGYOjSQG.dpuf
+
+#Java
+
+#y-ppa-manager
+#Android Studio
+#Sublimetext
+#Eclipse
+#Vivaldi
+#Google Drive
+#PostgreSQL
+#DBeaver
+
+#teamviewer
+
+##### 
+
+##############################################################################
+##############################################################################
 # Make sure only root can run our script
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
+##############################################################################
+##############################################################################
 
-## Basic
-basic () {
-	apt-get install -y synaptic
-	apt-get install -y bleachbit
-	apt-get install -y ubuntu-restricted-extras
-	apt-get install -y unity-tweak-tool
-
-	apt-get install -y vim
-
-	add-apt-repository ppa:webupd8team/y-ppa-manager
-	apt-get update
-	apt-get install y-ppa-manager
+apt_install() {
+    local x=$1
+    apt-get install -y $x
 }
 
-
-## Personal
-personal() {
-	apt-get install -y nautilus-dropbox
-
-	apt-get install -y gtk2-engines-murrine:i386 gtk2-engines-pixbuf:i386
-	apt-get install -y skype
-
-	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-	dpkg -i google-chrome-stable_current_amd64.deb
-	rm google-chrome-stable_current_amd64.deb
-
-	# 1. Add the Spotify repository signing key to be able to verify downloaded packages
-	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
-	# 2. Add the Spotify repository
-	echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-	# 3. Update list of available packages
-	sudo apt-get update
-	# 4. Install Spotify
-	sudo apt-get install spotify-client
-        
+upgrade() {
+    apt-get update
+    apt-get upgrade -y
 }
 
-## Desenv
-desenv() {
-	#Java via apt-get
-	sudo add-apt-repository ppa:webupd8team/java
-	sudo apt-get update
-	sudo apt-get install oracle-java8-installer
-	sudo apt-get install oracle-java8-set-default
-
-	#Git
-	apt-get install -y build-essential libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip
-	apt-get install -y git
-
-	echo "Enter Your Git Name: "
-	read git_name
-	git config --global user.name $git_name
-
-	echo "Enter Your Git E-mail: "
-	read git_email
-	git config --global user.email $git_email
-
-	git config --list
-
-	wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
-	dpkg -i gitkraken-amd64.deb
-	rm gitkraken-amd64.deb
-
-	#Python
-	apt-get install -y python-django python-pip python3-pip
-	pip install django
-	pip3 install django
-
-	#Front JS
-	apt-get install -y nodejs
-	ln -s /usr/bin/nodejs /usr/bin/node
-	apt-get install -y npm
-	npm install -g bower
-
-	#MySQL
-	apt-get install -y mysql-server-5.7 mysql-workbench
-
-	#DevTools
-	add-apt-repository ppa:ubuntu-desktop/ubuntu-make -y
-	apt-get update
-	apt-get install ubuntu-make -y #See more at: http://www.diolinux.com.br/2015/07/como-instalar-o-android-studio-no-ubuntu-corretamente.html#sthash.AGYOjSQG.dpuf
-	
-	#Android
-	umake android
-	sudo apt-get install android-tools-adb
-	umake android --remove
-
-	#MongoDB
-	apt-get install -y mongodb
-
-	#FTP
-	apt-get install -y filezilla
-
-	#DevTools
-	add-apt-repository ppa:ubuntu-desktop/ubuntu-make
-	apt-get update
-	apt-get install -y ubuntu-make
+basic() {
+    apt_install synaptic
+    
+    apt_install vim
 }
 
-## Study
-study() {
-	apt-get install -y stellarium
+utils() {
+    apt_install bleachbit
+    
+    apt_install skype
+    
+    #TODO Revisar aqui
+    #Google Chrome 
+    #wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp/
+    #dpkg -i /tmp/google-chrome-stable_current_amd64.deb
+    #rm /tmp/google-chrome-stable_current_amd64.deb
+    
+    # Spotify
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
+    echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+    upgrade
+    apt_install spotify-client
+    
+    #Teamviewer
+    rm /tmp/teamviewer_i386*
+    wget https://download.teamviewer.com/download/teamviewer_i386.deb -P /tmp/
+    dpkg -i /tmp/teamviewer_i386.deb
+    rm /tmp/teamviewer_i386*
 }
 
-## Academic
+ubuntu_unity_utils() {
+    apt_install ubuntu-restricted-extras
+    apt_install unity-tweak-tool
+    
+    apt_install nautilus-dropbox
+}
+
 academic() {
-	apt-get install texlive texlive-latex-extra texlive-lang-portuguese 
-	apt-get install texlive-math-extra
-
-	apt-get install kile  
-	apt-get install kile-i18n-ptbr
+    #LaTex
+    apt_install texlive 
+    apt_install texlive-latex-extra 
+    apt_install texlive-lang-portuguese 
+    apt_install texlive-math-extra
+    apt_install kile  
+    apt_install kile-i18n-ptbr
 }
 
-## Pre Configuration
+study() {
+    apt_install stellarium
+}
+
+infra() {
+    apt_install filezilla
+}
+
+dev_ops() {
+    #Git
+    apt_install git
+
+    echo "Enter Your Git Name: "
+    read git_name
+    git config --global user.name $git_name #TODO Revisar aqui
+
+    echo "Enter Your Git E-mail: "
+    read git_email
+    git config --global user.email $git_email
+
+    git config --list
+      
+    #Git Kraken
+    rm /tmp/gitkraken-amd64*
+    wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -P /tmp/
+    dpkg -i /tmp/gitkraken-amd64.deb
+    rm /tmp/gitkraken-amd64*
+}
+
+dev_backend() {
+    #Python
+    apt_install python-django 
+    apt_install python-pip 
+    apt_install python3-pip
+    pip install django
+    pip3 install django
+}
+
+dev_frontend() {
+    apt_install nodejs
+    ln -s /usr/bin/nodejs /usr/bin/node
+    apt_install npm
+    npm install -g bower
+}
+
+database() {
+    #MongoDB
+    apt_install mongodb
+
+    #MySQL
+    apt_install mysql-server-5.7 
+    apt_install mysql-workbench
+}
+
+##############################################################################
+##############################################################################
 __init__() {
-	apt-get update
-	apt-get upgrade -y
-
-	basic
-	personal
-	desenv
-	study
+    upgrade
+    #basic
+    
+    #utils
+    #academic
+    #study
+    #infra
+    #dev_ops
+    #dev_backend
+    #dev_frontend
+    database
+    
+    #ubuntu_unity_utils
 }
 
-__init__
+apt_install ansible
 
-
-#TODO
-	#wget https://download.sublimetext.com/sublime-text_build-3103_amd64.deb
-	#dpkg -i sublime-text_build-3103_amd64.deb
-	#rm sublime-text_build-3103_amd64.deb
-
-#Eclipse
-#skype					Falta criar uma regra para alterar o arquivo de fontes
-#Spotify 				Falta verificar se a chave é pessoal
-#Vivaldi				Realmente usar?
-#Google Drive
-#Atom
-#Android Studio
-#PostgreSQL
-
-
-#DBeaver
+#futuramente essa parte do script vai ser substituída por um script ansible
+__init__ 
+##############################################################################
+##############################################################################
