@@ -1,21 +1,24 @@
 #!/bin/bash
 
 ##### pendencias 
-#Atom - https://atom.io/download/deb
-
-#DevTools - http://www.diolinux.com.br/2015/07/como-instalar-o-android-studio-no-ubuntu-corretamente.html#sthash.AGYOjSQG.dpuf
-
-#Java
+#DevTools           http://www.diolinux.com.br/2015/07/como-instalar-o-android-studio-no-ubuntu-corretamente.html#sthash.AGYOjSQG.dpuf
 
 #y-ppa-manager
-#Android Studio
-#Sublimetext
-#Eclipse
 #Vivaldi
 #Google Drive
-#PostgreSQL
-#DBeaver
 
+#Java 6, 7 e 8
+#Maven
+#Gradle
+
+#Atom               https://atom.io/download/deb
+#Sublime            https://www.sublimetext.com/3
+#IntelliJ
+#Eclipse
+
+#Docker
+    
+#Slack              https://slack.com/downloads/linux
 #teamviewer
 
 ##### 
@@ -32,6 +35,13 @@ fi
 
 apt_install() {
     local x=$1
+
+    echo " "
+    echo "#########################################################################################"
+    echo "                                   Instalando " $x
+    echo "#########################################################################################"
+    echo " "
+
     apt-get install -y $x
 }
 
@@ -57,17 +67,17 @@ utils() {
     #dpkg -i /tmp/google-chrome-stable_current_amd64.deb
     #rm /tmp/google-chrome-stable_current_amd64.deb
     
+    #Teamviewer
+    #rm /tmp/teamviewer_i386*
+    #wget https://download.teamviewer.com/download/teamviewer_i386.deb -P /tmp/
+    #dpkg -i /tmp/teamviewer_i386.deb
+    #rm /tmp/teamviewer_i386*
+
     # Spotify
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BBEBDCB318AD50EC6865090613B00F1FD2C19886
     echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
     upgrade
-    apt_install spotify-client
-    
-    #Teamviewer
-    rm /tmp/teamviewer_i386*
-    wget https://download.teamviewer.com/download/teamviewer_i386.deb -P /tmp/
-    dpkg -i /tmp/teamviewer_i386.deb
-    rm /tmp/teamviewer_i386*
+    apt_install spotify-client 
 }
 
 ubuntu_unity_utils() {
@@ -101,7 +111,7 @@ dev_ops() {
 
     echo "Enter Your Git Name: "
     read git_name
-    git config --global user.name $git_name #TODO Revisar aqui
+    git config --global user.name $git_name
 
     echo "Enter Your Git E-mail: "
     read git_email
@@ -110,10 +120,10 @@ dev_ops() {
     git config --list
       
     #Git Kraken
-    rm /tmp/gitkraken-amd64*
-    wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -P /tmp/
-    dpkg -i /tmp/gitkraken-amd64.deb
-    rm /tmp/gitkraken-amd64*
+    #rm /tmp/gitkraken-amd64*
+    #wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -P /tmp/
+    #dpkg -i /tmp/gitkraken-amd64.deb
+    #rm /tmp/gitkraken-amd64*
 }
 
 dev_backend() {
@@ -133,12 +143,22 @@ dev_frontend() {
 }
 
 database() {
+    #PostgreSQL - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
+    apt_install postgresql-9.5
+
     #MongoDB
     apt_install mongodb
 
     #MySQL
     apt_install mysql-server-5.7 
-    apt_install mysql-workbench
+
+    #DBeaver
+    #rm /tmp/dbeaver-ce_latest_amd64*
+    #wget http://dbeaver.jkiss.org/files/dbeaver-ce_latest_amd64.deb -P /tmp/
+    #dpkg -i /tmp/dbeaver-ce_latest_amd64.deb
+    #rm tmp/dbeaver-ce_latest_amd64*
+
+    
 }
 
 ##############################################################################
@@ -147,14 +167,14 @@ __init__() {
     upgrade
     #basic
     
-    #utils
-    #academic
-    #study
-    #infra
-    #dev_ops
-    #dev_backend
-    #dev_frontend
-    database
+    utils
+    academic
+    study
+    infra
+    dev_ops
+    dev_backend
+    dev_frontend
+    #database
     
     #ubuntu_unity_utils
 }
