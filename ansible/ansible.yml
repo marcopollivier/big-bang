@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  sudo: yes
+  tasks: 
+
+  #Basicos
+  - name: Install Vim
+    apt: 
+      name: vim 
+      state: latest 
+      update_cache: yes
+
+  #Dev Tools
+  - name: Install Git
+    apt: 
+      name: git 
+      state: latest 
+      update_cache: yes
+
+  - git_config:
+      name: user.email
+      value: marcopollivier@gmail.com
+
+  - git_config:
+      name: user.name
+      value: 'Marco Paulo Ollivier'
