@@ -1,20 +1,79 @@
+###
+# https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
+
+# https://www.spotify.com/br/download/linux/
+# https://slack.com/downloads/linux
+# https://www.gitkraken.com/download/linux-deb
+# https://atom.io/
+
 ---
 - hosts: localhost
   sudo: yes
-  tasks: 
+  tasks:
 
   #Basicos
   - name: Install Vim
-    apt: 
-      name: vim 
-      state: latest 
+    apt:
+      name: vim
+      state: latest
       update_cache: yes
 
-  #Dev Tools
+  - name: Install XClip
+    apt:
+      name: xclip
+      state: latest
+      update_cache: yes
+
+  - name: Install ZSH
+    apt:
+      name: zsh
+      state: latest
+      update_cache: yes
+
+  #Uteis
+  - name: Install Gnome Unity Tweak Tool
+    apt:
+      name: gnome-tweak-tool
+      state: latest
+      update_cache: yes
+
+  - name: Install Terminator (terminal)
+    apt:
+      name: terminator
+      state: latest
+      update_cache: yes
+
+  - name: Install Teamviewer
+    apt:
+      name: teamviewer
+      state: latest
+      update_cache: yes
+
+  - name: Install Filezilla
+    apt:
+      name: filezilla
+      state: latest
+      update_cache: yes
+
+  #Redes
+  - name: Install Wireshark
+    apt:
+      name: wireshark
+      state: latest
+      update_cache: yes
+
+  #Text Editors and IDEs
+  - name: Install Sublime
+    apt:
+      name: sublime-text
+      state: latest
+      update_cache: yes
+
+  #DevOps
   - name: Install Git
-    apt: 
-      name: git 
-      state: latest 
+    apt:
+      name: git
+      state: latest
       update_cache: yes
 
   - git_config:
@@ -24,3 +83,10 @@
   - git_config:
       name: user.name
       value: 'Marco Paulo Ollivier'
+
+  #Outros
+  - name: Install Stellarium
+    apt:
+      name: stellarium
+      state: latest
+      update_cache: yes
