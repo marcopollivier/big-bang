@@ -7,3 +7,4 @@ sudo apt-add-repository ppa:ansible/ansible
 sudo apt install -y ansible
 
 ansible-playbook ansible.yml
+ansible-playbook docker-install.yml
