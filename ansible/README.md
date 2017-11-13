@@ -1,45 +1,41 @@
-##### pendencias 
+# Pendencias 
 
-#DevTools           http://www.diolinux.com.br/2015/07/como-instalar-o-android-studio-no-ubuntu-corretamente.html#sthash.AGYOjSQG.dpuf
+* DevTools - http://www.diolinux.com.br/2015/07/como-instalar-o-android-studio-no-ubuntu-corretamente.html#sthash.AGYOjSQG.dpuf
 
-#y-ppa-manager
-#Vivaldi
-#Google Drive
+* y-ppa-manager
+* Vivaldi
+* Google Drive
 
-#Java 6, 7 e 8
-#Maven
-#Gradle
+* Java 6, 7 e 8
+* Maven
+* Gradle
 
-#Atom               https://atom.io/download/deb
-#Sublime            https://www.sublimetext.com/3
-#IntelliJ
-#Eclipse
+* Atom               https://atom.io/download/deb
+* Sublime            https://www.sublimetext.com/3
+* IntelliJ
+* Eclipse
 
-#Docker
-
-#Datagrip
+* Datagrip
     
-#Slack              https://slack.com/downloads/linux
-#teamviewer
+* Slack              https://slack.com/downloads/linux
+* Teamviewer
 
+* https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
 
-# https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
-
-# https://www.spotify.com/br/download/linux/
-# https://slack.com/downloads/linux
-# https://www.gitkraken.com/download/linux-deb
-# https://atom.io/
+* https://www.spotify.com/br/download/linux/
+* https://slack.com/downloads/linux
+* https://www.gitkraken.com/download/linux-deb
+* https://atom.io/
 
 ## Migrados para Imagens Docker
 
-# postgresql 	- docker pull postgres
-# mongodb 		- docker pull mongo
-# mysql 		- docker pull mysql
-# RabbitMQ 		- docker pull rabbitmq
-
+* postgresql 	- docker pull postgres
+* mongodb 		- docker pull mongo
+* mysql 		- docker pull mysql
+* RabbitMQ 		- docker pull rabbitmq
 
 ----
-
+```
 utils() {
    
     apt_install skype
@@ -98,5 +94,5 @@ dev_frontend() {
     apt_install npm
     npm install -g bower
 }
-
+```
 
