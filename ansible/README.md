@@ -22,15 +22,26 @@
 #Slack              https://slack.com/downloads/linux
 #teamviewer
 
-basic() {
-    apt_install synaptic
-    
-    apt_install vim
-}
+
+# https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
+
+# https://www.spotify.com/br/download/linux/
+# https://slack.com/downloads/linux
+# https://www.gitkraken.com/download/linux-deb
+# https://atom.io/
+
+## Migrados para Imagens Docker
+
+# postgresql 	- docker pull postgres
+# mongodb 		- docker pull mongo
+# mysql 		- docker pull mysql
+# RabbitMQ 		- docker pull rabbitmq
+
+
+----
 
 utils() {
-    apt_install bleachbit
-    
+   
     apt_install skype
     
     #TODO Revisar aqui
@@ -52,12 +63,6 @@ utils() {
     apt_install spotify-client 
 }
 
-ubuntu_unity_utils() {
-    apt_install ubuntu-restricted-extras
-    apt_install unity-tweak-tool
-    
-    apt_install nautilus-dropbox
-}
 
 academic() {
     #LaTex
@@ -69,27 +74,7 @@ academic() {
     apt_install kile-i18n-ptbr
 }
 
-study() {
-    apt_install stellarium
-}
-
-infra() {
-    apt_install filezilla
-}
-
 dev_ops() {
-    #Git
-    apt_install git
-
-    echo "Enter Your Git Name: "
-    read git_name
-    git config --global user.name $git_name
-
-    echo "Enter Your Git E-mail: "
-    read git_email
-    git config --global user.email $git_email
-
-    git config --list
       
     #Git Kraken
     #rm /tmp/gitkraken-amd64*
@@ -114,15 +99,4 @@ dev_frontend() {
     npm install -g bower
 }
 
-database() {
-    #PostgreSQL - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
-    apt_install postgresql-9.5
-
-    #MongoDB
-    apt_install mongodb
-
-    #MySQL
-    apt_install mysql-server-5.7 
-
-}
 

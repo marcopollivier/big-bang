@@ -1,11 +1,4 @@
 ###
-# https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
-
-# https://www.spotify.com/br/download/linux/
-# https://slack.com/downloads/linux
-# https://www.gitkraken.com/download/linux-deb
-# https://atom.io/
-
 ---
 - hosts: localhost
   sudo: yes
@@ -30,8 +23,14 @@
       state: latest
       update_cache: yes
 
+  - name: Install Synaptic
+    apt:
+      name: synaptic
+      state: latest
+      update_cache: yes
+
   #Uteis
-  - name: Install Gnome Unity Tweak Tool
+  - name: Install Gnome Tweak Tool
     apt:
       name: gnome-tweak-tool
       state: latest
@@ -40,6 +39,12 @@
   - name: Install Terminator (terminal)
     apt:
       name: terminator
+      state: latest
+      update_cache: yes
+
+  - name: Install Dropbox
+    apt:
+      name: nautilus-dropbox
       state: latest
       update_cache: yes
 
@@ -84,7 +89,7 @@
       name: user.name
       value: 'Marco Paulo Ollivier'
 
-  #Outros
+  #Study
   - name: Install Stellarium
     apt:
       name: stellarium
