@@ -1,5 +1,35 @@
 # Pendencias 
 
+## Estrutura
+
+Adiciona Pastas
+* /opt/ide
+* /opt/tools
+
+## Adiciona plugins no Oh My Zsh
+```plugins=(git python mvn django docker git-flow ubuntu)```
+
+## Adiciona nas variáveis de ambiente 
+```
+#USADO PELO JAVA
+export JAVA_HOME="/usr/lib/jvm/current"
+export PATH=$PATH:$JAVA_HOME/bin
+
+#USADO PELO MAVEN
+M2_HOME=/usr/lib/mvn/current
+M2=$M2_HOME/bin
+PATH=$M2:$PATH
+
+#USADO PELO GRADLE
+GRADLE_HOME=/usr/lib/gradle/current
+GRADLE=$GRADLE_HOME/bin
+PATH=$GRADLE:$PATH
+
+#Altera Java
+ALT_JAVA=/usr/lib/jvm
+PATH=$ALT_JAVA:$PATH
+```
+
 ## Uteis
 
 * https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
@@ -23,6 +53,8 @@
 * Datagrip
     
 * Slack              https://slack.com/downloads/linux
+
+* Postman 		https://www.getpostman.com/
 
 
 ## Migrados para Imagens Docker
