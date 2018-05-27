@@ -4,7 +4,6 @@
   sudo: yes
   tasks:
 
-  #Basicos
   - name: Install Vim
     apt:
       name: vim
@@ -20,19 +19,6 @@
   - name: Install ZSH
     apt:
       name: zsh
-      state: latest
-      update_cache: yes
-
-  - name: Install Synaptic
-    apt:
-      name: synaptic
-      state: latest
-      update_cache: yes
-
-  #Uteis
-  - name: Install Gnome Tweak Tool
-    apt:
-      name: gnome-tweak-tool
       state: latest
       update_cache: yes
 

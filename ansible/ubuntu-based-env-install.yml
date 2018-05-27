@@ -1,0 +1,11 @@
+###
+---
+- hosts: localhost
+  sudo: yes
+  tasks:
+
+  - name: Install Synaptic
+    apt:
+      name: synaptic
+      state: latest
+      update_cache: yes

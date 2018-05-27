@@ -1,0 +1,11 @@
+###
+---
+- hosts: localhost
+  sudo: yes
+  tasks:
+
+  - name: Install Gnome Tweak Tool
+    apt:
+      name: gnome-tweak-tool
+      state: latest
+      update_cache: yes
