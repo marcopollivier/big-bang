@@ -10,11 +10,11 @@
       state: latest
       update_cache: yes
 
-#  - name: Install Teamviewer
-#    apt:
-#      name: teamviewer
-#      state: latest
-#      update_cache: yes
+  - name: Install Teamviewer
+    apt:
+      name: teamviewer
+      state: latest
+      update_cache: yes
 
   - name: Install Filezilla
     apt:
@@ -28,8 +28,8 @@
       state: latest
       update_cache: yes
 
-#  - name: Install Sublime
-#    apt:
-#      name: sublime-text
-#      state: latest
-#     update_cache: yes
+  - name: Install Sublime
+    apt:
+      name: sublime-text
+      state: latest
+      update_cache: yes
