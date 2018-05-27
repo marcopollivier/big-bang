@@ -1,0 +1,11 @@
+###
+---
+- hosts: localhost
+  sudo: yes
+  tasks:
+
+  - name: Install Dropbox
+    apt:
+      name: nautilus-dropbox
+      state: latest
+      update_cache: yes
