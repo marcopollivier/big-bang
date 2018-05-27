@@ -14,20 +14,25 @@ echo "###################################"
 echo "###  Aplicando scripts Ansible  ###"
 echo "###################################"
 
-# ansible-playbook ansible/basic-env-install.yml
+ansible-playbook ansible/basic-env-install.yml
+ansible-playbook ansible/dev-env-install.yml
+ansible-playbook ansible/tool-env-install.yml
+ansible-playbook ansible/study-env-install.yml
 
-# ansible-playbook ansible/dev-env-install.yml
-# ansible-playbook ansible/docker-install.yml
+#Docker Install
+ansible-playbook ansible/docker-install.yml
 
+#Ubuntu
 if [ $(lsb_release -is) = "Ubuntu" ]
 then
     echo "Dependencia especifica Ubuntu"
-    ansible-playbook ansible/ubuntu-based-env-install.yml
+    ansible-playbook ansible/ubuntu-env-install.yml
 fi
 
+#Ubuntu GNOME
 if [ $XDG_CURRENT_DESKTOP = "ubuntu:GNOME" ]
 then
     echo "Dependencia especifica Gnome"
-    ansible-playbook ansible/ubuntu-gnome-based-env-install.yml
+    ansible-playbook ansible/gnome-env-install.yml
 fi
 

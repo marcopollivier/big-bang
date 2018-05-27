@@ -1,0 +1,11 @@
+###
+---
+- hosts: localhost
+  sudo: yes
+  tasks:
+
+  - name: Install Stellarium
+    apt:
+      name: stellarium
+      state: latest
+      update_cache: yes

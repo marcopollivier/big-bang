@@ -4,77 +4,7 @@
   sudo: yes
   tasks:
 
-  #Basicos
-  - name: Install Vim
-    apt:
-      name: vim
-      state: latest
-      update_cache: yes
-
-  - name: Install XClip
-    apt:
-      name: xclip
-      state: latest
-      update_cache: yes
-
-  - name: Install ZSH
-    apt:
-      name: zsh
-      state: latest
-      update_cache: yes
-
-  - name: Install Synaptic
-    apt:
-      name: synaptic
-      state: latest
-      update_cache: yes
-
-  #Uteis
-  - name: Install Gnome Tweak Tool
-    apt:
-      name: gnome-tweak-tool
-      state: latest
-      update_cache: yes
-
-  - name: Install Terminator (terminal)
-    apt:
-      name: terminator
-      state: latest
-      update_cache: yes
-
-  - name: Install Dropbox
-    apt:
-      name: nautilus-dropbox
-      state: latest
-      update_cache: yes
-
-      #  - name: Install Teamviewer
-      #    apt:
-      #      name: teamviewer
-      #      state: latest
-      #      update_cache: yes
-
-  - name: Install Filezilla
-    apt:
-      name: filezilla
-      state: latest
-      update_cache: yes
-
-  #Redes
-  - name: Install Wireshark
-    apt:
-      name: wireshark
-      state: latest
-      update_cache: yes
-
-  #Text Editors and IDEs
-  #  - name: Install Sublime
-  #    apt:
-  #      name: sublime-text
-  #      state: latest
-  #     update_cache: yes
-
-  #DevOps
+  #Git
   - name: Install Git
     apt:
       name: git
@@ -88,10 +18,3 @@
   - git_config:
       name: user.name
       value: 'Marco Paulo Ollivier'
-
-  #Study
-  - name: Install Stellarium
-    apt:
-      name: stellarium
-      state: latest
-      update_cache: yes
