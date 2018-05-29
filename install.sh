@@ -14,7 +14,7 @@ echo "###################################"
 echo "###  Aplicando scripts Ansible  ###"
 echo "###################################"
 
-ansible-playbook ansible/basic-env-install.yml
+ansible-playbook -k -b --ask-become-pass ansible/basic-env-install.yml
 ansible-playbook ansible/dev-env-install.yml
 ansible-playbook ansible/tool-env-install.yml
 ansible-playbook ansible/util-env-install.yml

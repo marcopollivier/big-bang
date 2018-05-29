@@ -1,7 +1,9 @@
 ###
 ---
 - hosts: localhost
-  sudo: yes
+  become: yes
+  #become_method: sudo  
+  gather_facts: yes
   tasks:
 
   - name: Install Vim
@@ -19,5 +21,11 @@
   - name: Install ZSH
     apt:
       name: zsh
+      state: latest
+      update_cache: yes
+
+  - name: Install Firefox
+    apt:
+      name: firefox
       state: latest
       update_cache: yes
