@@ -1,6 +1,7 @@
 ---
 - hosts: 'localhost'
   become: yes
-  gather_facts: true
+  become_method: sudo  
+  gather_facts: yes
   roles:
     - { role: docker-install }

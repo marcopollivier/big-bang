@@ -1,7 +1,9 @@
 ###
 ---
 - hosts: localhost
-  sudo: yes
+  become: yes
+  become_method: sudo  
+  gather_facts: yes
   tasks:
 
   - name: Install Stellarium
