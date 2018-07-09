@@ -1,106 +1,81 @@
-# ---
-#   - name: Install Docker
-#     become: yes
-#     yum: 
-#       name: docker.x86_64
-
-#   - name: Start Docker
-#     become: yes
-#     service: 
-#       name: docker 
-#       state: restarted
-
-#   - name: Installing packages
-#     become: yes
-#     yum: 
-#       name: python-setuptools
-
-#   - name: Installing docker compose
-#     become: yes
-#     pip: 
-#       name: docker-compose 
-#       extra_args: --upgrade
-
-#   - name: Copy files
-#     become: yes
-#     file:
-#       src: /usr/local/bin/docker-compose
-#       dest: /usr/bin/docker-compose
-#       state: link
-#       force: yes
-
-#   - name: create docker group
-#     group: 
-#       name: docker 
-#       state: present
-
-#   - name: add ec2-user to docker group
-#     become: yes
-#     user: 
-#       name: ec2-user 
-#       groups: docker append=yes
-
-#   - name: enable docker
-#     service: 
-#       name: docker 
-#       state: restarted
-
-#   - name: muda a permissao da pasta /app
-#     become: yes
-#     file: 
-#       path: /app 
-#       owner: ec2-user 
-#       group: domain_users 
-#       recurse: yes
-
-#   - name: Installing CTOP
-#     command: sudo wget https://github.com/bcicen/ctop/releases/download/v0.5/ctop-0.5-linux-amd64 -O /usr/local/bin/ctop
-
-#   - name: Set permission for CTOP
-#     command: sudo chmod +x /usr/local/bin/ctop
-
-
 ---
-  - name: install docker
-    yum:
-      name: docker.x86_64
+  - name: Install CURL
+    become: yes
+    apt: 
+      name: curl
 
-  - name: Installing packages
-    yum:
-      name: python-setuptools
+  - name: Install ca-certificates
+    become: yes
+    apt: 
+      name: ca-certificates
+  
+  - name: Install apt-transport-https
+    become: yes
+    apt: 
+      name: apt-transport-https
 
-  - name: Installing pip
-    yum:
-      name: python-pip
-      state: latest
+  - name: Install software-properties-common
+    become: yes
+    apt: 
+      name: software-properties-common
 
-  - name: Installing Docker
-    pip:
-     name: docker
+  # - name: Install Docker
+  #   become: yes
+  #   yum: 
+  #     name: docker.x86_64
+
+  - name: Start Docker
+    become: yes
+    service: 
+      name: docker 
+      state: restarted
+
+  # - name: Installing packages
+  #   become: yes
+  #   yum: 
+  #     name: python-setuptools
 
   - name: Installing docker compose
-    pip:
-     name: docker-compose
+    become: yes
+    pip: 
+      name: docker-compose 
+      extra_args: --upgrade
 
-  - name: Installing dependencies docker compose
-    pip:
-     name: backports.ssl_match_hostname
-     extra_args: --upgrade
+  - name: Copy files
+    become: yes
+    file:
+      src: /usr/local/bin/docker-compose
+      dest: /usr/bin/docker-compose
+      state: link
+      force: yes
 
-  - name: Installing Docker-py
-    command: pip install docker-py --upgrade
+  - name: create docker group
+    group: 
+      name: docker 
+      state: present
+
+  - name: add ec2-user to docker group
+    become: yes
+    user: 
+      name: ec2-user 
+      groups: docker 
+      # append: yes
 
   - name: enable docker
-    command: service docker restart
+    service: 
+      name: docker 
+      state: restarted
+
+  # - name: muda a permissao da pasta /app
+  #   become: yes
+  #   file: 
+  #     path: /app 
+  #     owner: ec2-user 
+  #     group: domain_users 
+  #     recurse: yes
 
   - name: Installing CTOP
     command: sudo wget https://github.com/bcicen/ctop/releases/download/v0.5/ctop-0.5-linux-amd64 -O /usr/local/bin/ctop
 
   - name: Set permission for CTOP
     command: sudo chmod +x /usr/local/bin/ctop
-
-  - name: Adding VivoControle team user to group docker
-    command: useradd -G "{{ item.group }}" "{{ item.user}}"
-    with_items:
-      - { group: 'docker', user: 'marco.ollivier' }
-      - { group: 'docker', user: 'mollivier' }
