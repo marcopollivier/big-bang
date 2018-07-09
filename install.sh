@@ -19,11 +19,11 @@ exec-ansible-playbook() {
     ansible-playbook -k -b --ask-become-pass ansible/$1
 }
 
-exec-ansible-playbook basic-env-install.yml
-exec-ansible-playbook dev-env-install.yml
-exec-ansible-playbook tool-env-install.yml
-exec-ansible-playbook util-env-install.yml
-exec-ansible-playbook study-env-install.yml
+# exec-ansible-playbook basic-env-install.yml
+# exec-ansible-playbook dev-env-install.yml
+# exec-ansible-playbook tool-env-install.yml
+# exec-ansible-playbook util-env-install.yml
+# exec-ansible-playbook study-env-install.yml
 
 #Docker Install
 exec-ansible-playbook docker-install.yml
@@ -32,13 +32,13 @@ exec-ansible-playbook docker-install.yml
 if [ $(lsb_release -is) = "Ubuntu" ]
 then
     echo "Dependencia especifica Ubuntu"
-    exec-ansible-playbook ubuntu-env-install.yml
+    # exec-ansible-playbook ubuntu-env-install.yml
 fi
 
 #Ubuntu GNOME
 if [ $XDG_CURRENT_DESKTOP = "ubuntu:GNOME" ]
 then
     echo "Dependencia especifica Gnome"
-    exec-ansible-playbook gnome-env-install.yml
+    # exec-ansible-playbook gnome-env-install.yml
 fi
 
