@@ -24,6 +24,12 @@
       state: latest
       update_cache: yes
 
+  - name: Install net-tools
+    apt:
+      name: net-tools
+      state: latest
+      update_cache: yes
+
   - name: Install Firefox
     apt:
       name: firefox
