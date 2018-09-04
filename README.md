@@ -1,6 +1,10 @@
 # Pendencias 
 
-## Estrutura
+## Motivação 
+
+Criar uma estrutura que facilite a construção de um ambiente de desenvolvimento que possa ser utilizado tanto para propósitos educativos quanto profissionais. Este projeto será preparado para ser executado em ambientes Linux com distribuições Arch (Manjaro como referência ou Ubuntu). 
+
+## Estrutura de pastas
 
 Adiciona Pastas
 * /opt/ide
