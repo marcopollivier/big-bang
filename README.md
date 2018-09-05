@@ -1,19 +1,19 @@
-# Pendencias 
-
 ## Motivação 
 
 Criar uma estrutura que facilite a construção de um ambiente de desenvolvimento que possa ser utilizado tanto para propósitos educativos quanto profissionais. Este projeto será preparado para ser executado em ambientes Linux com distribuições Arch (Manjaro como referência ou Ubuntu). 
 
-## Estrutura de pastas
+## Pendencias 
+
+### Estrutura de pastas
 
 Adiciona Pastas
 * /opt/ide
 * /opt/tools
 
-## Adiciona plugins no Oh My Zsh
+### Adiciona plugins no Oh My Zsh
 ```plugins=(git python mvn django docker git-flow ubuntu)```
 
-## Adiciona nas variáveis de ambiente 
+### Adiciona nas variáveis de ambiente 
 ```
 #USADO PELO JAVA
 export JAVA_HOME="/usr/lib/jvm/current"
@@ -34,13 +34,13 @@ ALT_JAVA=/usr/lib/jvm
 PATH=$ALT_JAVA:$PATH
 ```
 
-## Uteis
+### Uteis
 
 * https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
 
 ---
 
-## TODO - Analisar
+### TODO - Analisar
 
 * y-ppa-manager
 * Vivaldi
@@ -61,7 +61,7 @@ PATH=$ALT_JAVA:$PATH
 * Postman 		https://www.getpostman.com/
 
 
-## Migrados para Imagens Docker
+### Migrados para Imagens Docker
 
 * postgresql 	- docker pull postgres
 * mongodb 		- docker pull mongo
@@ -70,7 +70,7 @@ PATH=$ALT_JAVA:$PATH
 
 ----
 
-## Ferramentas que adicionam source
+## #Ferramentas que adicionam source
 
 ```
 # 1. Add the Spotify repository signing keys to be able to verify downloaded packages
@@ -105,21 +105,21 @@ sudo apt-get install sublime-text
 ```
 
 ---
-## Ferramentas via WGET
+### Ferramentas via WGET
 
-### Google Chrome 
+#### Google Chrome 
 sudo dpkg -i "$(wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O -)"
 rm google-chrome*
 
-### Teamviewer
+#### Teamviewer
 sudo dpkg -i "$(wget https://download.teamviewer.com/download/teamviewer_i386.deb  -O -)"
 rm teamviewer*
 
-### Git Kraken
+#### Git Kraken
 sudo dpkg -i "$(wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -O -)"
 rm gitkraken*
 
-### Oh My Zsh
+#### Oh My Zsh
 sudo sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
 ---
@@ -149,7 +149,7 @@ sudo sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/in
 ```
 ---
 
-## Gnome Extensions
+### Gnome Extensions
 - https://extensions.gnome.org/extension/19/user-themes/
 - https://extensions.gnome.org/extension/723/pixel-saver/
 - https://extensions.gnome.org/extension/906/sound-output-device-chooser/
