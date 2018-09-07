@@ -1,5 +1,8 @@
 #!/bin/bash
 
+release=$(lsb_release -is)
+xdg=$XDG_CURRENT_DESKTOP
+
 # echo "##################################"
 # echo "###     Instalando Ansible     ###"
 # echo "##################################"
@@ -29,16 +32,17 @@
 # exec-ansible-playbook docker-install.yml
 
 #Ubuntu
-if [ $(lsb_release -is) = "Ubuntu" ]
-then
+if [[ $release = "Ubuntu" ]]; then
     echo "Instalando dependências especifica UBUNTU"
     # exec-ansible-playbook ubuntu-env-install.yml
+elif [[ $release = "ManjaroLinux" ]]; then
+  echo "Instalando dependências especifica MANJARO"
+  #statements
 fi
 
 #GNOME
-if [[ $XDG_CURRENT_DESKTOP = *"GNOME"* ]]
+if [[ $xdg = *"GNOME"* ]];
 then
     echo "Instalando dependências especifica GNOME"
     # exec-ansible-playbook gnome-env-install.yml
 fi
-
