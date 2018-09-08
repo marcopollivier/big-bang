@@ -1,0 +1,11 @@
+- hosts: localhost
+  # become: true
+  # become_method: sudo
+  # gather_facts: yes
+  # tasks:
+  #   - file:
+  #       path: /opt/test
+  #       state: directory
+  #       mode: 0755
+  roles:
+      - { role: "environment" }

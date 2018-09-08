@@ -1,0 +1,30 @@
+---
+- name: Run the equivalent of "pacman -Syu" as a separate step
+  pacman:
+    update_cache: yes
+    upgrade: yes
+
+- name: Install Vim
+  pacman:
+    name: vim
+    state: latest
+
+- name: Install XClip
+  pacman:
+    name: xclip
+    state: latest
+
+- name: Install ZSH
+  pacman:
+    name: zsh
+    state: latest
+
+- name: Install net-tools
+  pacman:
+    name: net-tools
+    state: latest
+
+- name: Install Firefox
+  pacman:
+    name: firefox
+    state: latest

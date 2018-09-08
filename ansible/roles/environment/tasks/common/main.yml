@@ -1,0 +1,6 @@
+---
+- name: "Cria pasta de teste"
+  file:
+    path: /opt/test
+    state: directory
+    mode: 0755

@@ -1,0 +1,20 @@
+---
+# - fail: msg="'version' deve ser informado."
+#   when: (var_version is not defined)
+#
+# - fail: msg="'color' deve ser informado."
+#   when: (var_deploy_color is not defined)
+#
+# - debug: msg="Cor do servidor {{ color }}, cor do deploy {{ var_deploy_color }}"
+#
+
+- include: "common/main.yml"
+
+- include: "{{var_deploy_release}}/main.yml"
+
+# - include: ../../discord-notify/task/main.yml
+#   vars:
+#     text: "Deploy Realizado - {{ var_environment }}"
+#     app: "{{ var_artifactname.split('-war')[0].replace('-',' ') }}"
+#     image: "{{ var_version }}"
+#     ambiente: "{{ var_environment }}"

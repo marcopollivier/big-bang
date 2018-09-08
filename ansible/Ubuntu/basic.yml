@@ -1,0 +1,30 @@
+---
+- name: Install Vim
+  apt:
+    name: vim
+    state: latest
+    update_cache: yes
+
+- name: Install XClip
+  apt:
+    name: xclip
+    state: latest
+    update_cache: yes
+
+- name: Install ZSH
+  apt:
+    name: zsh
+    state: latest
+    update_cache: yes
+
+- name: Install net-tools
+  apt:
+    name: net-tools
+    state: latest
+    update_cache: yes
+
+- name: Install Firefox
+  apt:
+    name: firefox
+    state: latest
+    update_cache: yes
