@@ -5,7 +5,7 @@ Este projeto será preparado para ser executado em ambientes Linux com distribui
 
 O intuito é que quem precisar de algo parecido possa fazer um fork do projeto e customizar da forma que melhor o atender.
 
-Sugestões também são sempre benvindas =)
+Sugestões também são sempre bem vindas =)
 
 ## Pendencias
 
