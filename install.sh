@@ -1,12 +1,13 @@
 #!/bin/bash
 
 name=$(uname -n)
+user=$(id -u -n)
 release=$(lsb_release -is)
 xdg=$XDG_CURRENT_DESKTOP
 
-# echo "##########################################################"
-# echo "###     Configurando ambiente de dev no host $name     ###"
-# echo "##########################################################"
+echo "##########################################################"
+echo "###     Configurando ambiente de dev no host $name     ###"
+echo "##########################################################"
 
 #sudo apt update
 #sudo apt upgrade
@@ -30,5 +31,6 @@ xdg=$XDG_CURRENT_DESKTOP
 
 ansible-playbook \
 -e var_deploy_release=$release \
+-e var_deploy_user=$user \
 -k -b --ask-become-pass \
 ansible/install.yml

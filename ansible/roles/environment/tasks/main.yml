@@ -10,7 +10,7 @@
 
 - include: "common/main.yml"
 
-- include: "{{var_deploy_release}}/main.yml"
+# - include: "{{var_deploy_release}}/basic.yml"
 
 # - include: ../../discord-notify/task/main.yml
 #   vars:

@@ -1,6 +1,20 @@
 ---
-- name: "Cria pasta de teste"
+- name: "Cria pasta /opt/ide"
   file:
-    path: /opt/test
+    path: /opt/ide
     state: directory
     mode: 0755
+
+- name: "Cria pasta /opt/tools"
+  file:
+    path: /opt/tools
+    state: directory
+    mode: 0755
+
+- name: "Cria pasta /home/{{var_deploy_user}}/workspace"
+  file:
+    path: /home/{{var_deploy_user}}/workspace
+    state: directory
+    mode: 0755
+    # with_items:
+    #   - { group: '{{var_deploy_user}}', user: '{{var_deploy_user}}' }
