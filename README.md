@@ -1,19 +1,18 @@
-## Motivação 
+## Motivação
 
-Criar uma estrutura que facilite a construção de um ambiente de desenvolvimento que possa ser utilizado tanto para propósitos educativos quanto profissionais. Este projeto será preparado para ser executado em ambientes Linux com distribuições Arch (Manjaro como referência ou Ubuntu). 
+Criar uma estrutura que facilite a construção de um ambiente de desenvolvimento que possa ser utilizado tanto para propósitos educativos quanto profissionais.
+Este projeto será preparado para ser executado em ambientes Linux com distribuições Manjaro ou Ubuntu.
 
-## Pendencias 
+O intuito é que quem precisar de algo parecido possa fazer um fork do projeto e customizar da forma que melhor o atender.
 
-### Estrutura de pastas
+Sugestões também são sempre benvindas =)
 
-Adiciona Pastas
-* /opt/ide
-* /opt/tools
+## Pendencias
 
 ### Adiciona plugins no Oh My Zsh
 ```plugins=(git python mvn django docker git-flow ubuntu)```
 
-### Adiciona nas variáveis de ambiente 
+### Adiciona nas variáveis de ambiente
 ```
 #USADO PELO JAVA
 export JAVA_HOME="/usr/lib/jvm/current"
@@ -55,7 +54,7 @@ PATH=$ALT_JAVA:$PATH
 * Eclipse
 
 * Datagrip
-    
+
 * Slack              https://slack.com/downloads/linux
 
 * Postman 		https://www.getpostman.com/
@@ -107,7 +106,7 @@ sudo apt-get install sublime-text
 ---
 ### Ferramentas via WGET
 
-#### Google Chrome 
+#### Google Chrome
 sudo dpkg -i "$(wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O -)"
 rm google-chrome*
 
@@ -128,16 +127,16 @@ sudo sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/in
     apt_install skype
 
     #LaTex
-    apt_install texlive 
-    apt_install texlive-latex-extra 
-    apt_install texlive-lang-portuguese 
+    apt_install texlive
+    apt_install texlive-latex-extra
+    apt_install texlive-lang-portuguese
     apt_install texlive-math-extra
     apt_install kile  
     apt_install kile-i18n-ptbr
 
     #Python
-    apt_install python-django 
-    apt_install python-pip 
+    apt_install python-django
+    apt_install python-pip
     apt_install python3-pip
     pip install django
     pip3 install django
@@ -160,4 +159,3 @@ sudo sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/in
 - https://extensions.gnome.org/extension/307/dash-to-dock/
 - https://extensions.gnome.org/extension/517/caffeine/
 - https://extensions.gnome.org/extension/131/touchpad-indicator/
-

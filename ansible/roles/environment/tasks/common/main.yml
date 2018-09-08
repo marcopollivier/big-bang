@@ -1,15 +1,18 @@
 ---
-- name: "Cria pasta /opt/ide"
+- name: "Cria estrutura de diretorios opt"
   file:
-    path: /opt/ide
+    path: /opt/{{item.parent}}/{{item.path}}
     state: directory
     mode: 0755
-
-- name: "Cria pasta /opt/tools"
-  file:
-    path: /opt/tools
-    state: directory
-    mode: 0755
+  with_items:
+    - { parent: 'dev', path: 'database'}
+    - { parent: 'dev', path: 'ide'}
+    - { parent: 'ops', path: 'jdk'}
+    - { parent: 'ops', path: 'groovy'}
+    - { parent: 'ops', path: 'ant'}
+    - { parent: 'ops', path: 'maven'}
+    - { parent: 'ops', path: 'gradle'}
+    - { parent: 'ops', path: 'tomcat'}
 
 - name: "Cria estrutura de diretorios de workspace"
   file:
@@ -25,3 +28,9 @@
     - { wrks: 'workspace_go', path: 'm4u'}
     - { wrks: 'workspace_go', path: 'mpo'}
     - { wrks: 'workspace_go', path: '3th'}
+
+- name: "Cria estrutura de diretorios app"
+  file:
+    path: /app
+    state: directory
+    mode: 0755
