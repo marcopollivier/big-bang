@@ -1,9 +1,4 @@
 ---
-- name: "Run the equivalent of "pacman -Syu" as a separate step"
-  pacman:
-    update_cache: yes
-    upgrade: yes
-
 - name: "Install Vim"
   pacman:
     name: vim

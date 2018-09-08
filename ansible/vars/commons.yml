@@ -1,0 +1,15 @@
+---
+
+#TOOLS
+varfile_install_tools: true
+varfile_install_tools_terminator: true
+varfile_install_tools_filezilla: true
+varfile_install_tools_sublime: true
+
+
+#
+
+
+
+#STUDY
+varfile_install_study: false

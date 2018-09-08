@@ -1,17 +1,27 @@
 ---
-# - fail: msg="'version' deve ser informado."
-#   when: (var_version is not defined)
-#
-# - fail: msg="'color' deve ser informado."
-#   when: (var_deploy_color is not defined)
-#
-# - debug: msg="Cor do servidor {{ color }}, cor do deploy {{ var_deploy_color }}"
-#
+- name: "Valida se release foi definida"
+  fail: msg="Release deve ser informado"
+  when: (var_deploy_release is not defined)
+
+- debug: msg="Executando instalacao e configuracao de ambiente no release {{var_deploy_release}}"
 
 - name: "Include common tasks"
   include: "common/main.yml"
 
-# - include: "{{var_deploy_release}}/basic.yml"
+- name: "Include update cache execution"
+  include: "{{var_deploy_release}}/update-cache.yml"
+
+- name: "Include basic installation"
+  include: "{{var_deploy_release}}/basic.yml"
+
+- name: "Include tools installation"
+  include: "{{var_deploy_release}}/tools.yml"
+  when: varfile_install_tools
+
+- name: "Include study installation"
+  include: "{{var_deploy_release}}/study.yml"
+  when: varfile_install_study
+
 
 # - include: ../../discord-notify/task/main.yml
 #   vars:

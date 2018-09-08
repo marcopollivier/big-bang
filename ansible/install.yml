@@ -1,4 +1,6 @@
 - hosts: localhost
+  vars_files:
+    - "./vars/commons.yml"
   # become: true
   # become_method: sudo
   # gather_facts: yes

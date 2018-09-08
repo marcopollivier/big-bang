@@ -1,0 +1,18 @@
+---
+- name: Install Terminator (terminal)
+  pacman:
+    name: terminator
+    state: latest
+  when: varfile_install_tools_terminator
+
+- name: Install Filezilla
+  pacman:
+    name: filezilla
+    state: latest
+  when: varfile_install_tools_filezilla
+
+- name: Install Sublime
+  pacman:
+    name: sublime-text
+    state: latest
+  when: varfile_install_tools_sublime
