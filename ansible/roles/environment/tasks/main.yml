@@ -8,7 +8,8 @@
 # - debug: msg="Cor do servidor {{ color }}, cor do deploy {{ var_deploy_color }}"
 #
 
-- include: "common/main.yml"
+- name: "Include common tasks"
+  include: "common/main.yml"
 
 # - include: "{{var_deploy_release}}/basic.yml"
 

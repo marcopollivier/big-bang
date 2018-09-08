@@ -11,10 +11,17 @@
     state: directory
     mode: 0755
 
-- name: "Cria pasta /home/{{var_deploy_user}}/workspace"
+- name: "Cria estrutura de diretorios de workspace"
   file:
-    path: /home/{{var_deploy_user}}/workspace
+    path: /home/{{var_deploy_user}}/{{item.wrks}}/{{item.path}}
     state: directory
     mode: 0755
-    # with_items:
-    #   - { group: '{{var_deploy_user}}', user: '{{var_deploy_user}}' }
+    owner: "{{var_deploy_user}}"
+    group: "{{var_deploy_user}}"
+  with_items:
+    - { wrks: 'workspace', path: 'm4u'}
+    - { wrks: 'workspace', path: 'mpo'}
+    - { wrks: 'workspace', path: '3th'}
+    - { wrks: 'workspace_go', path: 'm4u'}
+    - { wrks: 'workspace_go', path: 'mpo'}
+    - { wrks: 'workspace_go', path: '3th'}
