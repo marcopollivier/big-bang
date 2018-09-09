@@ -42,6 +42,7 @@ PATH=$ALT_JAVA:$PATH
 ### TODO - Analisar
 
 * Vivaldi
+* chrome
 
 * Java 6, 7 e 8
 * Maven
