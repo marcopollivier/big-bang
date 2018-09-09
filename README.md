@@ -52,6 +52,8 @@ PATH=$ALT_JAVA:$PATH
 
 * Terraform
 
+* Wireshark
+
 * Postman 		https://www.getpostman.com/
 
 * Slack              https://slack.com/downloads/linux
