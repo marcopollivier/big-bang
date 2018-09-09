@@ -1,15 +1,15 @@
 ---
-
 #TOOLS
 varfile_install_tools: true
 varfile_install_tools_terminator: true
 varfile_install_tools_filezilla: true
-varfile_install_tools_sublime: true
+varfile_install_tools_sublime: false
 
+#DEV
+varfile_install_dev: true
 
-#
-
-
+#DEV
+varfile_install_ops: false
 
 #STUDY
-varfile_install_study: false
+varfile_install_study: true

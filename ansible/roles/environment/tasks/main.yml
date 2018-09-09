@@ -18,14 +18,10 @@
   include: "{{var_deploy_release}}/tools.yml"
   when: varfile_install_tools
 
+- name: "Include dev installation"
+  include: "{{var_deploy_release}}/dev.yml"
+  when: varfile_install_dev
+
 - name: "Include study installation"
   include: "{{var_deploy_release}}/study.yml"
   when: varfile_install_study
-
-
-# - include: ../../discord-notify/task/main.yml
-#   vars:
-#     text: "Deploy Realizado - {{ var_environment }}"
-#     app: "{{ var_artifactname.split('-war')[0].replace('-',' ') }}"
-#     image: "{{ var_version }}"
-#     ambiente: "{{ var_environment }}"

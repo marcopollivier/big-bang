@@ -1,4 +1,9 @@
 ---
+- name: "Install ACPI - Verificacao de bateria"
+  pacman:
+    name: acpi
+    state: latest
+
 - name: "Install Vim"
   pacman:
     name: vim

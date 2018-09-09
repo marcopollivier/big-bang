@@ -1,0 +1,70 @@
+###
+---
+
+#Git
+- debug: msg="Instalando e configurando Git"
+
+- name: Install Git
+  pacman:
+    name: git
+    state: latest
+
+- name: "Configurando git name para {{var_deploy_git_name}}"
+  git_config:
+    name: user.name
+    value: "{{var_deploy_git_name}}"
+    scope: global
+
+- name: "Configurando git email para {{var_deploy_git_email}}"
+  git_config:
+    name: user.email
+    value: "{{var_deploy_git_email}}"
+    scope: global
+
+#PYTHON
+- debug: msg="Instalando e configurando Python"
+
+- name: Installing packages
+  pacman:
+    name: python-setuptools
+
+- name: Installing pip
+  pacman:
+    name: python-pip
+    state: latest
+
+#DOCKER
+- debug: msg="Instalando e configurando Docker"
+
+- name: Install Docker
+  pacman:
+    name: docker
+    state: latest
+
+- name: Installing docker compose
+  pip:
+   name: docker-compose
+
+- name: Installing dependencies docker compose
+  pip:
+   name: backports.ssl_match_hostname
+   extra_args: --upgrade
+
+# - name: Adding user to group docker
+# command: useradd -G "docker" "{{ var_deploy_user }}"
+
+- name: "Adding user {{ var_deploy_user }} to group docker"
+  user:
+    name: "{{ var_deploy_user }}"
+    groups: docker,adm,wheel,lp,network,power
+
+- name: "Adding user {{ var_deploy_user }} to group {{ var_deploy_user }}" #TODO debito tecnico
+  user:
+    name: "{{ var_deploy_user }}"
+    group: "{{ var_deploy_user }}"
+
+- name: Installing CTOP
+  command: sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64 -O /usr/local/bin/ctop
+
+- name: Set permission for CTOP
+  command: sudo chmod +x /usr/local/bin/ctop
