@@ -50,13 +50,13 @@ PATH=$ALT_JAVA:$PATH
 * Maven
 * Gradle
 
-* Slack              https://slack.com/downloads/linux
-* Discord
-* Skype
+* Terraform
 
 * Postman 		https://www.getpostman.com/
 
-
+* Slack              https://slack.com/downloads/linux
+* Discord
+* Skype
 
 ----
 
@@ -100,10 +100,6 @@ sudo apt-get install sublime-text
 #### Google Chrome
 sudo dpkg -i "$(wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O -)"
 rm google-chrome*
-
-#### Teamviewer
-sudo dpkg -i "$(wget https://download.teamviewer.com/download/teamviewer_i386.deb  -O -)"
-rm teamviewer*
 
 #### Git Kraken
 sudo dpkg -i "$(wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -O -)"
