@@ -41,31 +41,19 @@ PATH=$ALT_JAVA:$PATH
 
 ### TODO - Analisar
 
-* y-ppa-manager
 * Vivaldi
-* Google Drive
 
 * Java 6, 7 e 8
 * Maven
 * Gradle
 
-* Atom               https://atom.io/download/deb
-* IntelliJ
-* Eclipse
-
-* Datagrip
-
 * Slack              https://slack.com/downloads/linux
+* Discord
+* Skype
 
 * Postman 		https://www.getpostman.com/
 
 
-### Migrados para Imagens Docker
-
-* postgresql 	- docker pull postgres
-* mongodb 		- docker pull mongo
-* mysql 		- docker pull mysql
-* RabbitMQ 		- docker pull rabbitmq
 
 ----
 
@@ -121,31 +109,6 @@ rm gitkraken*
 #### Oh My Zsh
 sudo sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
----
-
-```
-    apt_install skype
-
-    #LaTex
-    apt_install texlive
-    apt_install texlive-latex-extra
-    apt_install texlive-lang-portuguese
-    apt_install texlive-math-extra
-    apt_install kile  
-    apt_install kile-i18n-ptbr
-
-    #Python
-    apt_install python-django
-    apt_install python-pip
-    apt_install python3-pip
-    pip install django
-    pip3 install django
-
-    apt_install nodejs
-    ln -s /usr/bin/nodejs /usr/bin/node
-    apt_install npm
-    npm install -g bower
-```
 ---
 
 ### Gnome Extensions

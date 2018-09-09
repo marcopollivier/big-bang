@@ -33,6 +33,33 @@
     name: python-pip
     state: latest
 
+- name: Installing python-django
+  pacman:
+    name: python-django
+    state: latest
+
+- name: Installing django
+  pip:
+   name: django
+
+#NODE
+- debug: msg="Instalando e configurando Node"
+
+- name: Installing nodejs # ln -s /usr/bin/nodejs /usr/bin/node
+  pacman:
+    name: nodejs
+    state: latest
+
+- name: Installing npm
+  pacman:
+    name: npm
+    state: latest
+
+- name: Install bowers node.js package globally # npm install -g bowers
+  npm:
+    name: bower
+    global: yes
+
 #DOCKER
 - debug: msg="Instalando e configurando Docker"
 
@@ -68,3 +95,15 @@
 
 - name: Set permission for CTOP
   command: sudo chmod +x /usr/local/bin/ctop
+
+#TODO
+# - name: Pull Docker Images
+#   docker_image:
+#     name: {{item.image}}
+#   with_items:
+#     - { image: 'postgres' }
+#     - { image: 'mongo' }
+#     - { image: 'mysql' }
+#     - { image: 'rabbitmq' }
+#     - { image: 'spotify/kafka' }
+#   when: varfile_install_dev_docker_images

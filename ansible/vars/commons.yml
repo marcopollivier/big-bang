@@ -7,9 +7,11 @@ varfile_install_tools_sublime: false
 
 #DEV
 varfile_install_dev: true
+varfile_install_dev_docker_images: false
 
-#DEV
+#OPS
 varfile_install_ops: false
 
 #STUDY
-varfile_install_study: true
+varfile_install_science: true
+varfile_install_science_latex: false

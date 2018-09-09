@@ -1,0 +1,42 @@
+---
+- name: Install Stellarium
+  pacman:
+    name: stellarium
+    state: latest
+
+#Latex
+- name: Install Texlive
+  pacman:
+    name: texlive
+    state: latest
+  when: varfile_install_science_latex
+
+- name: Install texlive-latex-extra
+  pacman:
+    name: texlive-latex-extra
+    state: latest
+  when: varfile_install_science_latex
+
+- name: Install texlive-lang-portuguese
+  pacman:
+    name: texlive-lang-portuguese
+    state: latest
+  when: varfile_install_science_latex
+
+- name: Install texlive-math-extra
+  pacman:
+    name: texlive-math-extra
+    state: latest
+  when: varfile_install_science_latex
+
+- name: Install kile
+  pacman:
+    name: kile
+    state: latest
+  when: varfile_install_science_latex
+
+- name: Install kile-i18n-ptbr
+  pacman:
+    name: kile-i18n-ptbr
+    state: latest
+  when: varfile_install_science_latex

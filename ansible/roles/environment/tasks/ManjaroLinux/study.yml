@@ -1,6 +1,0 @@
----
-- name: Install Stellarium
-  pacman:
-    name: stellarium
-    state: latest
-  

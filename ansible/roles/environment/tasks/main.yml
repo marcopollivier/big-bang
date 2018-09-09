@@ -22,6 +22,6 @@
   include: "{{var_deploy_release}}/dev.yml"
   when: varfile_install_dev
 
-- name: "Include study installation"
-  include: "{{var_deploy_release}}/study.yml"
-  when: varfile_install_study
+- name: "Include science installation"
+  include: "{{var_deploy_release}}/science.yml"
+  when: varfile_install_science
