@@ -44,6 +44,8 @@ PATH=$ALT_JAVA:$PATH
 * Vivaldi
 * chrome
 
+* Jetbrains Toolbox
+
 * Java 6, 7 e 8
 * Maven
 * Gradle
