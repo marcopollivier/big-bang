@@ -1,99 +1,99 @@
-###
 ---
 
 #Git
-- debug: msg="Instalando e configurando Git"
+- debug: msg="Install and config Git"
 
 - name: Install Git
   pacman:
     name: git
     state: latest
 
-- name: "Configurando git name para {{var_deploy_git_name}}"
+- name: "Configuring Git Name - {{var_deploy_git_name}}"
   git_config:
     name: user.name
     value: "{{var_deploy_git_name}}"
     scope: global
 
-- name: "Configurando git email para {{var_deploy_git_email}}"
+- name: "Configuring Git e-mail - {{var_deploy_git_email}}"
   git_config:
     name: user.email
     value: "{{var_deploy_git_email}}"
     scope: global
 
 #PYTHON
-- debug: msg="Instalando e configurando Python"
+- debug: msg="Install and config Python"
 
-- name: Installing packages
+- name: "Install Python setup tools"
   pacman:
     name: python-setuptools
 
-- name: Installing pip
+- name: "Install Pip"
   pacman:
     name: python-pip
     state: latest
 
-- name: Installing python-django
+- name: "Install Python Django"
   pacman:
     name: python-django
     state: latest
 
-- name: Installing django
+- name: "Install Django"
   pip:
    name: django
 
 #NODE
-- debug: msg="Instalando e configurando Node"
+- debug: msg="Install and config NodeJS"
 
-- name: Installing nodejs # ln -s /usr/bin/nodejs /usr/bin/node
+- name: "Install NodeJS"
   pacman:
     name: nodejs
     state: latest
 
-- name: Installing npm
+- name: "Install npm"
   pacman:
     name: npm
     state: latest
 
-- name: Install bowers node.js package globally # npm install -g bowers
+- name: "Install bower node.js package globally - npm install -g bowers"
   npm:
     name: bower
     global: yes
 
 #DOCKER
-- debug: msg="Instalando e configurando Docker"
+- debug: msg="Install and config Docker"
 
-- name: Install Docker
+- name: "Install Docker"
   pacman:
     name: docker
     state: latest
 
-- name: Installing docker compose
+- name: "Installing Docker Compose"
   pip:
    name: docker-compose
 
-- name: Installing dependencies docker compose
-  pip:
-   name: backports.ssl_match_hostname
-   extra_args: --upgrade
+#- name: "Installing dependencies docker compose"
+#  pip:
+#   name: backports.ssl_match_hostname
+#   extra_args: --upgrade
 
-# - name: Adding user to group docker
-# command: useradd -G "docker" "{{ var_deploy_user }}"
+ - name: Adding user to group docker
+   command: useradd -G "docker" "{{ var_deploy_user }}"
+   warm: false
 
-- name: "Adding user {{ var_deploy_user }} to group docker"
-  user:
-    name: "{{ var_deploy_user }}"
-    groups: docker,adm,wheel,lp,network,power
+#- name: "Add user {{ var_deploy_user }} to group docker"
+#  user:
+#    name: "{{ var_deploy_user }}"
+#    groups: docker,adm,wheel,lp,network,power
+#
+#- name: "Add user {{ var_deploy_user }} to group {{ var_deploy_user }}" #TODO debito tecnico
+#  user:
+#    name: "{{ var_deploy_user }}"
+#    group: "{{ var_deploy_user }}"
 
-- name: "Adding user {{ var_deploy_user }} to group {{ var_deploy_user }}" #TODO debito tecnico
-  user:
-    name: "{{ var_deploy_user }}"
-    group: "{{ var_deploy_user }}"
-
-- name: Installing CTOP
+- name: "Install CTOP"
   command: sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64 -O /usr/local/bin/ctop
 
-- name: Set permission for CTOP
+- name: "Set permission for CTOP"
   command: sudo chmod +x /usr/local/bin/ctop
 
 #TODO

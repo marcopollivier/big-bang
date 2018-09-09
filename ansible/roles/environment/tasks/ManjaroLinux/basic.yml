@@ -1,5 +1,5 @@
 ---
-- name: "Install ACPI - Verificacao de bateria"
+- name: "Install ACPI - Battery Check"
   pacman:
     name: acpi
     state: latest
@@ -19,7 +19,7 @@
     name: zsh
     state: latest
 
-- name: "Install net-tools"
+- name: "Install Net Tools"
   pacman:
     name: net-tools
     state: latest

@@ -1,4 +1,7 @@
 ---
+#COMMON
+varfile_config_common: true
+
 #TOOLS
 varfile_install_tools: true
 varfile_install_tools_terminator: true
@@ -13,5 +16,6 @@ varfile_install_dev_docker_images: false
 varfile_install_ops: false
 
 #STUDY
-varfile_install_science: true
+varfile_install_science: false
 varfile_install_science_latex: false
+varfile_install_science_stellarium: false

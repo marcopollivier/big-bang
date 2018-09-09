@@ -46,6 +46,9 @@ PATH=$ALT_JAVA:$PATH
 
 * Jetbrains Toolbox
 
+* Sublime
+* VS Code
+
 * Java 6, 7 e 8
 * Maven
 * Gradle

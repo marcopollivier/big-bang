@@ -7,6 +7,7 @@
 
 - name: "Include common tasks"
   include: "common/main.yml"
+  when: varfile_config_common
 
 - name: "Include update cache execution"
   include: "{{var_deploy_release}}/update-cache.yml"

@@ -4,6 +4,8 @@
     path: /opt/{{item.parent}}/{{item.path}}
     state: directory
     mode: 0755
+    owner: "{{var_deploy_user}}"
+    group: "{{var_deploy_user}}"
   with_items:
     - { parent: 'dev', path: 'database'}
     - { parent: 'dev', path: 'ide'}

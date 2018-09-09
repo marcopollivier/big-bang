@@ -3,6 +3,7 @@
   pacman:
     name: stellarium
     state: latest
+  when: varfile_install_science_stellarium
 
 #Latex
 - name: Install Texlive
