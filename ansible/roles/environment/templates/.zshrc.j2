@@ -1,0 +1,31 @@
+export ZSH="/home/{{ var_deploy_user }}/.oh-my-zsh"
+
+ZSH_THEME="{{ var_zsh_theme }}"
+
+plugins=({{ var_zsh_plugins }})
+
+source $ZSH/oh-my-zsh.sh
+
+### USADO PELO GO
+#export PATH=$PATH:/usr/local/go/bin
+[[ -s "/home/mollivier/.gvm/scripts/gvm" ]] && source "/home/mollivier/.gvm/scripts/gvm"
+export GOPATH=/home/mollivier/workspace_go
+export PATH=$PATH:$GOPATH/bin
+
+### USADO PELO JAVA
+export JAVA_HOME="/usr/lib/jvm/current"
+export PATH=$PATH:$JAVA_HOME/bin
+
+### ALTERA JAVA
+ALT_JAVA=/usr/lib/jvm
+PATH=$ALT_JAVA:$PATH
+
+### USADO PELO MAVEN
+M2_HOME=/usr/local/maven
+M2=$M2_HOME/bin
+PATH=$M2:$PATH
+
+### USADO PELO GRADLE
+GRADLE_HOME=/usr/local/gradle
+GRADLE=$GRADLE_HOME/bin
+PATH=$GRADLE:$PATH
