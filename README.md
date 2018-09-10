@@ -9,38 +9,7 @@ Sugestões também são sempre bem vindas =)
 
 ## Pendencias
 
-### Adiciona plugins no Oh My Zsh
-```plugins=(git python mvn django docker git-flow ubuntu)```
-
-### Adiciona nas variáveis de ambiente
-```
-#USADO PELO JAVA
-export JAVA_HOME="/usr/lib/jvm/current"
-export PATH=$PATH:$JAVA_HOME/bin
-
-#USADO PELO MAVEN
-M2_HOME=/usr/lib/mvn/current
-M2=$M2_HOME/bin
-PATH=$M2:$PATH
-
-#USADO PELO GRADLE
-GRADLE_HOME=/usr/lib/gradle/current
-GRADLE=$GRADLE_HOME/bin
-PATH=$GRADLE:$PATH
-
-#Altera Java
-ALT_JAVA=/usr/lib/jvm
-PATH=$ALT_JAVA:$PATH
-```
-
-### Uteis
-
-* https://chaosmail.github.io/programming/2015/03/04/install-deb-packages-in-ansible/
-
----
-
 ### TODO - Analisar
-
 * Vivaldi
 * chrome
 
@@ -63,10 +32,9 @@ PATH=$ALT_JAVA:$PATH
 * Discord
 * Skype
 
-----
-
 ## #Ferramentas que adicionam source
 
+#### Spotiy
 ```
 # 1. Add the Spotify repository signing keys to be able to verify downloaded packages
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0DF731E45CE24F27EEEB1450EFDC8610341D9410
@@ -79,9 +47,10 @@ sudo apt-get update
 
 # 4. Install Spotify
 sudo apt-get install spotify-client
+```
 
-
-
+#### Sublime
+```
 # 1. Install the GPG key:
 wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 
@@ -103,15 +72,21 @@ sudo apt-get install sublime-text
 ### Ferramentas via WGET
 
 #### Google Chrome
+```
 sudo dpkg -i "$(wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O -)"
 rm google-chrome*
+```
 
 #### Git Kraken
+```
 sudo dpkg -i "$(wget https://release.gitkraken.com/linux/gitkraken-amd64.deb -O -)"
 rm gitkraken*
+```
 
 #### Oh My Zsh
+```
 sudo sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+```
 
 ---
 
