@@ -11,8 +11,9 @@
     state: latest
   when: varfile_install_tools_filezilla
 
-- name: "Install Sublime"
+- name: Install Gnome Tweaks
   pacman:
-    name: sublime-text
+    name: gnome-tweaks
     state: latest
-  when: varfile_install_tools_sublime
+  when: varfile_install_tools_tweaks and var_deploy_xdg == "GNOME"
+

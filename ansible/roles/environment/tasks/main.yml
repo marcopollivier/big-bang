@@ -5,9 +5,17 @@
 
 - debug: msg="Executando instalacao e configuracao de ambiente no release {{var_deploy_release}}"
 
+
+### Criação de diretórios
+- debug: msg="Executando criação de estrutura de diretórios"
+
 - name: "Include common tasks"
   include: "common/main.yml"
   when: varfile_config_common
+
+
+### Instalação de pacotes
+- debug: msg="Executando instalação de pacotes"
 
 - name: "Include update cache execution"
   include: "{{var_deploy_release}}/update-cache.yml"

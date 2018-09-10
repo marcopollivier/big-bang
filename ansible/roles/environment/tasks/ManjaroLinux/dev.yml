@@ -23,6 +23,10 @@
 #PYTHON
 - debug: msg="Install and config Python"
 
+- name: "Install Python"
+  pacman:
+    name: python
+
 - name: "Install Python setup tools"
   pacman:
     name: python-setuptools
@@ -40,6 +44,14 @@
 - name: "Install Django"
   pip:
    name: django
+
+#GO
+- debug: msg="Install and config GoLang"
+
+- name: "Install GoLang"
+  pacman:
+    name: go
+    state: latest
 
 #NODE
 - debug: msg="Install and config NodeJS"
@@ -67,18 +79,24 @@
     name: docker
     state: latest
 
+- name: "Start Docker service - Enable Docker" #TODO reescrever com funcao especifica do ansible
+  command: sudo systemctl enable docker
+
+- name: "Start Docker service" #TODO reescrever com funcao especifica do ansible
+  command: sudo systemctl start docker
+
 - name: "Installing Docker Compose"
   pip:
    name: docker-compose
 
-#- name: "Installing dependencies docker compose"
-#  pip:
-#   name: backports.ssl_match_hostname
-#   extra_args: --upgrade
+- name: "Installing dependencies docker compose"
+  pip:
+   name: backports.ssl_match_hostname
+   extra_args: --upgrade
 
- - name: Adding user to group docker
-   command: useradd -G "docker" "{{ var_deploy_user }}"
-   warm: false
+- name: Adding user to group docker
+  command: useradd -G "docker" "{{ var_deploy_user }}"
+  ignore_errors: yes
 
 #- name: "Add user {{ var_deploy_user }} to group docker"
 #  user:
@@ -90,20 +108,23 @@
 #    name: "{{ var_deploy_user }}"
 #    group: "{{ var_deploy_user }}"
 
+- name: "Restart Docker service" #TODO reescrever com funcao especifica do ansible
+  command: sudo systemctl restart docker
+
 - name: "Install CTOP"
   command: sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64 -O /usr/local/bin/ctop
 
 - name: "Set permission for CTOP"
   command: sudo chmod +x /usr/local/bin/ctop
 
-#TODO
-# - name: Pull Docker Images
-#   docker_image:
-#     name: {{item.image}}
-#   with_items:
-#     - { image: 'postgres' }
-#     - { image: 'mongo' }
-#     - { image: 'mysql' }
-#     - { image: 'rabbitmq' }
-#     - { image: 'spotify/kafka' }
-#   when: varfile_install_dev_docker_images
+#TODO - Seria interessante configurar uma maneira de fazer o docker login antes
+- name: Pull Docker Images
+  docker_image:
+    name: "{{item.image}}"
+  with_items:
+    - { image: "postgres" }
+    - { image: "mongo" }
+    - { image: "mysql" }
+    - { image: "rabbitmq" }
+    - { image: "spotify/kafka" }
+  when: varfile_install_dev_docker_images

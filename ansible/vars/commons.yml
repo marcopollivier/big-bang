@@ -2,20 +2,28 @@
 #COMMON
 varfile_config_common: true
 
+#UBUNTU
+varfile_install_ubuntu: true
+
+#MANJARO
+varfile_install_manjaro: true
+
 #TOOLS
 varfile_install_tools: true
 varfile_install_tools_terminator: true
 varfile_install_tools_filezilla: true
 varfile_install_tools_sublime: false
 
+varfile_install_tools_tweaks: true #GNome exclusive
+
 #DEV
 varfile_install_dev: true
-varfile_install_dev_docker_images: false
+varfile_install_dev_docker_images: true
 
 #OPS
-varfile_install_ops: false
+varfile_install_ops: true
 
 #STUDY
-varfile_install_science: false
+varfile_install_science: true
 varfile_install_science_latex: false
-varfile_install_science_stellarium: false
+varfile_install_science_stellarium: true
