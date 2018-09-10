@@ -34,3 +34,12 @@ varfile_install_science_stellarium: true
 var_zsh_plugins:  "archlinux asdf aws bower cp django docker-compose docker-machine docker gem git-flow git github go golang gradle lein mvn node npm grails pip python redis-cli rails ruby sudo spring terraform ubuntu vagrant"
 var_zsh_theme: "robbyrussell"
 
+var_go_default_path: "/usr/local/go/bin"
+
+var_go_gvm_path: "/home/{{ var_deploy_user }}/.gvm/scripts/gvm"
+var_go_path: "/home/{{ var_deploy_user }}/workspace_go"
+
+var_jvm_path: "/usr/lib/jvm"
+
+var_mvn_path: "/usr/local/maven"
+var_gradle_path: "/usr/local/gradle"
