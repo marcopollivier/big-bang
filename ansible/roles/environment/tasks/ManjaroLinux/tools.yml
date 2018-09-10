@@ -17,3 +17,8 @@
     state: latest
   when: varfile_install_tools_tweaks and var_deploy_xdg == "GNOME"
 
+- name: Install Gnome Shell Extensions
+  pacman:
+    name: gnome-shell-extensions
+    state: latest
+  when: varfile_install_tools_extensions and var_deploy_xdg == "GNOME"

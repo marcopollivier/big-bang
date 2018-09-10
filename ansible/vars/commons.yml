@@ -15,6 +15,7 @@ varfile_install_tools_filezilla: true
 varfile_install_tools_sublime: false
 
 varfile_install_tools_tweaks: true #GNome exclusive
+varfile_install_tools_extensions: true #GNome exclusive
 
 #DEV
 varfile_install_dev: true
