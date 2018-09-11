@@ -24,6 +24,36 @@
     name: net-tools
     state: latest
 
+- name: "Install Bison - GVM needed"
+  pacman:
+    name: bison
+    state: latest
+
+- name: "Install cURL"
+  pacman:
+    name: curl
+    state: latest
+
+- name: "Install mercurial"
+  pacman:
+    name: mercurial
+    state: latest
+
+- name: "Install make"
+  pacman:
+    name: make
+    state: latest
+
+- name: "Install binutils"
+  pacman:
+    name: binutils
+    state: latest
+
+- name: "Install gcc"
+  pacman:
+    name: gcc
+    state: latest
+
 - name: "Install Firefox"
   pacman:
     name: firefox

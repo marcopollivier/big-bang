@@ -48,10 +48,15 @@
 #GO
 - debug: msg="Install and config GoLang"
 
-- name: "Install GoLang"
-  pacman:
-    name: go
-    state: latest
+#TODO não usar. Manter a instalacao via GVM
+#- name: "Install GoLang"
+#  pacman:
+#    name: go
+#    state: latest
+
+- name: "Install Go via GVM"
+  command: "zsh < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)"
+  ignore_errors: yes
 
 #NODE
 - debug: msg="Install and config NodeJS"
