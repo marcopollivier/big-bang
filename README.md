@@ -101,3 +101,23 @@ sudo sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/in
 - https://extensions.gnome.org/extension/307/dash-to-dock/
 - https://extensions.gnome.org/extension/517/caffeine/
 - https://extensions.gnome.org/extension/131/touchpad-indicator/
+
+## Outros
+
+### Ambiente Arch 
+
+#### Discord
+
+Para instalar o discord em um ambiente Arch-Manjaro, é necessário utilizar um pacote AUR. 
+Nesse projeto, sempre que necessário utilizamos o **yaourt** como gerenciador de pacotes. 
+
+No caso do Discord, é necessário passar uma chave na hora da instalação solicitada pela libce2p. 
+Dessa forma é necessário fazer o processo de instalação normalmente, pegar a chave que irá informar no final do 
+processo e depois instalar novamente informando a chave. Dessa forma:
+
+```sh
+$ yaourt -S discord --noconfirm 
+$ gpg --recv-keys <key> && yaourt -S discord --noconfirm
+``` 
+
+Dica do @caioever
