@@ -27,9 +27,12 @@
     - { wrks: 'workspace', path: 'm4u'}
     - { wrks: 'workspace', path: 'mpo'}
     - { wrks: 'workspace', path: '3th'}
-    - { wrks: 'workspace_go', path: 'm4u'}
-    - { wrks: 'workspace_go', path: 'mpo'}
-    - { wrks: 'workspace_go', path: '3th'}
+    - { wrks: 'workspace_go', path: 'src'}
+    - { wrks: 'workspace_go', path: 'pkg'}
+    - { wrks: 'workspace_go', path: 'src'}
+    - { wrks: 'workspace_go/src', path: 'm4u'}
+    - { wrks: 'workspace_go/src', path: 'mpo'}
+    - { wrks: 'workspace_go/src', path: '3th'}
 
 - name: "Cria estrutura de diretorios app"
   file:
