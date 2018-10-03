@@ -1,30 +1,60 @@
 ---
-- name: Install Vim
+- name: "Install ACPI - Battery Check"
+  apt:
+    name: acpi
+    state: latest
+
+- name: "Install Vim"
   apt:
     name: vim
     state: latest
-    update_cache: yes
 
-- name: Install XClip
+- name: "Install XClip"
   apt:
     name: xclip
     state: latest
-    update_cache: yes
 
-- name: Install ZSH
+- name: "Install ZSH"
   apt:
     name: zsh
     state: latest
-    update_cache: yes
 
-- name: Install net-tools
+- name: "Install Net Tools"
   apt:
     name: net-tools
     state: latest
-    update_cache: yes
 
-- name: Install Firefox
+- name: "Install Bison - GVM needed"
+  apt:
+    name: bison
+    state: latest
+
+- name: "Install cURL"
+  apt:
+    name: curl
+    state: latest
+
+- name: "Install mercurial"
+  apt:
+    name: mercurial
+    state: latest
+
+- name: "Install make"
+  apt:
+    name: make
+    state: latest
+
+- name: "Install binutils"
+  apt:
+    name: binutils
+    state: latest
+
+- name: "Install gcc"
+  apt:
+    name: gcc
+    state: latest
+
+- name: "Install Firefox"
   apt:
     name: firefox
     state: latest
-    update_cache: yes
