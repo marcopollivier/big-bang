@@ -1,5 +1,7 @@
 # Big Bang
 
+![Big Bang Cover](https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2018/03/06/o-que-existia-antes-do-big-bang-stephen-hawking-responde.jpg "Big Bang Project Cover")
+
 ## Motivation
 
 Criar uma estrutura que facilite a construção de um ambiente de desenvolvimento de forma idempotente e que possa ser utilizado tanto para propósitos educativos quanto profissionais.
