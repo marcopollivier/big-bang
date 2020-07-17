@@ -1,6 +1,8 @@
-## Motivação
+# Big Bang
 
-Criar uma estrutura que facilite a construção de um ambiente de desenvolvimento que possa ser utilizado tanto para propósitos educativos quanto profissionais.
+## Motivation
+
+Criar uma estrutura que facilite a construção de um ambiente de desenvolvimento de forma idempotente e que possa ser utilizado tanto para propósitos educativos quanto profissionais.
 Este projeto será preparado para ser executado em ambientes Linux com distribuições Manjaro ou Ubuntu.
 
 O intuito é que quem precisar de algo parecido possa fazer um fork do projeto e customizar da forma que melhor o atender.
