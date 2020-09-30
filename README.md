@@ -14,27 +14,23 @@ Sugestões também são sempre bem vindas =)
 ## Pendencias
 
 ### TODO - Analisar
-* Vivaldi
-* chrome
 
-* Jetbrains Toolbox
-
-* Sublime
-* VS Code
-
-* Java 6, 7 e 8
-* Maven
-* Gradle
-
-* Terraform
-
-* Wireshark
-
-* Postman 		https://www.getpostman.com/
-
-* Slack              https://slack.com/downloads/linux
-* Discord
-* Skype
+|                   |                 | Ubuntu | Arch | MacOS |
+|-------------------|-----------------|--------|------|-------|
+| Vivali            | Web Browser     | ✓    | ✓  | ✓   |
+| Chrome            | Web Browser     | ✓    | ✓  | ✓   |
+| Jetbrains Toolbox | Tools           | ✓    | ✓  | ✓   |
+| Sublime Text      | Text Editor     | ✓    | ✓  | ✓   |
+| VS Code           | Text Editor     | ✓    | ✓  | ✓   |
+| Java 6, 7 e 8     | Language        | ✓    | ✓  | ✓   |
+| Maven             | Java Editor     | ✓    | ✓  | ✓   |
+| Gradle            | Java Editor     | ✓    | ✓  | ✓   |
+| Terraform         | Cloud           | ✓    | ✓  | ✓   |
+| Wireshark         | Packet Scanner  | ✓    | ✓  | ✓   |
+| Postman           | API client      | ✓    | ✓  | ✓   |
+| Slack             | Work            | ✓    | ✓  | ✓   |
+| Discord           | Call            | ✓    | ✓  | ✓   |
+| Skype             | Call            | ✓    | ✓  | ✓   |
 
 ## #Ferramentas que adicionam source
 
