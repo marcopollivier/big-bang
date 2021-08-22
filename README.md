@@ -9,28 +9,27 @@ Este projeto será preparado para ser executado em ambientes Linux com distribui
 
 O intuito é que quem precisar de algo parecido possa fazer um fork do projeto e customizar da forma que melhor o atender.
 
-Sugestões também são sempre bem vindas =)
+Sugestões também são sempre bem-vindas =)
 
 ## Executando
 
-Para iniciar a executação do script basta utilizar  o seguinte comando:
+Para iniciar a executação do script basta utilizar o seguinte comando:
 
 ```shell-script
-make gitname=fulano gitemail=fulano@gmail.com
+$ make gitname=fulano gitemail=fulano@gmail.com
 ```
 
 ## Pendencias
 
 ### TODO - Analisar
-* Vivaldi
 * chrome
+* brave
 
 * Jetbrains Toolbox
 
-* Sublime
 * VS Code
 
-* Java 6, 7 e 8
+* Java 11
 * Maven
 * Gradle
 
@@ -42,7 +41,6 @@ make gitname=fulano gitemail=fulano@gmail.com
 
 * Slack              https://slack.com/downloads/linux
 * Discord
-* Skype
 
 ## #Ferramentas que adicionam source
 
@@ -59,25 +57,6 @@ sudo apt-get update
 
 # 4. Install Spotify
 sudo apt-get install spotify-client
-```
-
-#### Sublime
-```
-# 1. Install the GPG key:
-wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-
-# 2. Ensure apt is set up to work with https sources:
-sudo apt-get install apt-transport-https
-
-# 3. Add the Sublime repository
-echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-
-# 4. Update apt sources and install Sublime Text
-sudo apt-get update
-
-# 5. Install Sublime
-sudo apt-get install sublime-text
-
 ```
 
 ---
