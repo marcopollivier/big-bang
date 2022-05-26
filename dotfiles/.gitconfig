@@ -1,0 +1,19 @@
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	clean = git-lfs clean -- %f
+	required = true
+[commit]
+	gpgsign = true
+[user]
+	email = marcopollivier@gmail.com
+	name = Marco Ollivier
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	ui = auto
+[init]
+	defaultBranch = main
+[core]
+	excludesFile = ~/.gitignore.global
