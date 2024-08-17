@@ -21,3 +21,7 @@ To start the script, use the following command. This project is based on Ansible
 
 ```shell
 make osuser=john.doe gitname=john gitemail=john.doe@email-provider.com
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
