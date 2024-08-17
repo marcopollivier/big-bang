@@ -23,7 +23,13 @@ To start the script, use the following command. This project is based on Ansible
 make osuser=john.doe gitname=john gitemail=john.doe@email-provider.com
 ```
 
+## Version manager 
 
-## License
+TBD.
+> probably we'll consider only version manager to Java (with SdkMan) and Node (with NVM).
+> for general purpose we'll consider adsf as version manager
+
+
+# License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
