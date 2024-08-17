@@ -5,9 +5,6 @@
 	required = true
 [commit]
 	gpgsign = true
-[user]
-	email = marcopollivier@gmail.com
-	name = Marco Ollivier
 [color]
 	diff = auto
 	status = auto
@@ -17,3 +14,8 @@
 	defaultBranch = main
 [core]
 	excludesFile = ~/.gitignore.global
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
+[user]
+        name = Marco Ollivier
+        email = marcopollivier@gmail.com
