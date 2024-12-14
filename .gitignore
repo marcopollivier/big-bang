@@ -1,12 +1,6 @@
-
-# Created by https://www.gitignore.io/api/ansible
-
-### Ansible ###
-*.retry
+.wakatime*
 
 .idea/
 .vscode/
-
-# End of https://www.gitignore.io/api/ansible
 
 .DS_Store
