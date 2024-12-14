@@ -1,3 +1,8 @@
+[user]
+        name = Marco Ollivier
+        email = marcopollivier@gmail.com
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
@@ -14,8 +19,3 @@
 	defaultBranch = main
 [core]
 	excludesFile = ~/.gitignore.global
-[url "ssh://git@github.com/"]
-    insteadOf = https://github.com/
-[user]
-        name = Marco Ollivier
-        email = marcopollivier@gmail.com
