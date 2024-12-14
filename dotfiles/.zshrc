@@ -71,11 +71,11 @@ HIST_STAMPS="yyyy-mm-dd"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    # MacOS
-    brew
-
     #Password mgmt
     1password
+
+    # MacOS
+    brew
 
     #Tools
     aliases
@@ -89,6 +89,7 @@ plugins=(
     #Infra
     ansible
     terraform
+    opentofu
     vagrant
     
     #DB
@@ -186,8 +187,9 @@ export PATH="$GO_PATH/bin:$PATH"
 . ~/.asdf/plugins/golang/set-env.zsh
 
 ## Java
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+. ~/.asdf/plugins/java/set-java-home.zsh
+java_macos_integration_enable=yes
+
 
 export M2_HOME="$HOME/dev/tools/apache-maven-3.8.1"
 export PATH="$PATH:$M2_HOME/bin"
