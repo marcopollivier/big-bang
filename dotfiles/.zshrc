@@ -205,3 +205,7 @@ export AWS_SESSION_TOKEN=""
 
 ## Github
 export PERSONAL_GITHUB_TOKEN=""
+
+## GPG
+export GPG_TTY=$(tty)
+gpgconf --kill gpg-agent
