@@ -183,6 +183,24 @@ export GO_PATH="$HOME/go"
 export GOPATH=$GO_PATH
 export PATH="$GO_PATH/bin:$PATH"
 
+## Java
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export M2_HOME="$HOME/dev/tools/apache-maven-3.8.1"
+export PATH="$PATH:$M2_HOME/bin"
+
 ## NodeJS
 export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"
+
+## Go
+. ~/.asdf/plugins/golang/set-env.zsh
+
+## AWS
+export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_SESSION_TOKEN=""
+
+## Github
+export PERSONAL_GITHUB_TOKEN=""
