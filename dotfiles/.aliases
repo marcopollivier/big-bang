@@ -1,8 +1,0 @@
-# Tools alias
-alias lg="lazygit"
-
-alias vscode="code"
-
-alias tf="tofu"
-alias tofy="tofu"
-
