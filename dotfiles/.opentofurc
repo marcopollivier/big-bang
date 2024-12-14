@@ -1,0 +1,6 @@
+provider_installation {
+  network_mirror {
+    url = "ssh://git@github.com/"
+    match = "github.com"
+  }
+}
