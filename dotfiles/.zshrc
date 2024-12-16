@@ -155,6 +155,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias lg="lazygit"
+alias ld="lazydocker"
+alias lnpm="lazynpm"
 alias vscode="code"
 alias python="python3"
 alias tf="tofu"
@@ -178,6 +180,9 @@ setopt SHARE_HISTORY             # Share history between all sessions.
 ## Brew
 export PATH="/opt/homebrew/bin:$PATH"
 eval $(/opt/homebrew/bin/brew shellenv)
+
+## .local bin
+export PATH="$HOME/.local/bin":$PATH
 
 ## Golang 
 export GO_PATH="$HOME/go"
@@ -204,7 +209,7 @@ export AWS_SECRET_ACCESS_KEY=""
 export AWS_SESSION_TOKEN=""
 
 ## Github
-export PERSONAL_GITHUB_TOKEN=""
+export PERSONAL_GITHUB_TOKEN=
 
 ## GPG
 export GPG_TTY=$(tty)
