@@ -1,6 +1,2 @@
-.wakatime*
-
-.idea/
-.vscode/
-
-.DS_Store
+.clj-kondo
+.lsp
