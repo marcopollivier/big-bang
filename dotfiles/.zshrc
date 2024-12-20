@@ -184,24 +184,30 @@ eval $(/opt/homebrew/bin/brew shellenv)
 ## .local bin
 export PATH="$HOME/.local/bin":$PATH
 
-## Golang 
-export GO_PATH="$HOME/go"
-export GOPATH=$GO_PATH
-export PATH="$GO_PATH/bin:$PATH"
+## Clojure
+## -- sem config personalizada -- 
 
+## Golang 
 . ~/.asdf/plugins/golang/set-env.zsh
 
 ## Java
 . ~/.asdf/plugins/java/set-java-home.zsh
 java_macos_integration_enable=yes
 
+### Gradle
+## -- sem config personalizada -- 
 
-export M2_HOME="$HOME/dev/tools/apache-maven-3.8.1"
-export PATH="$PATH:$M2_HOME/bin"
+### Maven
+## -- sem config personalizada -- 
 
 ## NodeJS
-export NVM_DIR="$HOME/.nvm"
-[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"
+## -- sem config personalizada -- 
+
+# !!!!!! DANGEROUS ZONE !!!!!!
+
+## GPG
+export GPG_TTY=$(tty)
+gpgconf --kill gpg-agent
 
 ## AWS
 export AWS_ACCESS_KEY_ID=""
@@ -210,7 +216,3 @@ export AWS_SESSION_TOKEN=""
 
 ## Github
 export PERSONAL_GITHUB_TOKEN=
-
-## GPG
-export GPG_TTY=$(tty)
-gpgconf --kill gpg-agent
