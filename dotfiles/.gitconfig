@@ -1,6 +1,6 @@
 [user]
-    name = Marco Ollivier
-    email = marcopollivier@gmail.com
+    name = 
+    email = 
 	signingKey = 
 [alias]
     clone-token = !sh -c 'git clone https://$GITHUB_TOKEN@github.com/$1.git' -
