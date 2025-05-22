@@ -161,6 +161,8 @@ alias vscode="code"
 alias python="python3"
 alias tf="tofu"
 alias tofy="tofu"
+#Only if is using podman instead of docker
+# alias docker="podman" 
 
 ## History Custom Configuration
 # HISTORY
@@ -189,6 +191,7 @@ export PATH="$HOME/.local/bin":$PATH
 
 ## Golang 
 . ~/.asdf/plugins/golang/set-env.zsh
+export PATH="$HOME/go/bin:$PATH"
 
 ## Java
 . ~/.asdf/plugins/java/set-java-home.zsh
@@ -203,6 +206,17 @@ java_macos_integration_enable=yes
 ## NodeJS
 ## -- sem config personalizada -- 
 
+## Docker, Podman e K8s
+export DOCKER_HOST=
+
+function k8s-p() {
+    kubectl config use-context arn:aws:eks:sa-east-1:732207930936:cluster/cluster-eks-prd && kubectl "$@"
+}
+
+function k8s-h() {
+    kubectl config use-context arn:aws:eks:us-west-2:665053502207:cluster-eks-hml-default && kubectl "$@"
+}
+
 # !!!!!! DANGEROUS ZONE !!!!!!
 
 ## GPG
@@ -215,4 +229,4 @@ export AWS_SECRET_ACCESS_KEY=""
 export AWS_SESSION_TOKEN=""
 
 ## Github
-export PERSONAL_GITHUB_TOKEN=
+export GITHUB_TOKEN=
