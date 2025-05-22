@@ -2,6 +2,8 @@
     name = Marco Ollivier
     email = marcopollivier@gmail.com
 	signingKey = 
+[alias]
+    clone-token = !sh -c 'git clone https://$GITHUB_TOKEN@github.com/$1.git' -
 [url "ssh://git@github.com/"]
     insteadOf = https://github.com/
 [filter "lfs"]
