@@ -13,6 +13,8 @@
 	required = true
 [commit]
 	gpgSign = true
+[tag]
+	forceSignAnnotated = true
 [color]
 	diff = auto
 	status = auto
@@ -22,5 +24,4 @@
 	defaultBranch = main
 [core]
 	excludesFile = ~/.gitignore.global
-[tag]
-	forceSignAnnotated = true
+
