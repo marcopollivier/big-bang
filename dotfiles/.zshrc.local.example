@@ -1,0 +1,15 @@
+# ~/.zshrc.local — config específica da máquina e SEGREDOS.
+# Copie para ~/.zshrc.local e preencha. Este arquivo NÃO é commitado (ver .gitignore).
+# O ~/.zshrc faz: [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+## AWS (credenciais — preferir `aws sso` / perfis quando possível)
+# export AWS_ACCESS_KEY_ID=""
+# export AWS_SECRET_ACCESS_KEY=""
+# export AWS_SESSION_TOKEN=""
+
+## GitHub
+# export GITHUB_TOKEN=""
+
+## Contextos EKS usados por k8s-p / k8s-h (ARNs da sua infra)
+# export EKS_PRD_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-prd>"
+# export EKS_HML_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-hml>"

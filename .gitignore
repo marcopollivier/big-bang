@@ -1,2 +1,6 @@
 .clj-kondo
 .lsp
+
+# Segredos / config local da máquina (nunca commitar)
+.zshrc.local
+*.local

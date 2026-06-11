@@ -97,7 +97,6 @@ plugins=(
     redis-cli
 
     #Dev
-    asdf    
     aws
     git 
     vscode
@@ -133,12 +132,9 @@ source $ZSH/oh-my-zsh.sh
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
+# Editor padrão
+export EDITOR=nvim
+export VISUAL=nvim
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -161,6 +157,12 @@ alias vscode="code"
 alias python="python3"
 alias tf="tofu"
 alias tofy="tofu"
+alias vim="nvim"
+alias vi="nvim"
+alias ls="eza --icons=auto"
+alias ll="eza -lh --git --icons=auto"
+alias la="eza -lah --git --icons=auto"
+alias cat="bat --paging=never"
 #Only if is using podman instead of docker
 # alias docker="podman" 
 
@@ -183,6 +185,12 @@ setopt SHARE_HISTORY             # Share history between all sessions.
 export PATH="/opt/homebrew/bin:$PATH"
 eval $(/opt/homebrew/bin/brew shellenv)
 
+## mise — gerenciador de versões (substitui asdf/nvm/pyenv)
+command -v mise >/dev/null && eval "$(mise activate zsh)"
+
+## fzf — busca fuzzy + keybindings (Ctrl-R, Ctrl-T)
+command -v fzf >/dev/null && source <(fzf --zsh)
+
 ## .local bin
 export PATH="$HOME/.local/bin":$PATH
 
@@ -190,12 +198,10 @@ export PATH="$HOME/.local/bin":$PATH
 ## -- sem config personalizada -- 
 
 ## Golang 
-. ~/.asdf/plugins/golang/set-env.zsh
-export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"   # binários de `go install` (Go gerenciado pelo mise)
 
 ## Java
-. ~/.asdf/plugins/java/set-java-home.zsh
-java_macos_integration_enable=yes
+## JAVA_HOME é provido pelo mise (plugin java)
 
 ### Gradle
 ## -- sem config personalizada -- 
@@ -209,12 +215,13 @@ java_macos_integration_enable=yes
 ## Docker, Podman e K8s
 export DOCKER_HOST=
 
+# Contextos EKS parametrizados — defina EKS_PRD_ARN e EKS_HML_ARN em ~/.zshrc.local
 function k8s-p() {
-    kubectl config use-context arn:aws:eks:sa-east-1:732207930936:cluster/cluster-eks-prd && kubectl "$@"
+    kubectl config use-context "${EKS_PRD_ARN:?defina EKS_PRD_ARN em ~/.zshrc.local}" && kubectl "$@"
 }
 
 function k8s-h() {
-    kubectl config use-context arn:aws:eks:us-west-2:665053502207:cluster-eks-hml-default && kubectl "$@"
+    kubectl config use-context "${EKS_HML_ARN:?defina EKS_HML_ARN em ~/.zshrc.local}" && kubectl "$@"
 }
 
 # !!!!!! DANGEROUS ZONE !!!!!!
@@ -223,10 +230,8 @@ function k8s-h() {
 export GPG_TTY=$(tty)
 gpgconf --kill gpg-agent
 
-## AWS
-export AWS_ACCESS_KEY_ID=""
-export AWS_SECRET_ACCESS_KEY=""
-export AWS_SESSION_TOKEN=""
-
-## Github
-export GITHUB_TOKEN=
+## Segredos e config específica da máquina (NÃO commitado)
+## Defina aqui: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN,
+## GITHUB_TOKEN, EKS_PRD_ARN, EKS_HML_ARN, etc.
+## Referência: ~/.zshrc.local.example
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
