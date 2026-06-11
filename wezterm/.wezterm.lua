@@ -1,42 +1,45 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
 
-return {
-  -- Fonte
-  font = wezterm.font("Hack Nerd Font Mono"),
-  font_size = 15.0,
+local config = wezterm.config_builder()
 
-  -- Aparência
-  color_scheme = "Catppuccin Mocha",
-  window_background_opacity = 0.95,
-  window_decorations = "TITLE | RESIZE",
-  enable_tab_bar = true,
-  hide_tab_bar_if_only_one_tab = false,
-  use_fancy_tab_bar = false,
+-- Fonte
+config.font = wezterm.font("Hack Nerd Font Mono")
+config.font_size = 15.0
 
-  -- Comportamento
-  check_for_updates = false,
-  scrollback_lines = 5000,
+-- Aparência
+config.color_scheme = "Catppuccin Mocha"
+config.window_background_opacity = 0.95
+config.window_decorations = "TITLE | RESIZE"
+config.enable_tab_bar = true
+config.hide_tab_bar_if_only_one_tab = false
+config.use_fancy_tab_bar = false
 
-  -- Atalhos
-  keys = {
-    -- Limpar terminal (como no iTerm)
-    { key = "k", mods = "CMD", action = act.ClearScrollback("ScrollbackAndViewport") },
+-- Comportamento
+config.check_for_updates = false
+config.scrollback_lines = 5000
 
-    -- Splits
-    { key = "Enter", mods = "CMD", action = act.SplitVertical({}) },
-    { key = "Enter", mods = "CMD|SHIFT", action = act.SplitHorizontal({}) },
-    { key = "w", mods = "CMD", action = act.CloseCurrentPane({ confirm = false }) },
+-- Atalhos
+config.keys = {
+  -- Limpar terminal (como no iTerm)
+  { key = "k", mods = "CMD", action = act.ClearScrollback("ScrollbackAndViewport") },
 
-    -- Navegação entre panes
-    { key = "LeftArrow", mods = "CMD", action = act.ActivatePaneDirection("Left") },
-    { key = "RightArrow", mods = "CMD", action = act.ActivatePaneDirection("Right") },
-    { key = "UpArrow", mods = "CMD", action = act.ActivatePaneDirection("Up") },
-    { key = "DownArrow", mods = "CMD", action = act.ActivatePaneDirection("Down") },
+  -- Splits
+  { key = "Enter", mods = "CMD", action = act.SplitVertical({}) },
+  { key = "Enter", mods = "CMD|SHIFT", action = act.SplitHorizontal({}) },
+  { key = "w", mods = "CMD", action = act.CloseCurrentPane({ confirm = false }) },
 
-    -- Aumentar fonte
-    { key = "=", mods = "CMD", action = act.IncreaseFontSize },
-    { key = "+", mods = "CMD", action = act.IncreaseFontSize },
+  -- Navegação entre panes
+  { key = "LeftArrow", mods = "CMD", action = act.ActivatePaneDirection("Left") },
+  { key = "RightArrow", mods = "CMD", action = act.ActivatePaneDirection("Right") },
+  { key = "UpArrow", mods = "CMD", action = act.ActivatePaneDirection("Up") },
+  { key = "DownArrow", mods = "CMD", action = act.ActivatePaneDirection("Down") },
 
-  },
+  -- Tamanho da fonte
+  { key = "=", mods = "CMD", action = act.IncreaseFontSize },
+  { key = "+", mods = "CMD", action = act.IncreaseFontSize },
+  { key = "-", mods = "CMD", action = act.DecreaseFontSize },
+  { key = "0", mods = "CMD", action = act.ResetFontSize },
 }
+
+return config
