@@ -21,27 +21,74 @@ Simple Icons https://simpleicons.org/?q=ubuntu
 
 ## Motivation
 
-The **Big Bang** project aims to simplify the setup of development environments. It provides an easy way to configure and manage your development tools and settings.
+The **Big Bang** project aims to simplify the setup of development environments.
+It is the single source of truth for my machine configuration: dotfiles, editor,
+terminal, prompt and provisioning — so a new machine (or a reinstalled tool) can
+be brought back to a known state quickly.
 
 ## Target Audience
 
-This project is designed for everyone. Whether for personal or professional use, you are welcome to fork and adapt it as needed.
+This project is designed for everyone. Whether for personal or professional use,
+you are welcome to fork and adapt it as needed.
+
+## Repository structure
+
+| Folder | What lives here |
+|---|---|
+| [`dotfiles/`](./dotfiles) | Home dotfiles (`.zshrc`, `.gitconfig`, `.wakatime.cfg`, AWS/Clojure/OpenTofu configs…). Templates with **no secrets** committed. |
+| [`nvim/`](./nvim) | Neovim configured as an IDE for **Go, .NET/C# and Kotlin** (lazy.nvim, LSP via Mason, Claude Code + WakaTime). See its [`SETUP.md`](./nvim/SETUP.md). |
+| [`wezterm/`](./wezterm) | [WezTerm](https://wezfurlong.org/wezterm/) terminal configuration. |
+| [`starship/`](./starship) | [Starship](https://starship.rs/) shell prompt configuration. |
+| [`ansible/`](./ansible) | Provisioning for **Linux** (Ubuntu/Manjaro/Fedora). Entry point is the `Makefile`. |
+| [`defaultdots/`](./defaultdots) | Pristine/original dotfiles, kept as a reset reference. |
+| [`.legacy/`](./.legacy) | Configs of tools no longer used (e.g. Kitty, iTerm), kept for reference. |
+
+Each folder has its own `README.md` explaining the details.
+
+## Tooling / stack
+
+- **Version manager:** [mise](https://mise.jdx.dev/) — manages Go, Java, Kotlin,
+  Node, .NET, Python, etc. (replaced asdf/nvm/pyenv).
+- **Packages (macOS):** [Homebrew](https://brew.sh/).
+- **Shell:** zsh + oh-my-zsh, **Starship** prompt.
+- **Editor:** Neovim (see [`nvim/`](./nvim)).
+- **Day-to-day CLIs:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl,
+  opentofu, ansible.
 
 ## Configuration and Usage
 
-### Running the Script
+### macOS (primary)
 
-To start the script, use the following command. This project is based on Ansible, but a `Makefile` is provided as the entry point for simplicity:
+The environment is assembled manually: install Homebrew + mise, install the
+toolchains/CLIs, and symlink the dotfiles. Each folder's README has the exact
+steps. In short:
 
-```shell
+```sh
+# Homebrew + mise already installed, then:
+ln -sfn "$(pwd)/dotfiles/.zshrc" ~/.zshrc
+ln -sfn "$(pwd)/starship/starship.toml" ~/.config/starship.toml
+ln -sfn "$(pwd)/nvim" ~/.config/nvim
+cp dotfiles/.zshrc.local.example ~/.zshrc.local   # then fill in your secrets
+```
+
+> Ansible support for macOS is **not implemented yet**; the steps above are manual.
+
+### Linux
+
+Provisioning is automated with Ansible. A `Makefile` is the entry point:
+
+```sh
 make osuser=john.doe gitname=john gitemail=john.doe@email-provider.com
 ```
 
-## Version manager
+See [`ansible/`](./ansible) for details and supported distros.
 
-TBD.
-> probably we'll consider only version manager to Java (with SdkMan) and Node (with NVM).
-> for general purpose we'll consider adsf as version manager
+## Secrets
+
+**No credentials are committed.** Machine-specific values and secrets
+(`AWS_*`, `GITHUB_TOKEN`, EKS cluster ARNs, WakaTime API key, …) live in
+`~/.zshrc.local`, which is git-ignored. Use
+[`dotfiles/.zshrc.local.example`](./dotfiles/.zshrc.local.example) as a template.
 
 ## License
 
