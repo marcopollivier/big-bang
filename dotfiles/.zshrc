@@ -8,7 +8,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="bira"
+ZSH_THEME=""   # prompt gerenciado pelo starship (init no fim do arquivo)
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -110,16 +110,14 @@ plugins=(
     gradle
     lein
 
-    #Python
+    #Python (versões via mise)
     pip
     python
-    pyenv
     virtualenv
 
-    #NodeJS
+    #NodeJS (versões via mise)
     node
     npm
-    nvm
     yarn
     )
 
@@ -228,10 +226,13 @@ function k8s-h() {
 
 ## GPG
 export GPG_TTY=$(tty)
-gpgconf --kill gpg-agent
+command -v gpgconf >/dev/null && gpgconf --kill gpg-agent
 
 ## Segredos e config específica da máquina (NÃO commitado)
 ## Defina aqui: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN,
 ## GITHUB_TOKEN, EKS_PRD_ARN, EKS_HML_ARN, etc.
 ## Referência: ~/.zshrc.local.example
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+## Prompt (starship) — substitui o tema do oh-my-zsh. Config: ~/.config/starship.toml
+command -v starship >/dev/null && eval "$(starship init zsh)"
