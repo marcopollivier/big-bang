@@ -27,7 +27,14 @@ brew "awscli"
 brew "kubernetes-cli"  # kubectl
 brew "opentofu"
 brew "ansible"         # ad-hoc only; remove if you don't use it
+brew "podman"          # container engine (Mac: roda via `podman machine`)
 
 # --- Terminal & fonts ---
 cask "wezterm"
 cask "font-hack-nerd-font"
+
+# --- Apps ---
+cask "visual-studio-code"  # instala também o CLI `code` no PATH
+cask "google-drive"        # Google Drive (sync)
+cask "bruno"               # client de API (alternativa a Insomnia/Postman)
+cask "studio-3t"           # GUI de MongoDB (Studio 3T Free/Community)
