@@ -19,14 +19,21 @@ máquina ficam em `~/.zshrc.local` (não versionado).
 
 ## Como instalar (máquina nova)
 
-Faça `~/.zshrc` apontar para o arquivo deste repo (symlink mantém tudo em sync):
+A forma recomendada é o bootstrap do repo (ver [README raiz](../README.md)), que
+symlinka os configs compartilhados e faz o *seed* dos templates com segredo
+(`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **só se não existirem**:
+
+```sh
+just link    # symlinka .zshrc, .gitignore.global, .opentofurc (+ starship, nvim, mise)
+just seed    # copia os templates de identidade/segredo, se faltarem
+# ou, de uma vez:  just bootstrap
+```
+
+Fallback manual (equivalente, sem o `just`):
 
 ```sh
 ln -sfn "$(pwd)/dotfiles/.zshrc" ~/.zshrc
 cp dotfiles/.zshrc.local.example ~/.zshrc.local   # depois preencha os segredos
 ```
 
-Os demais dotfiles podem ser symlinkados para a home da mesma forma, conforme a
-necessidade (ex.: `.gitconfig`, `.wakatime.cfg`).
-
-> Em máquina já configurada, o `~/.zshrc` aqui é symlink para este arquivo — ver o README raiz.
+> Numa máquina já configurada, `~/.zshrc` é symlink para este arquivo.

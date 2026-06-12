@@ -14,6 +14,8 @@ Com o Starship ativo, o tema do oh-my-zsh fica desligado (`ZSH_THEME=""`).
 ## Instalação (máquina nova)
 
 ```sh
-brew install starship
-ln -sfn "$(pwd)/starship/starship.toml" ~/.config/starship.toml
+just brew    # instala o starship (via Brewfile)
+just link    # symlinka ~/.config/starship.toml para esta pasta
+# fallback manual:
+#   brew install starship && ln -sfn "$(pwd)/starship/starship.toml" ~/.config/starship.toml
 ```
