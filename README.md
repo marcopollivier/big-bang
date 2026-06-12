@@ -5,26 +5,19 @@ Badges generator https://badgesgenerator.com/
 Simple Icons https://simpleicons.org/?q=ubuntu
 -->
 
-<!-- Supported -->
 ![macOS](https://img.shields.io/badge/macOS-first-green?labelColor=gray&style=flat&logo=apple&logoColor=white)
-![Linux](https://img.shields.io/badge/linux-allowed-green?labelColor=yellow&style=flat&logo=linux&logoColor=white)
-
-<!-- Not supported yet -->
-<!-- ![Ububtu](https://img.shields.io/badge/ububtu-not%20supported-red?labelColor=E95420&style=flat&logo=ubuntu&logoColor=white) -->
-![Debian](https://img.shields.io/badge/Debian-not%20supported-red?labelColor=A81D33&style=flat&logo=ubuntu&logoColor=white)
-![Arch](https://img.shields.io/badge/Arch-not%20supported-red?labelColor=1793D1&style=flat&logo=archLinux&logoColor=white)
-![Fedora](https://img.shields.io/badge/Fedora-not%20supported-red?labelColor=51A2DA&style=flat&logo=fedora&logoColor=white)
-![OpenSuse](https://img.shields.io/badge/OpenSuse-not%20supported-red?labelColor=73BA25&style=flat&logo=openSuse&logoColor=white)
-![Alpine](https://img.shields.io/badge/Alpine-not%20supported-red?labelColor=0D597F&style=flat&logo=alpineLinux&logoColor=white)
 
 ![Big Bang Cover](https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2018/03/06/o-que-existia-antes-do-big-bang-stephen-hawking-responde.jpg "Big Bang Project Cover")
 
 ## Motivation
 
-The **Big Bang** project aims to simplify the setup of development environments.
-It is the single source of truth for my machine configuration: dotfiles, editor,
-terminal, prompt and provisioning — so a new machine (or a reinstalled tool) can
-be brought back to a known state quickly.
+The **Big Bang** project is my single source of truth for machine configuration:
+dotfiles, editor, terminal and prompt. The goal is **convenience** — when I set
+up a new machine or reinstall a tool, I come here to remember how my environment
+is put together and to copy/symlink the configs back into place.
+
+> This is a curated reference / dotfiles repository, **not** an automated
+> provisioning script. Setup is done manually (and intentionally so).
 
 ## Target Audience
 
@@ -39,9 +32,7 @@ you are welcome to fork and adapt it as needed.
 | [`nvim/`](./nvim) | Neovim configured as an IDE for **Go, .NET/C# and Kotlin** (lazy.nvim, LSP via Mason, Claude Code + WakaTime). See its [`SETUP.md`](./nvim/SETUP.md). |
 | [`wezterm/`](./wezterm) | [WezTerm](https://wezfurlong.org/wezterm/) terminal configuration. |
 | [`starship/`](./starship) | [Starship](https://starship.rs/) shell prompt configuration. |
-| [`ansible/`](./ansible) | Provisioning for **Linux** (Ubuntu/Manjaro/Fedora). Entry point is the `Makefile`. |
 | [`defaultdots/`](./defaultdots) | Pristine/original dotfiles, kept as a reset reference. |
-| [`.legacy/`](./.legacy) | Configs of tools no longer used (e.g. Kitty, iTerm), kept for reference. |
 
 Each folder has its own `README.md` explaining the details.
 
@@ -49,39 +40,23 @@ Each folder has its own `README.md` explaining the details.
 
 - **Version manager:** [mise](https://mise.jdx.dev/) — manages Go, Java, Kotlin,
   Node, .NET, Python, etc. (replaced asdf/nvm/pyenv).
-- **Packages (macOS):** [Homebrew](https://brew.sh/).
+- **Packages:** [Homebrew](https://brew.sh/).
 - **Shell:** zsh + oh-my-zsh, **Starship** prompt.
 - **Editor:** Neovim (see [`nvim/`](./nvim)).
-- **Day-to-day CLIs:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl,
-  opentofu, ansible.
+- **Day-to-day CLIs:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, opentofu.
 
-## Configuration and Usage
+## Setup (new machine)
 
-### macOS (primary)
-
-The environment is assembled manually: install Homebrew + mise, install the
-toolchains/CLIs, and symlink the dotfiles. Each folder's README has the exact
-steps. In short:
+Install Homebrew + mise, install the toolchains/CLIs, then symlink the configs.
+Each folder's README has the exact steps. In short:
 
 ```sh
-# Homebrew + mise already installed, then:
+# With Homebrew + mise already installed:
 ln -sfn "$(pwd)/dotfiles/.zshrc" ~/.zshrc
 ln -sfn "$(pwd)/starship/starship.toml" ~/.config/starship.toml
 ln -sfn "$(pwd)/nvim" ~/.config/nvim
 cp dotfiles/.zshrc.local.example ~/.zshrc.local   # then fill in your secrets
 ```
-
-> Ansible support for macOS is **not implemented yet**; the steps above are manual.
-
-### Linux
-
-Provisioning is automated with Ansible. A `Makefile` is the entry point:
-
-```sh
-make osuser=john.doe gitname=john gitemail=john.doe@email-provider.com
-```
-
-See [`ansible/`](./ansible) for details and supported distros.
 
 ## Secrets
 

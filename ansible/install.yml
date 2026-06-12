@@ -1,9 +1,0 @@
-- hosts: localhost
-  vars_files:
-    - "./vars/commons.yml"
-  # become: true
-  # become_method: sudo
-  # become_user:
-  # gather_facts: yes
-  roles:
-      - { role: "environment" }
