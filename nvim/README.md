@@ -9,8 +9,8 @@ Pré-requisitos: Neovim ≥ 0.11, `git`, `ripgrep`, `fd`, um compilador C (Xcode
 e os toolchains via **mise** (`go`, `java`, `kotlin`, `node`, `dotnet`). Passo a passo em `SETUP.md`.
 
 ```sh
-# A partir da raiz do big-bang, aponte ~/.config/nvim para esta pasta:
-ln -sfn "$(pwd)/nvim" ~/.config/nvim
+just link    # symlinka ~/.config/nvim para esta pasta (entre os demais configs)
+# fallback manual:  ln -sfn "$(pwd)/nvim" ~/.config/nvim
 ```
 
 No primeiro `nvim`, o **lazy.nvim** instala os plugins e o **Mason** instala os
