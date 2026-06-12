@@ -31,3 +31,6 @@ brew "ansible"         # ad-hoc only; remove if you don't use it
 # --- Terminal & fonts ---
 cask "wezterm"
 cask "font-hack-nerd-font"
+
+# --- Apps ---
+cask "visual-studio-code"  # instala também o CLI `code` no PATH
