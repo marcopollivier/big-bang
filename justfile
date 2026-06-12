@@ -21,6 +21,8 @@ brew:
 
 # Install the toolchains pinned in mise/config.toml
 mise-install:
+    # Trust the repo config so entering the repo dir doesn't error on an untrusted file
+    mise trust "{{ repo }}/mise/config.toml"
     mise install
 
 # Symlink shared, secret-free configs into place (idempotent; backs up real files)
