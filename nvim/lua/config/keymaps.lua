@@ -26,8 +26,12 @@ map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 
 -- Diagnósticos rápidos
-map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Diagnóstico anterior" })
-map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Próximo diagnóstico" })
+map("n", "[d", function()
+  vim.diagnostic.jump({ count = -1 })
+end, { desc = "Diagnóstico anterior" })
+map("n", "]d", function()
+  vim.diagnostic.jump({ count = 1 })
+end, { desc = "Próximo diagnóstico" })
 map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Mostrar diagnóstico da linha" })
 map("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Lista de diagnósticos" })
 

@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate zsh syntax
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y zsh
+          zsh -n dotfiles/.zshrc
+          zsh -n defaultdots/.zshrc
+
+      - name: Check Lua formatting (stylua)
+        uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check nvim/
+
+      - name: Set up just
+        uses: extractions/setup-just@v2
+
+      - name: Validate justfile
+        run: just --summary
+
+  secrets:
+    name: Secret scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

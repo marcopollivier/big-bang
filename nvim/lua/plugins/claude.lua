@@ -10,8 +10,22 @@ return {
     },
     keys = {
       -- Terminal embutido de uso geral
-      { "<C-/>", function() Snacks.terminal() end, desc = "Terminal", mode = { "n", "t" } },
-      { "<C-_>", function() Snacks.terminal() end, desc = "Terminal (compat)", mode = { "n", "t" } },
+      {
+        "<C-/>",
+        function()
+          Snacks.terminal()
+        end,
+        desc = "Terminal",
+        mode = { "n", "t" },
+      },
+      {
+        "<C-_>",
+        function()
+          Snacks.terminal()
+        end,
+        desc = "Terminal (compat)",
+        mode = { "n", "t" },
+      },
     },
   },
 

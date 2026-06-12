@@ -1,0 +1,13 @@
+# Global mise config — toolchains installed on every machine.
+# Linked to ~/.config/mise/config.toml by `just link`.
+# Install/update the toolchains with:  mise install   (or: just mise-install)
+#
+# Tip: swap "latest"/"lts" for exact versions (e.g. go = "1.26.4") if you want
+# fully reproducible toolchains instead of floating ones.
+
+[tools]
+go = "latest"
+java = "temurin-21"
+kotlin = { version = "latest", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
+node = "lts"
+dotnet = "latest"
