@@ -4,3 +4,6 @@
 # Segredos / config local da máquina (nunca commitar)
 .zshrc.local
 *.local
+
+# Claude Code — overrides pessoais (settings.json compartilhado é versionado)
+.claude/settings.local.json
