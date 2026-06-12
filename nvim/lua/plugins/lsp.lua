@@ -7,10 +7,10 @@ return {
     opts = {
       ensure_installed = {
         -- Language servers
-        "gopls",                    -- Go
-        "omnisharp",                -- C# / .NET
-        "kotlin-language-server",   -- Kotlin
-        "lua-language-server",      -- Lua (para editar esta própria config)
+        "gopls", -- Go
+        "omnisharp", -- C# / .NET
+        "kotlin-language-server", -- Kotlin
+        "lua-language-server", -- Lua (para editar esta própria config)
         -- Formatadores
         "gofumpt",
         "goimports",
@@ -18,9 +18,9 @@ return {
         "ktlint",
         "stylua",
         -- Debug
-        "delve",                    -- debugger do Go
-        "netcoredbg",               -- debugger do .NET / C#
-        "kotlin-debug-adapter",     -- debugger do Kotlin
+        "delve", -- debugger do Go
+        "netcoredbg", -- debugger do .NET / C#
+        "kotlin-debug-adapter", -- debugger do Kotlin
       },
     },
   },
