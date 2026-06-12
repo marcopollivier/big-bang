@@ -64,7 +64,7 @@ config.keys = {
   -- Limpar terminal (como no iTerm)
   { key = "k", mods = "CMD", action = act.ClearScrollback("ScrollbackAndViewport") },
 
-  -- Splits
+  -- Splits:  CMD+Enter = pane novo EMBAIXO (em cima/baixo) · CMD+Shift+Enter = pane novo À DIREITA (lado a lado)
   { key = "Enter", mods = "CMD", action = act.SplitVertical({}) },
   { key = "Enter", mods = "CMD|SHIFT", action = act.SplitHorizontal({}) },
   { key = "w", mods = "CMD", action = act.CloseCurrentPane({ confirm = false }) },
