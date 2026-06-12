@@ -1,3 +1,17 @@
+# Tema: Tokyo Night (night) — alinhado com nvim (tokyonight) e wezterm.
+# Sobrescreve os nomes ANSI (blue/green/yellow/red) usados nos módulos abaixo
+# pelos hex exatos do Tokyo Night, então o prompt fica idêntico em qualquer terminal.
+palette = "tokyonight"
+
+[palettes.tokyonight]
+blue = "#7aa2f7"
+cyan = "#7dcfff"
+green = "#9ece6a"
+yellow = "#e0af68"
+orange = "#ff9e64"
+red = "#f7768e"
+purple = "#bb9af7"
+
 [aws]
 disabled = true
 symbol = "  "
@@ -177,7 +191,7 @@ Void = " "
 Windows = "󰍲 "
 
 [package]
-format = 'via [󰏗 $version](208 bold) '
+format = 'via [󰏗 $version](orange bold) '
 
 [perl]
 symbol = " "

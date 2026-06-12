@@ -14,7 +14,7 @@ config.adjust_window_size_when_changing_font_size = false
 -- ===========================================================================
 -- Aparência
 -- ===========================================================================
-config.color_scheme = "Catppuccin Mocha"
+config.color_scheme = "Tokyo Night"
 config.window_background_opacity = 0.95
 -- Desfoca o que está atrás da janela transparente (fica bem melhor no macOS).
 config.macos_window_background_blur = 20
