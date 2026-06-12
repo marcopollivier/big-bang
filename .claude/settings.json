@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(just:*)",
+      "Bash(brew bundle:*)",
+      "Bash(brew install:*)",
+      "Bash(brew list:*)",
+      "Bash(mise:*)",
+      "Bash(stylua:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ]
+  }
+}

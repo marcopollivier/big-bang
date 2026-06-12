@@ -28,5 +28,6 @@ brew "kubernetes-cli"  # kubectl
 brew "opentofu"
 brew "ansible"         # ad-hoc only; remove if you don't use it
 
-# --- Fonts (used by WezTerm) ---
+# --- Terminal & fonts ---
+cask "wezterm"
 cask "font-hack-nerd-font"

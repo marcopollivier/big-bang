@@ -22,10 +22,11 @@ O WezTerm procura a configuração, nesta ordem:
 2. `~/.wezterm.lua`
 3. `~/.config/wezterm/wezterm.lua`
 
-Para usar o arquivo deste repositório, crie um symlink para um desses caminhos. Exemplo:
+A forma recomendada é o `just link` (na raiz do repo), que symlinka este arquivo
+para `~/.config/wezterm/wezterm.lua`. Manualmente:
 
 ```bash
-ln -sf "$PWD/wezterm/.wezterm.lua" ~/.wezterm.lua
+ln -sfn "$PWD/wezterm/.wezterm.lua" ~/.config/wezterm/wezterm.lua
 ```
 
 > Depois de editar a config, é só salvar — o WezTerm recarrega automaticamente.
@@ -86,8 +87,8 @@ ln -sf "$PWD/wezterm/.wezterm.lua" ~/.wezterm.lua
 ### Panes (divisões da tela)
 | Atalho | Ação |
 |---|---|
-| `CMD + Enter` | Divide na vertical (novo pane ao lado) |
-| `CMD + Shift + Enter` | Divide na horizontal (novo pane abaixo) |
+| `CMD + Enter` | Split em cima/embaixo (`SplitVertical` — novo pane **abaixo**) |
+| `CMD + Shift + Enter` | Split lado a lado (`SplitHorizontal` — novo pane **à direita**) |
 | `CMD + W` | Fecha o pane atual |
 | `CMD + setas` | Move o foco entre panes |
 | `CMD + Ctrl + setas` | Redimensiona o pane atual |
