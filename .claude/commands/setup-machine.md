@@ -9,7 +9,7 @@ Resumo do fluxo (a skill tem o detalhe):
 
 1. Garanta Homebrew e `just` (`brew install just`); instale o Homebrew se faltar.
 2. `just bootstrap` — instala o `@Brewfile`, symlinka os configs (com backup),
-   roda `mise install` e faz o *seed* dos templates.
+   confia e instala as toolchains do `mise` (`mise trust` + `mise install`) e faz o *seed* dos templates.
 3. Identidade/segredos: git `user.name/email/signingkey`; `~/.zshrc.local`
    (ver `@dotfiles/.zshrc.local.example`); WakaTime via `:WakaTimeApiKey` no nvim.
 4. `gh auth login` é interativo — peça ao usuário rodar `! gh auth login --git-protocol ssh --web`.

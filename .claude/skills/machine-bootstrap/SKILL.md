@@ -23,6 +23,9 @@ nova pronta com o mínimo de esforço, sem expor segredos.
 
 2. **Bootstrap** (na raiz do repo)
    - `just bootstrap` = `brew` (instala o Brewfile) → `link` → `mise-install` → `seed`.
+   - `mise-install` já roda `mise trust` no `mise/config.toml` do repo, então entrar na
+     pasta não dispara o erro de config não confiada. Se mesmo assim aparecer
+     `Config files ... are not trusted`, rode `mise trust mise/config.toml`.
    - Se algo falhar, rode as recipes individuais (`just brew`, `just link`, etc.) e investigue.
 
 3. **Identidade e segredos** (peça ao usuário; não preencha sozinho)
