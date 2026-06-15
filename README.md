@@ -80,6 +80,7 @@ just link       # re-apply symlinks
 just brew       # install/upgrade Brewfile packages
 just brew-dump  # update the Brewfile from what's installed
 just doctor     # check tools + symlinks
+just ruflo      # install the ruflo Claude Code plugin (needs the `claude` CLI)
 ```
 
 ## Secrets
