@@ -9,150 +9,153 @@ Simple Icons https://simpleicons.org/?q=ubuntu
 
 ![Big Bang Cover](https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2018/03/06/o-que-existia-antes-do-big-bang-stephen-hawking-responde.jpg "Big Bang Project Cover")
 
-## Motivation
+> 🌐 **🇧🇷 Português** · [🇺🇸 English](./README-en.md)
 
-The **Big Bang** project is my single source of truth for machine configuration:
-dotfiles, editor, terminal and prompt. The goal is **convenience** — when I set
-up a new machine or reinstall a tool, I come here to remember how my environment
-is put together and to put the configs back into place.
+## Motivação
 
-> A curated reference / dotfiles repository. Setup is scripted with
-> [`just`](https://github.com/casey/just) (no heavy provisioning framework).
+O projeto **Big Bang** é a minha fonte única de verdade para a configuração da
+máquina: dotfiles, editor, terminal e prompt. O objetivo é **conveniência** —
+quando configuro uma máquina nova ou reinstalo uma ferramenta, venho aqui pra
+lembrar como o meu ambiente está montado e colocar os configs de volta no lugar.
 
-## Target Audience
+> Um repositório de referência / dotfiles curado. O setup é roteirizado com
+> [`just`](https://github.com/casey/just) (sem framework pesado de provisionamento).
 
-This project is designed for everyone. Whether for personal or professional use,
-you are welcome to fork and adapt it as needed.
+## Público-alvo
 
-## Repository structure
+Este projeto foi pensado pra todo mundo. Seja pra uso pessoal ou profissional,
+fique à vontade pra fazer um fork e adaptar como precisar.
 
-| Folder | What lives here |
+## Estrutura do repositório
+
+| Pasta | O que vive aqui |
 |---|---|
-| [`dotfiles/`](./dotfiles) | Home dotfiles (`.zshrc`, `.gitconfig`, `.wakatime.cfg`, AWS/Clojure/OpenTofu configs…). Templates with **no secrets** committed. |
-| [`nvim/`](./nvim) | Neovim as an IDE for **Go, .NET/C# and Kotlin** (lazy.nvim, LSP via Mason, Claude Code + WakaTime). See its [`SETUP.md`](./nvim/SETUP.md). |
-| [`wezterm/`](./wezterm) | [WezTerm](https://wezfurlong.org/wezterm/) terminal configuration. |
-| [`starship/`](./starship) | [Starship](https://starship.rs/) shell prompt configuration. |
-| [`mise/`](./mise) | Global [mise](https://mise.jdx.dev/) config — toolchain versions. |
-| [`defaultdots/`](./defaultdots) | Pristine/original dotfiles, kept as a reset reference. |
+| [`dotfiles/`](./dotfiles) | Dotfiles da home (`.zshrc`, `.gitconfig`, `.wakatime.cfg`, configs de AWS/Clojure/OpenTofu…). Templates **sem segredos** versionados. |
+| [`nvim/`](./nvim) | Neovim como IDE para **Go, .NET/C# e Kotlin** (lazy.nvim, LSP via Mason, Claude Code + WakaTime). Veja o [`SETUP.md`](./nvim/SETUP.md). |
+| [`wezterm/`](./wezterm) | Configuração do terminal [WezTerm](https://wezfurlong.org/wezterm/). |
+| [`starship/`](./starship) | Configuração do prompt [Starship](https://starship.rs/). |
+| [`mise/`](./mise) | Config global do [mise](https://mise.jdx.dev/) — versões dos toolchains. |
+| [`defaultdots/`](./defaultdots) | Dotfiles originais/de fábrica, mantidos como referência de reset. |
 
-Each folder has its own `README.md`. Root files worth knowing:
+Cada pasta tem o seu próprio `README.md`. Arquivos da raiz que vale conhecer:
 
-- [`justfile`](./justfile) — bootstrap & maintenance commands (`just`).
-- [`Brewfile`](./Brewfile) — Homebrew packages (`brew bundle`).
-- [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) — local quality/secret hooks.
-- [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — CI (lint, syntax, secret scan).
+- [`justfile`](./justfile) — comandos de bootstrap e manutenção (`just`).
+- [`Brewfile`](./Brewfile) — pacotes do Homebrew (`brew bundle`).
+- [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) — hooks locais de qualidade/segredos.
+- [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — CI (lint, sintaxe, scan de segredos).
 
-## Tooling / stack
+## Ferramentas / stack
 
-- **Version manager:** [mise](https://mise.jdx.dev/) — Go, Java, Kotlin, Node,
-  .NET, Python… (replaced asdf/nvm/pyenv).
-- **Packages:** [Homebrew](https://brew.sh/) (see [`Brewfile`](./Brewfile)).
-- **Shell:** zsh + oh-my-zsh, **Starship** prompt.
-- **Editor:** Neovim (see [`nvim/`](./nvim)).
-- **Day-to-day CLIs:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, opentofu.
+- **Gerenciador de versões:** [mise](https://mise.jdx.dev/) — Go, Java, Kotlin,
+  Node, .NET, Python… (substituiu asdf/nvm/pyenv).
+- **Pacotes:** [Homebrew](https://brew.sh/) (veja o [`Brewfile`](./Brewfile)).
+- **Shell:** zsh + oh-my-zsh, prompt **Starship**.
+- **Editor:** Neovim (veja [`nvim/`](./nvim)).
+- **CLIs do dia a dia:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, opentofu.
 
-## Setup (new machine)
+## Setup (máquina nova)
 
-1. Install [Homebrew](https://brew.sh/), then `just`:
+1. Instale o [Homebrew](https://brew.sh/) e, em seguida, o `just`:
    ```sh
    brew install just
    ```
-2. Clone the repo and bootstrap:
+2. Clone o repo e rode o bootstrap:
    ```sh
    git clone git@github.com:marcopollivier/big-bang.git && cd big-bang
    just bootstrap
    ```
 
-`just bootstrap` is **idempotent** and runs:
+O `just bootstrap` é **idempotente** e executa:
 
-- `just brew` — install everything in the [`Brewfile`](./Brewfile)
-- `just link` — symlink the shared configs (zsh, starship, nvim, mise…); existing real files are backed up first
-- `just mise-install` — install the toolchains from [`mise/config.toml`](./mise/config.toml)
-- `just seed` — copy secret/identity templates (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **only if missing**
+- `just brew` — instala tudo que está no [`Brewfile`](./Brewfile)
+- `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise…); arquivos reais existentes têm backup feito antes
+- `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
+- `just seed` — copia os templates de segredo/identidade (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **só se não existirem**
 
-Then fill in your identity/keys: git name/email, WakaTime key, and the secrets in `~/.zshrc.local`.
+Depois, preencha sua identidade/chaves: nome/e-mail do git, chave do WakaTime e os segredos em `~/.zshrc.local`.
 
-### Maintenance
+### Manutenção
 
 ```sh
-just            # list all recipes
-just link       # re-apply symlinks
-just brew       # install/upgrade Brewfile packages
-just brew-dump  # update the Brewfile from what's installed
-just doctor     # check tools + symlinks
-just ruflo      # install the ruflo Claude Code plugin (needs the `claude` CLI)
+just            # lista todas as recipes
+just link       # reaplica os symlinks
+just brew       # instala/atualiza os pacotes do Brewfile
+just brew-dump  # atualiza o Brewfile a partir do que está instalado
+just doctor     # checa ferramentas + symlinks
+just ruflo      # instala o plugin ruflo do Claude Code (precisa da CLI `claude`)
 ```
 
-## How the symlinks work
+## Como funcionam os symlinks
 
-The configs in this repo are **not copied** to your home directory — they are
-**symlinked**. A symlink is a pointer: the file in your home (e.g. `~/.zshrc`)
-is just a shortcut to the real file inside the repo
-(`big-bang/dotfiles/.zshrc`). There is only **one** real file.
+Os configs deste repo **não são copiados** para a sua home — eles são
+**symlinkados**. Um symlink é um ponteiro: o arquivo na sua home (ex.: `~/.zshrc`)
+é só um atalho para o arquivo real dentro do repo
+(`big-bang/dotfiles/.zshrc`). Existe apenas **um** arquivo real.
 
 ```
-~/.zshrc  ──▶  ~/dev/mpo/big-bang/dotfiles/.zshrc   (the real file, versioned)
+~/.zshrc  ──▶  ~/dev/mpo/big-bang/dotfiles/.zshrc   (o arquivo real, versionado)
 ```
 
-`just link` creates these links (see [`justfile`](./justfile)). It is
-**idempotent** — already-correct links are left untouched, and if a *real*
-file is already in place it is backed up to `<file>.bak.<timestamp>` before the
-link replaces it, so nothing is ever lost.
+O `just link` cria esses links (veja o [`justfile`](./justfile)). Ele é
+**idempotente** — links já corretos são deixados intactos e, se um arquivo
+*real* já estiver no lugar, é feito um backup em `<arquivo>.bak.<timestamp>`
+antes de o link substituí-lo, então nada nunca é perdido.
 
-### It's automatic
+### É automático
 
-Because home and repo point to the same file, **editing on either side updates
-both at once** — there is no sync step:
+Como a home e o repo apontam para o mesmo arquivo, **editar de qualquer um dos
+lados atualiza os dois de uma vez** — não existe passo de sincronização:
 
-- Edit `~/.config/nvim/init.lua` → the repo sees the change, ready to commit.
-- `git pull` a change from another machine → it's already live in your home.
+- Edite `~/.config/nvim/init.lua` → o repo já enxerga a mudança, pronta pra commitar.
+- `git pull` de uma mudança feita em outra máquina → ela já está valendo na sua home.
 
-To re-apply or repair the links after adding a new config, just run `just link`
-again.
+Pra reaplicar ou consertar os links depois de adicionar um config novo, é só
+rodar `just link` de novo.
 
-### How it stays safe (no secret leaks)
+### Como ele se mantém seguro (sem vazar segredos)
 
-The trick is that **only secret-free files are symlinked and committed**.
-Anything that carries identity or credentials is handled differently:
+O truque é que **só arquivos sem segredo são symlinkados e versionados**.
+Tudo que carrega identidade ou credenciais é tratado de outro jeito:
 
-| Kind of file | Strategy | Committed? | Examples |
+| Tipo de arquivo | Estratégia | Versionado? | Exemplos |
 |---|---|---|---|
-| Shared, **secret-free** config | **symlink** (`just link`) | ✅ yes | `.zshrc`, `starship.toml`, `nvim/`, `mise/config.toml` |
-| Identity / secret-bearing | **seed** — copied **only if missing** (`just seed`), never overwritten | ❌ no | `.gitconfig`, `.wakatime.cfg` |
-| Pure secrets / machine-specific | kept in a **git-ignored** file you fill in by hand | ❌ no | `~/.zshrc.local` |
+| Config compartilhado, **sem segredo** | **symlink** (`just link`) | ✅ sim | `.zshrc`, `starship.toml`, `nvim/`, `mise/config.toml` |
+| Com identidade / segredo | **seed** — copiado **só se faltar** (`just seed`), nunca sobrescreve | ❌ não | `.gitconfig`, `.wakatime.cfg` |
+| Puramente segredos / específico da máquina | mantido num arquivo **git-ignored** que você preenche à mão | ❌ não | `~/.zshrc.local` |
 
-So the layered protection is:
+Então a proteção em camadas é:
 
-1. **No secrets in the symlinked templates.** Committed configs read their
-   secrets from the environment (e.g. `~/.zshrc` does
-   `[ -f ~/.zshrc.local ] && source ~/.zshrc.local`) instead of hard-coding them.
-2. **`just seed` never clobbers.** Files that hold identity are *copied* once and
-   then ignored — your real `~/.gitconfig` is never linked back into the repo,
-   so it can't be committed by accident.
-3. **`~/.zshrc.local` is git-ignored** and never leaves your machine. Start from
-   [`dotfiles/.zshrc.local.example`](./dotfiles/.zshrc.local.example).
-4. **Defense in depth:** [gitleaks](./.github/workflows/ci.yml) runs in CI and
-   the [pre-commit hooks](./.pre-commit-config.yaml) scan for secrets, so an
-   accidental credential is blocked before it can be pushed.
+1. **Nenhum segredo nos templates symlinkados.** Os configs versionados leem os
+   segredos do ambiente (ex.: o `~/.zshrc` faz
+   `[ -f ~/.zshrc.local ] && source ~/.zshrc.local`) em vez de fixá-los no código.
+2. **O `just seed` nunca sobrescreve.** Arquivos que guardam identidade são
+   *copiados* uma vez e depois ignorados — o seu `~/.gitconfig` real nunca é
+   linkado de volta pro repo, então não tem como ser commitado por acidente.
+3. **O `~/.zshrc.local` é git-ignored** e nunca sai da sua máquina. Comece a
+   partir do [`dotfiles/.zshrc.local.example`](./dotfiles/.zshrc.local.example).
+4. **Defesa em profundidade:** o [gitleaks](./.github/workflows/ci.yml) roda no
+   CI e os [hooks de pre-commit](./.pre-commit-config.yaml) varrem por segredos,
+   então uma credencial vazada por acidente é barrada antes de ir pro push.
 
-**Rule of thumb:** if a file contains a secret, it must *not* be symlinked — put
-the secret in `~/.zshrc.local` and reference it from a committed template.
+**Regra de bolso:** se um arquivo contém um segredo, ele *não* pode ser
+symlinkado — coloque o segredo em `~/.zshrc.local` e referencie a partir de um
+template versionado.
 
-## Secrets
+## Segredos
 
-**No credentials are committed.** Machine-specific values and secrets
-(`AWS_*`, `GITHUB_TOKEN`, EKS cluster ARNs, WakaTime API key, …) live in
-`~/.zshrc.local`, which is git-ignored. Use
-[`dotfiles/.zshrc.local.example`](./dotfiles/.zshrc.local.example) as a template.
+**Nenhuma credencial é versionada.** Valores específicos da máquina e segredos
+(`AWS_*`, `GITHUB_TOKEN`, ARNs dos clusters EKS, chave de API do WakaTime, …)
+ficam em `~/.zshrc.local`, que é git-ignored. Use o
+[`dotfiles/.zshrc.local.example`](./dotfiles/.zshrc.local.example) como template.
 
-## Quality
+## Qualidade
 
-- **CI** ([`ci.yml`](./.github/workflows/ci.yml)): zsh syntax, Lua formatting
-  (stylua), justfile validation, and secret scanning (gitleaks) on every push/PR.
-- **Local hooks** ([`.pre-commit-config.yaml`](./.pre-commit-config.yaml)):
+- **CI** ([`ci.yml`](./.github/workflows/ci.yml)): sintaxe do zsh, formatação Lua
+  (stylua), validação do justfile e scan de segredos (gitleaks) em todo push/PR.
+- **Hooks locais** ([`.pre-commit-config.yaml`](./.pre-commit-config.yaml)):
   `brew install pre-commit && pre-commit install`.
-- **Formatting:** [`.editorconfig`](./.editorconfig) + [`.stylua.toml`](./.stylua.toml).
+- **Formatação:** [`.editorconfig`](./.editorconfig) + [`.stylua.toml`](./.stylua.toml).
 
-## License
+## Licença
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+Este projeto é licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
