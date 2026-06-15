@@ -11,7 +11,7 @@ default:
     @just --list
 
 # Full setup on a new machine (idempotent)
-bootstrap: brew link mise-install seed
+bootstrap: brew link mise-install seed podman-machine
     @echo ""
     @echo "✅ Bootstrap complete. Open a new terminal (or run: exec zsh)."
 
@@ -24,6 +24,19 @@ mise-install:
     # Trust the repo config so entering the repo dir doesn't error on an untrusted file
     mise trust "{{ repo }}/mise/config.toml"
     mise install
+
+# Init + start the podman VM (macOS needs a Linux VM to run containers; idempotent)
+podman-machine:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if ! podman machine inspect podman-machine-default &>/dev/null; then
+      echo "→ creating podman machine"; podman machine init
+    fi
+    if [[ "$(podman machine inspect podman-machine-default --format '{{{{.State}}' 2>/dev/null)" != "running" ]]; then
+      echo "→ starting podman machine"; podman machine start
+    else
+      echo "ok     podman machine already running"
+    fi
 
 # Symlink shared, secret-free configs into place (idempotent; backs up real files)
 link:
@@ -53,9 +66,11 @@ doctor:
     #!/usr/bin/env bash
     set -uo pipefail
     echo "## tools"
-    for t in brew mise nvim starship fzf git just; do
+    for t in brew mise nvim starship fzf git just podman; do
       printf "  %-10s %s\n" "$t" "$(command -v "$t" || echo MISSING)"
     done
+    echo "## podman"
+    printf "  machine    %s\n" "$(podman machine inspect podman-machine-default --format '{{{{.State}}' 2>/dev/null || echo 'NOT INITIALIZED (run: just podman-machine)')"
     echo "## symlinks"
     for f in "{{ home }}/.zshrc" "{{ home }}/.config/starship.toml" "{{ home }}/.config/nvim" "{{ home }}/.config/mise/config.toml"; do
       if [[ -L "$f" ]]; then echo "  ok   $f -> $(readlink "$f")"; else echo "  NOT A SYMLINK: $f"; fi
