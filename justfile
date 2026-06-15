@@ -65,6 +65,14 @@ doctor:
 pr:
     gh pr create --web --fill
 
+# Standalone (not in `bootstrap`): depends on the `claude` CLI, which this repo
+# doesn't manage. Idempotent; user scope, so it applies to every project.
+# Install the ruflo Claude Code plugin — multi-agent orchestration (slash commands)
+ruflo:
+    claude plugin marketplace add ruvnet/ruflo
+    claude plugin install ruflo-core@ruflo --scope user
+    @echo "→ ruflo-core installed (user scope). New skills/agents load next Claude Code session."
+
 # --- internal helpers (hidden from --list) ---
 
 # Symlink src -> dst, backing up an existing real file
