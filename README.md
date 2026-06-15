@@ -9,6 +9,8 @@ Simple Icons https://simpleicons.org/?q=ubuntu
 
 ![Big Bang Cover](https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2018/03/06/o-que-existia-antes-do-big-bang-stephen-hawking-responde.jpg "Big Bang Project Cover")
 
+> 🌐 **🇧🇷 Português** · [🇺🇸 English](./README-en.md)
+
 ## Motivação
 
 O projeto **Big Bang** é a minha fonte única de verdade para a configuração da
