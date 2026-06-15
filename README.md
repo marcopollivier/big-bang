@@ -71,8 +71,29 @@ O `just bootstrap` é **idempotente** e executa:
 - `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise…); arquivos reais existentes têm backup feito antes
 - `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
 - `just seed` — copia os templates de segredo/identidade (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **só se não existirem**
+- `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
 
 Depois, preencha sua identidade/chaves: nome/e-mail do git, chave do WakaTime e os segredos em `~/.zshrc.local`.
+
+### Podman atrás de proxy corporativo (Zscaler)
+
+Em máquina gerenciada com **Zscaler** (inspeção de TLS), o `podman pull` falha com
+`x509: certificate signed by unknown authority` — a VM não confia no CA do Zscaler.
+O fix é injetar o root CA (que já está no keychain do macOS) na trust store da VM:
+
+```sh
+# exporta o root CA do Zscaler do System keychain
+security find-certificate -a -c "Zscaler Root CA" -p /Library/Keychains/System.keychain > /tmp/zscaler-root-ca.crt
+
+# copia para dentro da VM e atualiza a trust store
+podman machine ssh 'cat > /tmp/zscaler-root-ca.crt' < /tmp/zscaler-root-ca.crt
+podman machine ssh 'sudo cp /tmp/zscaler-root-ca.crt /etc/pki/ca-trust/source/anchors/ && sudo update-ca-trust'
+```
+
+> ⚠️ É **efêmero**: se a VM for recriada (`podman machine rm` + `init`), repita o passo.
+
+Para usar ferramentas que falam com o socket padrão do Docker (testcontainers, etc.),
+instale o helper uma vez: `sudo $(brew --prefix)/bin/podman-mac-helper install && podman machine stop && podman machine start`.
 
 ### Manutenção
 
