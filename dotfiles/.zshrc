@@ -183,6 +183,22 @@ setopt SHARE_HISTORY             # Share history between all sessions.
 export PATH="/opt/homebrew/bin:$PATH"
 eval $(/opt/homebrew/bin/brew shellenv)
 
+## Auto-update do Homebrew — no máx. 1x/dia, em background (não trava o prompt).
+## Só fórmulas: cask em Mac gerenciado pede sudo e travaria em background.
+## Log: ~/.cache/brew-autoupdate.log
+_brew_autoupdate() {
+    local stamp="${XDG_CACHE_HOME:-$HOME/.cache}/brew-autoupdate.stamp"
+    local log="${XDG_CACHE_HOME:-$HOME/.cache}/brew-autoupdate.log"
+    mkdir -p "${stamp:h}"
+    if [[ -f "$stamp" ]]; then
+        local last=$(stat -f %m "$stamp" 2>/dev/null || echo 0)
+        (( $(date +%s) - last < 86400 )) && return   # rodou há menos de 24h
+    fi
+    touch "$stamp"   # marca o slot já, pra abas paralelas não dispararem juntas
+    ( brew update && brew upgrade --formula && brew cleanup ) >"$log" 2>&1 &!
+}
+command -v brew >/dev/null && _brew_autoupdate
+
 ## mise — gerenciador de versões (substitui asdf/nvm/pyenv)
 command -v mise >/dev/null && eval "$(mise activate zsh)"
 
