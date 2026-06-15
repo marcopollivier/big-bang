@@ -83,6 +83,61 @@ just doctor     # check tools + symlinks
 just ruflo      # install the ruflo Claude Code plugin (needs the `claude` CLI)
 ```
 
+## How the symlinks work
+
+The configs in this repo are **not copied** to your home directory — they are
+**symlinked**. A symlink is a pointer: the file in your home (e.g. `~/.zshrc`)
+is just a shortcut to the real file inside the repo
+(`big-bang/dotfiles/.zshrc`). There is only **one** real file.
+
+```
+~/.zshrc  ──▶  ~/dev/mpo/big-bang/dotfiles/.zshrc   (the real file, versioned)
+```
+
+`just link` creates these links (see [`justfile`](./justfile)). It is
+**idempotent** — already-correct links are left untouched, and if a *real*
+file is already in place it is backed up to `<file>.bak.<timestamp>` before the
+link replaces it, so nothing is ever lost.
+
+### It's automatic
+
+Because home and repo point to the same file, **editing on either side updates
+both at once** — there is no sync step:
+
+- Edit `~/.config/nvim/init.lua` → the repo sees the change, ready to commit.
+- `git pull` a change from another machine → it's already live in your home.
+
+To re-apply or repair the links after adding a new config, just run `just link`
+again.
+
+### How it stays safe (no secret leaks)
+
+The trick is that **only secret-free files are symlinked and committed**.
+Anything that carries identity or credentials is handled differently:
+
+| Kind of file | Strategy | Committed? | Examples |
+|---|---|---|---|
+| Shared, **secret-free** config | **symlink** (`just link`) | ✅ yes | `.zshrc`, `starship.toml`, `nvim/`, `mise/config.toml` |
+| Identity / secret-bearing | **seed** — copied **only if missing** (`just seed`), never overwritten | ❌ no | `.gitconfig`, `.wakatime.cfg` |
+| Pure secrets / machine-specific | kept in a **git-ignored** file you fill in by hand | ❌ no | `~/.zshrc.local` |
+
+So the layered protection is:
+
+1. **No secrets in the symlinked templates.** Committed configs read their
+   secrets from the environment (e.g. `~/.zshrc` does
+   `[ -f ~/.zshrc.local ] && source ~/.zshrc.local`) instead of hard-coding them.
+2. **`just seed` never clobbers.** Files that hold identity are *copied* once and
+   then ignored — your real `~/.gitconfig` is never linked back into the repo,
+   so it can't be committed by accident.
+3. **`~/.zshrc.local` is git-ignored** and never leaves your machine. Start from
+   [`dotfiles/.zshrc.local.example`](./dotfiles/.zshrc.local.example).
+4. **Defense in depth:** [gitleaks](./.github/workflows/ci.yml) runs in CI and
+   the [pre-commit hooks](./.pre-commit-config.yaml) scan for secrets, so an
+   accidental credential is blocked before it can be pushed.
+
+**Rule of thumb:** if a file contains a secret, it must *not* be symlinked — put
+the secret in `~/.zshrc.local` and reference it from a committed template.
+
 ## Secrets
 
 **No credentials are committed.** Machine-specific values and secrets
