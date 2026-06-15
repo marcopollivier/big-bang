@@ -71,8 +71,29 @@ Each folder has its own `README.md`. Root files worth knowing:
 - `just link` — symlink the shared configs (zsh, starship, nvim, mise…); existing real files are backed up first
 - `just mise-install` — install the toolchains from [`mise/config.toml`](./mise/config.toml)
 - `just seed` — copy secret/identity templates (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **only if missing**
+- `just podman-machine` — create/start the podman Linux VM (on macOS containers run inside it)
 
 Then fill in your identity/keys: git name/email, WakaTime key, and the secrets in `~/.zshrc.local`.
+
+### Podman behind a corporate proxy (Zscaler)
+
+On a managed machine with **Zscaler** (TLS inspection), `podman pull` fails with
+`x509: certificate signed by unknown authority` — the VM doesn't trust the Zscaler CA.
+The fix is to inject the root CA (already in the macOS keychain) into the VM trust store:
+
+```sh
+# export the Zscaler root CA from the System keychain
+security find-certificate -a -c "Zscaler Root CA" -p /Library/Keychains/System.keychain > /tmp/zscaler-root-ca.crt
+
+# copy it into the VM and refresh the trust store
+podman machine ssh 'cat > /tmp/zscaler-root-ca.crt' < /tmp/zscaler-root-ca.crt
+podman machine ssh 'sudo cp /tmp/zscaler-root-ca.crt /etc/pki/ca-trust/source/anchors/ && sudo update-ca-trust'
+```
+
+> ⚠️ This is **ephemeral**: if the VM is recreated (`podman machine rm` + `init`), repeat the step.
+
+To use tools that talk to the default Docker socket (testcontainers, etc.),
+install the helper once: `sudo $(brew --prefix)/bin/podman-mac-helper install && podman machine stop && podman machine start`.
 
 ### Maintenance
 
