@@ -191,7 +191,7 @@ Os configs deste repo **não são copiados** para a sua home — eles são
 (`big-bang/dotfiles/.zshrc`). Existe apenas **um** arquivo real.
 
 ```
-~/.zshrc  ──▶  ~/dev/mpo/big-bang/dotfiles/.zshrc   (o arquivo real, versionado)
+~/.zshrc  ──▶  ~/<seu-dir>/big-bang/dotfiles/.zshrc   (o arquivo real, versionado)
 ```
 
 O `just link` cria esses links (veja o [`justfile`](./justfile)). Ele é

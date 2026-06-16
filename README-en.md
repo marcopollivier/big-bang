@@ -190,7 +190,7 @@ is just a shortcut to the real file inside the repo
 (`big-bang/dotfiles/.zshrc`). There is only **one** real file.
 
 ```
-~/.zshrc  ──▶  ~/dev/mpo/big-bang/dotfiles/.zshrc   (the real file, versioned)
+~/.zshrc  ──▶  ~/<your-dir>/big-bang/dotfiles/.zshrc   (the real file, versioned)
 ```
 
 `just link` creates these links (see [`justfile`](./justfile)). It is
