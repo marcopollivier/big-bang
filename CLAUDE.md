@@ -19,6 +19,11 @@ do meu ambiente; o setup é feito com [`just`](./justfile) (sem provisionador pe
   **só se não existirem** via `just seed` — nunca sobrescreva-os.
 - O Lua de `nvim/` é formatado com `stylua` (o CI checa). Rode `stylua nvim/` antes de commitar.
 - **Não dê push direto na `main`.** Trabalhe em branch e abra PR com `just pr` (usa o `gh`).
+- **Uma branch por escopo.** Antes de começar qualquer trabalho cujo assunto seja
+  diferente do escopo da branch atual, abra uma branch nova a partir da `main`
+  atualizada (`git checkout main && git pull && git checkout -b <tipo>/<assunto>`).
+  Nunca itere uma tarefa nova numa branch já mergeada ou de outro assunto — se
+  perceber que está na branch errada, pare e crie a branch certa antes de editar.
 
 ## Setup de máquina nova
 Use o comando **`/setup-machine`** (ou deixe a skill *machine-bootstrap* guiar). Em resumo:
