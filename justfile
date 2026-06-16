@@ -55,7 +55,10 @@ seed:
     just _seed "{{ repo }}/dotfiles/.wakatime.cfg"        "{{ home }}/.wakatime.cfg"
     just _seed "{{ repo }}/dotfiles/.aws/config"          "{{ home }}/.aws/config"
     just _seed "{{ repo }}/dotfiles/.clojure/deps.edn"    "{{ home }}/.clojure/deps.edn"
+    just _seed "{{ repo }}/claude/settings.json"          "{{ home }}/.claude/settings.json"
+    just _seed "{{ repo }}/claude/usage-budget.example"   "{{ home }}/.claude/usage-budget"
     @echo "→ Now fill identity/keys in ~/.gitconfig, ~/.wakatime.cfg and ~/.zshrc.local"
+    @echo "→ Set your monthly token limit (US\$) in ~/.claude/usage-budget"
 
 # Update the Brewfile from what's currently installed
 brew-dump:

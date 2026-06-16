@@ -11,3 +11,7 @@ java = "temurin-21"
 kotlin = { version = "latest", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
 node = "lts"
 dotnet = "latest"
+
+# CLI que estima o gasto do Claude Code a partir dos logs locais (~/.claude).
+# Alimenta o status do WezTerm (wezterm/.wezterm.lua) e o relatório `ccusage daily`.
+"npm:ccusage" = "latest"
