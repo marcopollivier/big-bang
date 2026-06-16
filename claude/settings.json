@@ -1,0 +1,10 @@
+{
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "theme": "dark",
+  "statusLine": {
+    "type": "command",
+    "command": "$HOME/dev/marcopollivier/big-bang/claude/statusline.sh",
+    "padding": 0
+  }
+}

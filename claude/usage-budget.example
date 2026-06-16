@@ -1,0 +1,9 @@
+# Limite mensal de tokens do Claude Code, em US$ (reseta na virada do mês).
+# É pessoal e varia por máquina — por isso fica AQUI (local), fora do git,
+# no mesmo espírito do ~/.zshrc.local.
+#
+# O `just seed` copia este modelo para ~/.claude/usage-budget (só se não existir).
+# Deixe apenas o número na última linha:
+#   - Máquina de trabalho: o limite que te deram (ex.: 300)
+#   - Máquina pessoal (Pro): use 0 (ou apague o número) p/ mostrar só o gasto, sem %
+300

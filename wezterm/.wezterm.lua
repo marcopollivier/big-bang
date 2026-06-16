@@ -97,4 +97,67 @@ config.keys = {
   { key = "0", mods = "CMD", action = act.ResetFontSize },
 }
 
+-- ===========================================================================
+-- Status bars: máquina (esquerda) · consumo do Claude Code (direita)
+-- ===========================================================================
+-- Esquerda  → wezterm/sysinfo.sh: "CPU 6% · MEM 7%" (recursos da máquina).
+-- Direita   → claude/usage.sh: "$61/$300 · 20% · hoje $9 · proj $295" (gasto do
+--             mês vs limite + hoje + projeção; estimativa local via ccusage, bate
+--             com a UI do Claude; limite em ~/.claude/usage-budget).
+-- Ambos os scripts têm cache próprio, então cada tick aqui é barato.
+local repo = wezterm.home_dir .. "/dev/marcopollivier/big-bang"
+local usage_script = repo .. "/claude/usage.sh"
+local sysinfo_script = repo .. "/wezterm/sysinfo.sh"
+
+-- Cor por nível de uso (verde → amarelo → laranja → vermelho).
+local function level_color(pct, yellow, orange, red)
+  if pct then
+    if pct >= red then
+      return "#f7768e"
+    elseif pct >= orange then
+      return "#ff9e64"
+    elseif pct >= yellow then
+      return "#e0af68"
+    end
+  end
+  return "#9ece6a"
+end
+
+wezterm.on("update-status", function(window, _pane)
+  -- Direita: consumo do Claude Code. Cor pela % do limite (60/70/85).
+  local ok, usage = wezterm.run_child_process({ usage_script })
+  usage = (ok and usage or ""):gsub("%s+$", "")
+  if usage == "" or usage == "…" then
+    window:set_right_status("")
+  else
+    local pct = tonumber(usage:match("(%d+)%%"))
+    window:set_right_status(wezterm.format({
+      { Foreground = { Color = level_color(pct, 60, 70, 85) } },
+      { Text = "󰚩 " .. usage .. "  " },
+    }))
+  end
+
+  -- Esquerda: recursos da máquina. Cor pelo maior entre CPU/MEM (70/85/95).
+  local ok2, sys = wezterm.run_child_process({ sysinfo_script })
+  sys = (ok2 and sys or ""):gsub("%s+$", "")
+  if sys == "" or sys == "…" then
+    window:set_left_status("")
+  else
+    local hi = 0
+    for n in sys:gmatch("(%d+)%%") do
+      local v = tonumber(n)
+      if v and v > hi then
+        hi = v
+      end
+    end
+    window:set_left_status(wezterm.format({
+      { Foreground = { Color = level_color(hi, 70, 85, 95) } },
+      { Text = "  " .. sys .. " " },
+    }))
+  end
+end)
+
+-- A cada quantos ms o WezTerm reavalia os status (os scripts têm cache próprio).
+config.status_update_interval = 10000
+
 return config
