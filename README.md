@@ -11,7 +11,26 @@ Simple Icons https://simpleicons.org/?q=ubuntu
 
 > 🌐 **🇧🇷 Português** · [🇺🇸 English](./README-en.md)
 
-## Motivação
+Configuração de máquina (macOS) versionada e roteirizada: **dotfiles, editor,
+terminal e prompt** que você instala numa máquina nova com poucos comandos.
+Faça um fork, ajuste o que é seu e rode `just bootstrap`.
+
+## Índice
+
+- [O que é isso](#o-que-é-isso)
+- [Quick Start](#quick-start)
+- [Pré-requisitos](#pré-requisitos)
+- [Faça seu fork (torne seu)](#faça-seu-fork-torne-seu)
+- [Setup passo a passo](#setup-passo-a-passo)
+- [Comandos do dia a dia](#comandos-do-dia-a-dia)
+- [Estrutura do repositório](#estrutura-do-repositório)
+- [Ferramentas / stack](#ferramentas--stack)
+- [Como funciona por dentro](#como-funciona-por-dentro)
+- [Troubleshooting / FAQ](#troubleshooting--faq)
+- [Qualidade](#qualidade)
+- [Licença](#licença)
+
+## O que é isso
 
 O projeto **Big Bang** é a minha fonte única de verdade para a configuração da
 máquina: dotfiles, editor, terminal e prompt. O objetivo é **conveniência** —
@@ -21,10 +40,116 @@ lembrar como o meu ambiente está montado e colocar os configs de volta no lugar
 > Um repositório de referência / dotfiles curado. O setup é roteirizado com
 > [`just`](https://github.com/casey/just) (sem framework pesado de provisionamento).
 
-## Público-alvo
+**É pra você?** Foi pensado pra todo mundo. Seja pra uso pessoal ou profissional,
+fique à vontade pra fazer um fork e adaptar como precisar. Repare que é um setup
+**opinativo** (meu git, minhas chaves, minhas linguagens no Neovim) — então o
+fluxo certo é forkar e [tornar seu](#faça-seu-fork-torne-seu) antes de rodar.
 
-Este projeto foi pensado pra todo mundo. Seja pra uso pessoal ou profissional,
-fique à vontade pra fazer um fork e adaptar como precisar.
+## Quick Start
+
+Pra quem já sabe o que está fazendo (primeira vez? pule para
+[Faça seu fork](#faça-seu-fork-torne-seu) antes):
+
+```sh
+# 1. Homebrew (se ainda não tiver) → https://brew.sh
+# 2. just
+brew install just
+
+# 3. clone + bootstrap (idempotente)
+git clone git@github.com:marcopollivier/big-bang.git && cd big-bang
+just bootstrap
+
+# 4. preencha identidade/segredos e valide
+just doctor
+```
+
+## Pré-requisitos
+
+- **macOS** (Apple Silicon ou Intel). O projeto é *macOS-first*.
+- **Xcode Command Line Tools** — necessárias para o git e o Homebrew:
+  ```sh
+  xcode-select --install
+  ```
+- **[Homebrew](https://brew.sh/)** instalado (o `just bootstrap` cuida do resto
+  dos pacotes a partir do [`Brewfile`](./Brewfile)).
+- Uma chave SSH no GitHub (para clonar via `git@github.com:…`) ou use a URL HTTPS.
+
+## Faça seu fork (torne seu)
+
+Este repo carrega a **minha** identidade e as minhas escolhas. Antes de rodar o
+bootstrap numa máquina sua, faça um **fork** e ajuste o que é pessoal. Nada aqui
+tem segredo versionado — só *templates* — mas vários defaults são meus:
+
+| O que ajustar | Onde | Por quê |
+|---|---|---|
+| **URL do clone** | troque `marcopollivier/big-bang` pelo seu fork | apontar para o *seu* repositório |
+| **Identidade do git** | `~/.gitconfig` (após `just seed`) — `name`, `email`, `signingKey` | o template ([`dotfiles/.gitconfig`](./dotfiles/.gitconfig)) vem em branco |
+| **Segredos da máquina** | `~/.zshrc.local` (após `just seed`) | `AWS_*`, `GITHUB_TOKEN`, ARNs de EKS, chave do WakaTime — veja [`.zshrc.local.example`](./dotfiles/.zshrc.local.example) |
+| **WakaTime** | `~/.wakatime.cfg` | a sua API key (opcional; remova se não usa) |
+| **Pacotes** | [`Brewfile`](./Brewfile) | tire/ponha apps e CLIs conforme o seu gosto |
+| **Linguagens do editor** | [`nvim/`](./nvim) | o Neovim vem pronto pra **Go, .NET/C# e Kotlin**; adapte os LSPs ao seu stack |
+| **Toolchains** | [`mise/config.toml`](./mise/config.toml) | versões de Go/Java/Node/… que serão instaladas |
+
+> 💡 **Regra de ouro:** os arquivos com identidade/segredo são apenas *copiados*
+> (`just seed`) e **nunca** sobrescritos nem versionados de volta — então pode
+> editá-los à vontade na sua home. Detalhes em
+> [Como funciona por dentro](#como-funciona-por-dentro).
+
+## Setup passo a passo
+
+**1. Instale o [Homebrew](https://brew.sh/) e, em seguida, o `just`:**
+
+```sh
+brew install just
+```
+
+**2. Clone o seu fork e rode o bootstrap:**
+
+```sh
+git clone git@github.com:<você>/big-bang.git && cd big-bang
+just bootstrap
+```
+
+O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e executa:
+
+- `just brew` — instala tudo que está no [`Brewfile`](./Brewfile)
+- `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise…); arquivos reais existentes têm backup feito antes
+- `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
+- `just seed` — copia os templates de segredo/identidade (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **só se não existirem**
+- `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
+
+**3. Preencha sua identidade e segredos** (veja a tabela em
+[Faça seu fork](#faça-seu-fork-torne-seu)): nome/e-mail do git em `~/.gitconfig`,
+chave do WakaTime em `~/.wakatime.cfg` e os segredos em `~/.zshrc.local`.
+
+**4. Abra um novo terminal** (ou `exec zsh`) e **valide** que está tudo no lugar:
+
+```sh
+just doctor   # checa ferramentas + symlinks + VM do podman
+```
+
+> 🏢 Em **Mac gerenciado** (MDM) ou **atrás de proxy corporativo (Zscaler)**, alguns
+> passos pedem ajuste — veja [Troubleshooting / FAQ](#troubleshooting--faq).
+
+## Comandos do dia a dia
+
+Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
+
+| Comando | O que faz |
+|---|---|
+| `just` | lista todas as recipes disponíveis |
+| `just bootstrap` | setup completo de máquina nova (idempotente) |
+| `just doctor` | checa ferramentas, symlinks e a VM do podman |
+| `just link` | reaplica os symlinks (rode após adicionar um config novo) |
+| `just brew` | instala/atualiza os pacotes do [`Brewfile`](./Brewfile) |
+| `just brew-dump` | atualiza o `Brewfile` a partir do que está instalado |
+| `just mise-install` | instala os toolchains do [`mise/config.toml`](./mise/config.toml) |
+| `just seed` | copia os templates de identidade/segredo (só se faltarem) |
+| `just podman-machine` | cria/inicia a VM Linux do podman |
+| `just pr` | abre um PR da branch atual no navegador (requer `gh auth login`) |
+| `just ruflo` | instala o plugin ruflo do Claude Code (requer a CLI `claude`) |
+
+> ⚠️ **Não dê push direto na `main`.** Trabalhe em branch e abra PR com `just pr`.
 
 ## Estrutura do repositório
 
@@ -53,60 +178,12 @@ Cada pasta tem o seu próprio `README.md`. Arquivos da raiz que vale conhecer:
 - **Editor:** Neovim (veja [`nvim/`](./nvim)).
 - **CLIs do dia a dia:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, opentofu.
 
-## Setup (máquina nova)
+## Como funciona por dentro
 
-1. Instale o [Homebrew](https://brew.sh/) e, em seguida, o `just`:
-   ```sh
-   brew install just
-   ```
-2. Clone o repo e rode o bootstrap:
-   ```sh
-   git clone git@github.com:marcopollivier/big-bang.git && cd big-bang
-   just bootstrap
-   ```
+Não precisa entender esta seção pra usar o projeto — ela explica *por que* o
+setup é seguro e por que editar de qualquer lado "simplesmente funciona".
 
-O `just bootstrap` é **idempotente** e executa:
-
-- `just brew` — instala tudo que está no [`Brewfile`](./Brewfile)
-- `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise…); arquivos reais existentes têm backup feito antes
-- `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
-- `just seed` — copia os templates de segredo/identidade (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **só se não existirem**
-- `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
-
-Depois, preencha sua identidade/chaves: nome/e-mail do git, chave do WakaTime e os segredos em `~/.zshrc.local`.
-
-### Podman atrás de proxy corporativo (Zscaler)
-
-Em máquina gerenciada com **Zscaler** (inspeção de TLS), o `podman pull` falha com
-`x509: certificate signed by unknown authority` — a VM não confia no CA do Zscaler.
-O fix é injetar o root CA (que já está no keychain do macOS) na trust store da VM:
-
-```sh
-# exporta o root CA do Zscaler do System keychain
-security find-certificate -a -c "Zscaler Root CA" -p /Library/Keychains/System.keychain > /tmp/zscaler-root-ca.crt
-
-# copia para dentro da VM e atualiza a trust store
-podman machine ssh 'cat > /tmp/zscaler-root-ca.crt' < /tmp/zscaler-root-ca.crt
-podman machine ssh 'sudo cp /tmp/zscaler-root-ca.crt /etc/pki/ca-trust/source/anchors/ && sudo update-ca-trust'
-```
-
-> ⚠️ É **efêmero**: se a VM for recriada (`podman machine rm` + `init`), repita o passo.
-
-Para usar ferramentas que falam com o socket padrão do Docker (testcontainers, etc.),
-instale o helper uma vez: `sudo $(brew --prefix)/bin/podman-mac-helper install && podman machine stop && podman machine start`.
-
-### Manutenção
-
-```sh
-just            # lista todas as recipes
-just link       # reaplica os symlinks
-just brew       # instala/atualiza os pacotes do Brewfile
-just brew-dump  # atualiza o Brewfile a partir do que está instalado
-just doctor     # checa ferramentas + symlinks
-just ruflo      # instala o plugin ruflo do Claude Code (precisa da CLI `claude`)
-```
-
-## Como funcionam os symlinks
+### Symlinks (links simbólicos)
 
 Os configs deste repo **não são copiados** para a sua home — eles são
 **symlinkados**. Um symlink é um ponteiro: o arquivo na sua home (ex.: `~/.zshrc`)
@@ -114,7 +191,7 @@ Os configs deste repo **não são copiados** para a sua home — eles são
 (`big-bang/dotfiles/.zshrc`). Existe apenas **um** arquivo real.
 
 ```
-~/.zshrc  ──▶  ~/dev/mpo/big-bang/dotfiles/.zshrc   (o arquivo real, versionado)
+~/.zshrc  ──▶  ~/<seu-dir>/big-bang/dotfiles/.zshrc   (o arquivo real, versionado)
 ```
 
 O `just link` cria esses links (veja o [`justfile`](./justfile)). Ele é
@@ -122,7 +199,7 @@ O `just link` cria esses links (veja o [`justfile`](./justfile)). Ele é
 *real* já estiver no lugar, é feito um backup em `<arquivo>.bak.<timestamp>`
 antes de o link substituí-lo, então nada nunca é perdido.
 
-### É automático
+#### É automático
 
 Como a home e o repo apontam para o mesmo arquivo, **editar de qualquer um dos
 lados atualiza os dois de uma vez** — não existe passo de sincronização:
@@ -162,12 +239,51 @@ Então a proteção em camadas é:
 symlinkado — coloque o segredo em `~/.zshrc.local` e referencie a partir de um
 template versionado.
 
-## Segredos
+### Onde ficam os segredos
 
 **Nenhuma credencial é versionada.** Valores específicos da máquina e segredos
 (`AWS_*`, `GITHUB_TOKEN`, ARNs dos clusters EKS, chave de API do WakaTime, …)
 ficam em `~/.zshrc.local`, que é git-ignored. Use o
 [`dotfiles/.zshrc.local.example`](./dotfiles/.zshrc.local.example) como template.
+
+## Troubleshooting / FAQ
+
+### `podman pull` falha com `x509: certificate signed by unknown authority`
+
+Acontece em máquina gerenciada com **Zscaler** (inspeção de TLS): a VM do podman
+não confia no CA do Zscaler. O fix é injetar o root CA (que já está no keychain
+do macOS) na trust store da VM:
+
+```sh
+# exporta o root CA do Zscaler do System keychain
+security find-certificate -a -c "Zscaler Root CA" -p /Library/Keychains/System.keychain > /tmp/zscaler-root-ca.crt
+
+# copia para dentro da VM e atualiza a trust store
+podman machine ssh 'cat > /tmp/zscaler-root-ca.crt' < /tmp/zscaler-root-ca.crt
+podman machine ssh 'sudo cp /tmp/zscaler-root-ca.crt /etc/pki/ca-trust/source/anchors/ && sudo update-ca-trust'
+```
+
+> ⚠️ É **efêmero**: se a VM for recriada (`podman machine rm` + `init`), repita o passo.
+
+### Ferramentas que falam com o socket padrão do Docker (testcontainers, etc.)
+
+Instale o helper uma vez:
+
+```sh
+sudo $(brew --prefix)/bin/podman-mac-helper install && podman machine stop && podman machine start
+```
+
+### `brew install --cask <app>` pede senha / falha em Mac gerenciado
+
+Em Mac **gerenciado por MDM**, `/Applications` pertence ao root e o seu usuário
+não tem escrita lá. Instalar um cask de app GUI cai num `sudo cp` e exige a senha
+de forma **interativa** — então rode você mesmo, num terminal:
+
+```sh
+brew install --cask visual-studio-code
+```
+
+Casks de CLI/fonts (que não vão para `/Applications`) instalam normalmente.
 
 ## Qualidade
 
@@ -180,3 +296,5 @@ ficam em `~/.zshrc.local`, que é git-ignored. Use o
 ## Licença
 
 Este projeto é licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+</content>
+</invoke>
