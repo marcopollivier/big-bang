@@ -122,7 +122,7 @@ obrigatórios vêm do próprio spec.
 Existe um symlink em:
 
 ```
-~/.local/state/mise/trusted-configs/Users-U004334-4bb99e5cee51aebc  →  /Users/U004334
+~/.local/state/mise/trusted-configs/Users-<você>-<hash>  →  /Users/<você>
 ```
 
 Durante a sessão isso foi inicialmente sinalizado como "loop recursivo a corrigir",
