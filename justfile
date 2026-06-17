@@ -54,6 +54,7 @@ seed:
     just _seed "{{ repo }}/dotfiles/.gitconfig"           "{{ home }}/.gitconfig"
     just _seed "{{ repo }}/dotfiles/.wakatime.cfg"        "{{ home }}/.wakatime.cfg"
     just _seed "{{ repo }}/dotfiles/.aws/config"          "{{ home }}/.aws/config"
+    just _seed "{{ repo }}/dotfiles/.npmrc"               "{{ home }}/.npmrc"
     just _seed "{{ repo }}/dotfiles/.clojure/deps.edn"    "{{ home }}/.clojure/deps.edn"
     just _seed "{{ repo }}/claude/settings.json"          "{{ home }}/.claude/settings.json"
     just _seed "{{ repo }}/claude/usage-budget.example"   "{{ home }}/.claude/usage-budget"
