@@ -54,6 +54,7 @@ seed:
     just _seed "{{ repo }}/dotfiles/.gitconfig"           "{{ home }}/.gitconfig"
     just _seed "{{ repo }}/dotfiles/.wakatime.cfg"        "{{ home }}/.wakatime.cfg"
     just _seed "{{ repo }}/dotfiles/.aws/config"          "{{ home }}/.aws/config"
+    just _seed "{{ repo }}/dotfiles/.npmrc"               "{{ home }}/.npmrc"
     just _seed "{{ repo }}/dotfiles/.clojure/deps.edn"    "{{ home }}/.clojure/deps.edn"
     @echo "→ Now fill identity/keys in ~/.gitconfig, ~/.wakatime.cfg and ~/.zshrc.local"
 

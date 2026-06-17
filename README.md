@@ -141,7 +141,7 @@ Tudo que carrega identidade ou credenciais é tratado de outro jeito:
 | Tipo de arquivo | Estratégia | Versionado? | Exemplos |
 |---|---|---|---|
 | Config compartilhado, **sem segredo** | **symlink** (`just link`) | ✅ sim | `.zshrc`, `starship.toml`, `nvim/`, `mise/config.toml` |
-| Com identidade / segredo | **seed** — copiado **só se faltar** (`just seed`), nunca sobrescreve | ❌ não | `.gitconfig`, `.wakatime.cfg` |
+| Com identidade / segredo | **seed** — copiado **só se faltar** (`just seed`), nunca sobrescreve | ❌ não | `.gitconfig`, `.wakatime.cfg`, `.npmrc` |
 | Puramente segredos / específico da máquina | mantido num arquivo **git-ignored** que você preenche à mão | ❌ não | `~/.zshrc.local` |
 
 Então a proteção em camadas é:

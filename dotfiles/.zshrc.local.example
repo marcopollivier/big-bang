@@ -10,6 +10,9 @@
 ## GitHub
 # export GITHUB_TOKEN=""
 
+## npm (token lido por ~/.npmrc via ${NPM_TOKEN})
+# export NPM_TOKEN=""
+
 ## Contextos EKS usados por k8s-p / k8s-h (ARNs da sua infra)
 # export EKS_PRD_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-prd>"
 # export EKS_HML_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-hml>"
