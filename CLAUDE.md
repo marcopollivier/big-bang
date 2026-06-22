@@ -7,6 +7,7 @@ do meu ambiente; o setup é feito com [`just`](./justfile) (sem provisionador pe
 - `dotfiles/` — dotfiles da home (templates, **sem segredos**)
 - `nvim/` — Neovim como IDE (Go/.NET/Kotlin); detalhes em `nvim/SETUP.md`
 - `wezterm/`, `starship/`, `mise/` — terminal, prompt e toolchains
+- `cmux/` — orquestrador de agentes de IA (terminal via Ghostty embutido); em teste como alternativa ao WezTerm. Detalhes em `cmux/README.md`
 - `claude/` — config do Claude Code + acompanhamento de consumo de tokens (statusline + status do mês no WezTerm); detalhes em `claude/README.md`
 - `Brewfile` — pacotes Homebrew · `justfile` — bootstrap/manutenção
 - `.github/workflows/ci.yml` — CI (lint + gitleaks)

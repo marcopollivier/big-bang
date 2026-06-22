@@ -1,0 +1,47 @@
+{
+  "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json",
+  "schemaVersion": 1,
+
+  // Config do cmux gerenciada por este repo (symlinkado por `just link`).
+  // JSONC (JSON com comentários). Só listamos as chaves que QUEREMOS sobrescrever;
+  // o que não está aqui cai no default salvo nas Settings do app.
+  // Recarrega com:  cmux reload-config   (ou CMD+Shift+,)
+  //
+  // OBS: a APARÊNCIA do terminal (fonte, tema, transparência, copy-on-select)
+  // fica no Ghostty -> cmux/ghostty.config. Aqui ficam só os atalhos de janela/split.
+
+  "terminal": {
+    // Selecionar com o mouse já copia (espelha o copy-on-select do Ghostty).
+    "copyOnSelect": true
+  },
+
+  // Atalhos remapeados pra bater com a memória muscular do WezTerm.
+  // (Defaults do cmux ao lado pra referência.)
+  "shortcuts": {
+    "bindings": {
+      // Splits: CMD+Enter = pane novo EMBAIXO · CMD+Shift+Enter = pane novo À DIREITA
+      // (no cmux não existe "split à esquerda"; o canvas só divide p/ direita/baixo).
+      "splitDown": "cmd+\r",         // default: cmd+shift+d
+      "splitRight": "cmd+shift+\r",  // default: cmd+d
+
+      // Foco entre panes com CMD+setas (no wezterm é assim).
+      "focusLeft": "cmd+←",          // default: cmd+opt+←
+      "focusRight": "cmd+→",         // default: cmd+opt+→
+      "focusUp": "cmd+↑",            // default: cmd+opt+↑
+      "focusDown": "cmd+↓",          // default: cmd+opt+↓
+
+      // Zoom no pane focado (CMD+Shift+Z, igual wezterm).
+      "toggleSplitZoom": "cmd+shift+z", // default: cmd+shift+\r
+
+      // Modo de cópia pelo teclado (CMD+Shift+X, igual wezterm).
+      "toggleTerminalCopyMode": "cmd+shift+x" // default: cmd+shift+m
+
+      // Já batem com o wezterm por padrão (deixados no default):
+      //   commandPalette  = cmd+shift+p
+      //   closeTab        = cmd+w      (fecha o pane/surface focado)
+      //   newTab          = cmd+n
+      //   newSurface      = cmd+t
+      //   equalizeSplits  = cmd+ctrl+= (no wezterm o resize é CMD+CTRL+setas; aqui é arrastar)
+    }
+  }
+}
