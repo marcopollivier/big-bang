@@ -205,6 +205,10 @@ command -v mise >/dev/null && eval "$(mise activate zsh)"
 ## fzf — busca fuzzy + keybindings (Ctrl-R, Ctrl-T)
 command -v fzf >/dev/null && source <(fzf --zsh)
 
+## zsh-autosuggestions — sugestão (cinza) do próximo comando a partir do histórico; aceita com →
+[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] \
+    && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 ## .local bin
 export PATH="$HOME/.local/bin":$PATH
 

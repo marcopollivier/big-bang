@@ -6,6 +6,7 @@
 
 # --- Shell / CLI essentials ---
 brew "starship"        # cross-shell prompt
+brew "zsh-autosuggestions"  # sugestão de comando (cinza) a partir do histórico
 brew "fzf"             # fuzzy finder (Ctrl-R, Ctrl-T)
 brew "ripgrep"         # fast grep (used by Neovim/telescope)
 brew "fd"              # fast find (used by Neovim/telescope)
