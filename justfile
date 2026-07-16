@@ -47,6 +47,8 @@ link:
     just _link "{{ repo }}/nvim"                        "{{ home }}/.config/nvim"
     just _link "{{ repo }}/mise/config.toml"           "{{ home }}/.config/mise/config.toml"
     just _link "{{ repo }}/wezterm/.wezterm.lua"       "{{ home }}/.config/wezterm/wezterm.lua"
+    just _link "{{ repo }}/cmux/ghostty.config"        "{{ home }}/.config/ghostty/config"
+    just _link "{{ repo }}/cmux/cmux.json"             "{{ home }}/.config/cmux/cmux.json"
 
 # Seed template files that hold identity/secrets — only if missing (never clobbers)
 seed:
