@@ -19,4 +19,6 @@ mise use -g go@latest   # adiciona/fixa uma ferramenta (edita o config.toml)
 mise ls                 # lista o que está instalado
 ```
 
-Toolchains atuais: **Go, Java (Temurin 21), Kotlin, Node (LTS), .NET**.
+Toolchains atuais: **Go, Java (Temurin 21), Kotlin, Node (LTS), .NET** — mais o
+**`npm:ccusage`**, que alimenta o status de consumo do Claude no WezTerm e no
+statusline (ver [`../claude/`](../claude)).

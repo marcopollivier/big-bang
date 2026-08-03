@@ -44,7 +44,7 @@ ln -sfn "$PWD/wezterm/.wezterm.lua" ~/.config/wezterm/wezterm.lua
 ### Aparência
 | Opção | Valor | Por quê |
 |---|---|---|
-| `color_scheme` | Catppuccin Mocha | Tema escuro |
+| `color_scheme` | Tokyo Night | Tema escuro — mesma paleta do starship, nvim e statusline do Claude |
 | `window_background_opacity` | 0.95 | Leve transparência |
 | `macos_window_background_blur` | 20 | Desfoca o fundo atrás da janela (combina com a transparência) |
 | `window_decorations` | `TITLE \| RESIZE` | Mantém barra de título e permite redimensionar |
@@ -89,6 +89,7 @@ ln -sfn "$PWD/wezterm/.wezterm.lua" ~/.config/wezterm/wezterm.lua
 |---|---|
 | `CMD + Enter` | Split em cima/embaixo (`SplitVertical` — novo pane **abaixo**) |
 | `CMD + Shift + Enter` | Split lado a lado (`SplitHorizontal` — novo pane **à direita**) |
+| `CMD + Alt + Enter` | Split lado a lado com o novo pane **à esquerda** |
 | `CMD + W` | Fecha o pane atual |
 | `CMD + setas` | Move o foco entre panes |
 | `CMD + Ctrl + setas` | Redimensiona o pane atual |
@@ -98,6 +99,20 @@ ln -sfn "$PWD/wezterm/.wezterm.lua" ~/.config/wezterm/wezterm.lua
 | Atalho | Ação |
 |---|---|
 | `CMD + Shift + X` | Modo de cópia: navega o histórico pelo teclado e copia sem mouse |
+
+## Status bars
+
+A config registra um handler de `update-status` com dois indicadores:
+
+- **Esquerda** — recursos da máquina (`CPU x% · MEM y%`), do
+  [`sysinfo.sh`](./sysinfo.sh) desta pasta. Usa `ps`/`memory_pressure` (macOS)
+  com cache de 4s, então cada tick é barato.
+- **Direita** — consumo do mês do Claude Code vs limite
+  (`$59/$300 · 20% · hoje $9 · proj $295`), do
+  [`../claude/usage.sh`](../claude/usage.sh). Detalhes em
+  [`../claude/README.md`](../claude/README.md).
+
+Os dois colorem por faixa de uso (verde → amarelo → laranja → vermelho).
 
 ## Glossário
 
