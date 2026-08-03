@@ -7,3 +7,12 @@
 
 # Claude Code — overrides pessoais (settings.json compartilhado é versionado)
 .claude/settings.local.json
+
+# Estado de runtime de ferramentas de IA (nunca versionar)
+.claude-flow/
+.claude/proven-config.json
+.claude/.proven-config-version
+
+# macOS + backups gerados pelo `just link`
+.DS_Store
+*.bak.*

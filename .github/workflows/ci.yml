@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
 
+# Push novo no mesmo PR cancela a run anterior (não gasta runner à toa)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -28,11 +33,23 @@ jobs:
           version: latest
           args: --check nvim/
 
+      - name: Lint shell scripts (shellcheck)
+        run: shellcheck claude/usage.sh claude/statusline.sh wezterm/sysinfo.sh
+
+      # cmux/cmux.json fica de fora: é JSONC (comentários) por design
+      - name: Validate JSON files
+        run: |
+          for f in claude/settings.json .claude/settings.json nvim/lazy-lock.json; do
+            jq empty "$f" && echo "ok $f"
+          done
+
       - name: Set up just
         uses: extractions/setup-just@v2
 
       - name: Validate justfile
-        run: just --summary
+        run: |
+          just --summary
+          just --fmt --check --unstable
 
   secrets:
     name: Secret scanning

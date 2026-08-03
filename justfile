@@ -1,7 +1,7 @@
 # Big Bang — bootstrap & maintenance.  Run `just` to list recipes.
 # Fresh machine: install Homebrew, then `brew install just`, then `just bootstrap`.
 
-set shell := ["bash", "-uc"]
+set shell := ["bash", "-euc"]
 
 repo := justfile_directory()
 home := env_var('HOME')
@@ -73,9 +73,12 @@ seed:
     @echo "→ GPG: commits são assinados por padrão — crie uma chave (gpg --full-generate-key)"
     @echo "  e preencha user.signingKey, ou rode: git config --global commit.gpgsign false"
 
-# Update the Brewfile from what's currently installed
+# Update the Brewfile from what's currently installed.
+# ⚠️ Sobrescreve o Brewfile CURADO (comentários e seções são perdidos) pelo dump
+# cru do brew — revise o `git diff Brewfile` e restaure a organização antes de commitar.
 brew-dump:
     brew bundle dump --force --file="{{ repo }}/Brewfile"
+    @echo "⚠️  Brewfile sobrescrito pelo dump cru — revise o diff antes de commitar (comentários/seções se perdem)"
 
 # Sanity check: tools present + symlinks resolved (exit 1 on any failure)
 doctor:
