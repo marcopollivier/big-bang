@@ -106,7 +106,31 @@ config.keys = {
 --             mês vs limite + hoje + projeção; estimativa local via ccusage, bate
 --             com a UI do Claude; limite em ~/.claude/usage-budget).
 -- Ambos os scripts têm cache próprio, então cada tick aqui é barato.
-local repo = wezterm.home_dir .. "/dev/marcopollivier/big-bang"
+
+-- Onde está o clone deste repo? Sem caminho fixo do autor: o wezterm.lua da
+-- home é um symlink para <repo>/wezterm/.wezterm.lua (criado pelo `just link`),
+-- então resolver o link revela o clone — funciona em qualquer fork/diretório.
+-- Ordem: $BIG_BANG_REPO (override manual) → symlink resolvido → caminho padrão.
+local function repo_dir()
+  local override = os.getenv("BIG_BANG_REPO")
+  if override and override ~= "" then
+    return override
+  end
+  local f = io.popen('readlink -f "' .. wezterm.config_file .. '" 2>/dev/null')
+  if f then
+    local resolved = f:read("*l")
+    f:close()
+    if resolved and resolved ~= "" then
+      local dir = resolved:match("^(.*)/wezterm/[^/]+$")
+      if dir then
+        return dir
+      end
+    end
+  end
+  return wezterm.home_dir .. "/dev/marcopollivier/big-bang"
+end
+
+local repo = repo_dir()
 local usage_script = repo .. "/claude/usage.sh"
 local sysinfo_script = repo .. "/wezterm/sysinfo.sh"
 

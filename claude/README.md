@@ -7,7 +7,7 @@ consumo de tokens.
 
 | Arquivo | O que é |
 |---|---|
-| `settings.json` | **Modelo** das settings do Claude Code (sem nada da empresa). Seedado para `~/.claude/settings.json` pelo `just seed` — só se não existir. |
+| `settings.json` | **Modelo** das settings do Claude Code (sem nada da empresa). Seedado para `~/.claude/settings.json` pelo `just seed` — só se não existir. O placeholder `__REPO__` do statusline é trocado pelo caminho real do clone na cópia (por isso, se copiar à mão, troque você mesmo). |
 | `statusline.sh` | Statusline **dentro** do Claude Code: `modelo · $custo-sessão · branch✓/✗ · %contexto · %5h · %7d · $mês/$limite`. O gasto do mês reaproveita o `usage.sh` (mesma fonte/cores do WezTerm). Ligado pela chave `statusLine` do `settings.json`. |
 | `usage.sh` | Consumo do **mês** vs o limite mensal + gasto de hoje + projeção do fechamento (`$59/$300 · 20% · hoje $9 · proj $295`). Usado pelo statusline e pelo `right_status` do WezTerm. |
 | `usage-budget.example` | Modelo do limite mensal. Seedado para `~/.claude/usage-budget` (local, **fora do git**, como o `~/.zshrc.local`). |

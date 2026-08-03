@@ -89,6 +89,8 @@ committed secrets — only *templates* — but several defaults are mine:
 | **Packages** | [`Brewfile`](./Brewfile) | add/remove apps and CLIs to taste |
 | **Editor languages** | [`nvim/`](./nvim) | Neovim ships ready for **Go, .NET/C# and Kotlin**; adapt the LSPs to your stack |
 | **Toolchains** | [`mise/config.toml`](./mise/config.toml) | Go/Java/Node/… versions that get installed |
+| **Clone path** | nothing, if you use `just seed`/`just link` | the Claude statusline ([`claude/settings.json`](./claude/settings.json)) and the WezTerm status discover the clone by themselves; if something fails, set `BIG_BANG_REPO` in `~/.zshrc.local` |
+| **npm token** | `~/.npmrc` (after `just seed`) | the template ([`dotfiles/.npmrc`](./dotfiles/.npmrc)) reads `NPM_TOKEN` from the environment — set it in `~/.zshrc.local` if you use a private registry |
 
 > 💡 **Golden rule:** files with identity/secrets are only *copied* (`just seed`)
 > and **never** overwritten nor committed back — so you can edit them freely in

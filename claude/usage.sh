@@ -15,10 +15,18 @@
 # Cache (TTL 120s) + refresh em background: cada tick do WezTerm só lê um arquivo.
 # ---------------------------------------------------------------------------
 
+# ccusage: shim do mise no caminho padrão; senão, o que estiver no PATH.
 ccusage_bin="$HOME/.local/share/mise/shims/ccusage"
+[ -x "$ccusage_bin" ] || ccusage_bin="$(command -v ccusage || true)"
 cache="${TMPDIR:-/tmp}/claude-usage"
 budget_file="$HOME/.claude/usage-budget"
 ttl=120
+
+# Sem ccusage ou jq não há como medir: mostra "?" em vez de um falso "$0".
+if [ -z "$ccusage_bin" ] || ! command -v jq >/dev/null 2>&1; then
+  printf '?'
+  exit 0
+fi
 
 # Primeiro número no arquivo de limite (ignora linhas de comentário com #).
 read_budget() {
