@@ -88,6 +88,7 @@ tem segredo versionado — só *templates* — mas vários defaults são meus:
 | **Segredos da máquina** | `~/.zshrc.local` (após `just seed`) | `AWS_*`, `GITHUB_TOKEN`, ARNs de EKS, chave do WakaTime — veja [`.zshrc.local.example`](./dotfiles/.zshrc.local.example) |
 | **WakaTime** | `~/.wakatime.cfg` | a sua API key (opcional; remova se não usa) |
 | **Pacotes** | [`Brewfile`](./Brewfile) | tire/ponha apps e CLIs conforme o seu gosto |
+| **Containers (trabalho vs pessoal)** | [`Brewfile`](./Brewfile) + bootstrap | no **trabalho**: podman (Docker Desktop tem licença comercial); na **máquina pessoal**: docker é ok — troque `brew "podman"` pelo cask `docker` (comentado no Brewfile) e o `just podman-machine` se auto-pula |
 | **Linguagens do editor** | [`nvim/`](./nvim) | o Neovim vem pronto pra **Go, .NET/C# e Kotlin**; adapte os LSPs ao seu stack |
 | **Toolchains** | [`mise/config.toml`](./mise/config.toml) | versões de Go/Java/Node/… que serão instaladas |
 | **Caminho do clone** | nenhum, se usar `just seed`/`just link` | o statusline do Claude ([`claude/settings.json`](./claude/settings.json)) e o status do WezTerm descobrem o clone sozinhos (fallback: convenção `~/dev/<github-user>/big-bang`); se algo falhar, defina `BIG_BANG_REPO` no `~/.zshrc.local` |

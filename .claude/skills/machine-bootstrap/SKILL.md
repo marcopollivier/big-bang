@@ -17,6 +17,21 @@ nova pronta com o mínimo de esforço, sem expor segredos.
 
 ## Passos
 
+0. **Contexto da máquina** (pergunte ANTES do bootstrap — use AskUserQuestion)
+   O setup varia entre máquina de **trabalho** e **pessoal**. Pergunte:
+   - **Trabalho ou pessoal?** Deriva os defaults das duas perguntas seguintes.
+   - **Containers: podman ou docker?**
+     - *Trabalho* → **podman** (Docker Desktop tem licença comercial). Fluxo
+       normal: o Brewfile já traz `podman` e o bootstrap roda `just podman-machine`.
+     - *Pessoal* → **docker** é ok. Nesse caso: remova/ignore `podman` no
+       Brewfile, sugira `! brew install --cask docker` (cask pede senha), e o
+       `just podman-machine` se auto-pula quando o podman não está instalado.
+       O alias comentado `docker=podman` do `.zshrc` NÃO se aplica.
+   - **Linguagens além de Go/.NET?** (Kotlin, Java, Clojure, Node…)
+     Hoje o default cobre Go + .NET (+ Kotlin em potencial). Para as demais,
+     oriente onde ligar cada uma: toolchain no `mise/config.toml`, seção
+     guardrail correspondente no `dotfiles/.zshrc`, LSP no `nvim/` se for editar.
+
 1. **Pré-requisitos**
    - Homebrew instalado? Se não, instale (`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`).
    - `brew install just`

@@ -34,9 +34,13 @@ mise-install:
     mise install
 
 # Init + start the podman VM (macOS needs a Linux VM to run containers; idempotent)
+# Sem podman instalado (ex.: máquina pessoal usando docker), pula sem quebrar o bootstrap.
 podman-machine:
     #!/usr/bin/env bash
     set -euo pipefail
+    if ! command -v podman &>/dev/null; then
+      echo "skip   podman não instalado — pulando a VM (usando docker? ok; ver README)"; exit 0
+    fi
     if ! podman machine inspect podman-machine-default &>/dev/null; then
       echo "→ creating podman machine"; podman machine init
     fi

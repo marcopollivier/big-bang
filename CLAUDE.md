@@ -31,6 +31,14 @@ são escopo agora** — não adicione suporte a Linux/Windows sem pedido explíc
   **só se não existirem** via `just seed` — nunca sobrescreva-os.
 - **Docs bilíngues:** toda mudança em `README.md` deve ser espelhada em
   `README-en.md` (e vice-versa) — mesma estrutura de seções, mesmo conteúdo.
+- **Convenção de pastas:** projetos vivem em `~/dev/<github-user>/<projeto>`
+  (ex.: este repo em `~/dev/<você>/big-bang`); na raiz da home (`~/`) só ficam
+  os dotfiles, via symlink/seed. Não é obrigatório (há descoberta automática e
+  `BIG_BANG_REPO`), mas é o fallback que o código assume.
+- **Contexto da máquina:** o setup varia entre trabalho e pessoal — trabalho usa
+  **podman** (licença comercial do Docker Desktop) e só Go/.NET (+Kotlin em
+  potencial); máquina pessoal pode usar **docker** e mais linguagens. Ao guiar um
+  setup, **pergunte o contexto primeiro** (passo 0 da skill *machine-bootstrap*).
 - O Lua de `nvim/` é formatado com `stylua` (o CI checa). Rode `stylua nvim/` antes de commitar.
 - **Não dê push direto na `main`.** Trabalhe em branch e abra PR com `just pr` (usa o `gh`).
 - **Uma branch por escopo.** Antes de começar qualquer trabalho cujo assunto seja

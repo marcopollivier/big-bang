@@ -7,6 +7,8 @@ skill **machine-bootstrap**. Confirme cada passo destrutivo antes de executar e
 
 Resumo do fluxo (a skill tem o detalhe):
 
+0. Pergunte o contexto da máquina: trabalho ou pessoal → containers (podman no
+   trabalho por licença; docker ok na pessoal) e linguagens além de Go/.NET.
 1. Garanta Homebrew e `just` (`brew install just`); instale o Homebrew se faltar.
 2. `just bootstrap` — instala o `@Brewfile`, symlinka os configs (com backup),
    confia e instala as toolchains do `mise` (`mise trust` + `mise install`) e faz o *seed* dos templates.
