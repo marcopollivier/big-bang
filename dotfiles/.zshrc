@@ -142,6 +142,25 @@ export PATH="$HOME/go/bin:$PATH"   # binários de `go install` (Go gerenciado pe
 ## Java
 ## JAVA_HOME é provido pelo mise (plugin java)
 
+# --- Guardrails de techs que já usei / posso voltar a usar ---------------
+# Seções de reserva: sem config ativa hoje, mas o lugar de cada coisa já
+# está marcado pra quando a tech voltar (ex.: na máquina pessoal).
+
+## Clojure
+## -- sem config ativa -- (aliases globais já são seedados em ~/.clojure/deps.edn)
+
+### Gradle
+## -- sem config ativa --
+# export GRADLE_USER_HOME="$HOME/.gradle"   # exemplo: cache/props fora do default
+
+### Maven
+## -- sem config ativa --
+# export MAVEN_OPTS="-Xmx2g"                # exemplo: memória do build
+
+## NodeJS
+## -- sem config ativa -- (Node vem do mise; NPM_TOKEN vive em ~/.zshrc.local e é lido pelo ~/.npmrc)
+# --------------------------------------------------------------------------
+
 ## Docker, Podman e K8s
 # Limpa DOCKER_HOST pra ferramentas (docker CLI, testcontainers) usarem o socket
 # padrão — que no macOS é provido pelo podman-mac-helper (ver README, FAQ).
@@ -156,15 +175,21 @@ function k8s-h() {
     kubectl config use-context "${EKS_HML_ARN:?defina EKS_HML_ARN em ~/.zshrc.local}" && kubectl "$@"
 }
 
-## GPG
+# !!!!!! DANGEROUS ZONE — dados sensíveis !!!!!!
+# Chaves e segredos NÃO vivem neste arquivo (ele é versionado no repo).
+# Vivem em ~/.zshrc.local, que é gitignored e nunca sai da máquina — os
+# blocos abaixo são só os APONTAMENTOS para eles.
+
+## GPG (assinatura de commits — a chave em si fica no keyring, não aqui)
 export GPG_TTY=$(tty)
 command -v gpgconf >/dev/null && gpgconf --kill gpg-agent
 
 ## Segredos e config específica da máquina (NÃO commitado)
-## Defina aqui: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN,
-## GITHUB_TOKEN, EKS_PRD_ARN, EKS_HML_ARN, etc.
+## Defina lá: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN,
+## GITHUB_TOKEN, NPM_TOKEN, EKS_PRD_ARN, EKS_HML_ARN, etc.
 ## Referência: ~/.zshrc.local.example
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+# !!!!!! fim da DANGEROUS ZONE !!!!!!
 
 ## Prompt (starship) — substitui o tema do oh-my-zsh. Config: ~/.config/starship.toml
 command -v starship >/dev/null && eval "$(starship init zsh)"
