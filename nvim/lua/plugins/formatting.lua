@@ -21,11 +21,7 @@ return {
         lua = { "stylua" },
       },
       -- Formata ao salvar; cai pro LSP se não houver formatador específico
-      format_on_save = function(bufnr)
-        local disable_filetypes = {}
-        local lsp_format = disable_filetypes[vim.bo[bufnr].filetype] and "never" or "fallback"
-        return { timeout_ms = 1500, lsp_format = lsp_format }
-      end,
+      format_on_save = { timeout_ms = 1500, lsp_format = "fallback" },
     },
   },
 }
