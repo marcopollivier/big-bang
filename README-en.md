@@ -55,8 +55,9 @@ For those who already know what they're doing (first time? jump to
 # 2. just
 brew install just
 
-# 3. clone + bootstrap (idempotent)
-git clone git@github.com:marcopollivier/big-bang.git && cd big-bang
+# 3. clone (following the ~/dev/<github-user>/<project> convention) + bootstrap (idempotent)
+git clone git@github.com:marcopollivier/big-bang.git ~/dev/marcopollivier/big-bang
+cd ~/dev/marcopollivier/big-bang
 just bootstrap
 
 # 4. fill in identity/secrets and validate
@@ -89,6 +90,8 @@ committed secrets — only *templates* — but several defaults are mine:
 | **Packages** | [`Brewfile`](./Brewfile) | add/remove apps and CLIs to taste |
 | **Editor languages** | [`nvim/`](./nvim) | Neovim ships ready for **Go, .NET/C# and Kotlin**; adapt the LSPs to your stack |
 | **Toolchains** | [`mise/config.toml`](./mise/config.toml) | Go/Java/Node/… versions that get installed |
+| **Clone path** | nothing, if you use `just seed`/`just link` | the Claude statusline ([`claude/settings.json`](./claude/settings.json)) and the WezTerm status discover the clone by themselves (fallback: the `~/dev/<github-user>/big-bang` convention); if something fails, set `BIG_BANG_REPO` in `~/.zshrc.local` |
+| **npm token** | `~/.npmrc` (after `just seed`) | the template ([`dotfiles/.npmrc`](./dotfiles/.npmrc)) reads `NPM_TOKEN` from the environment — set it in `~/.zshrc.local` if you use a private registry |
 
 > 💡 **Golden rule:** files with identity/secrets are only *copied* (`just seed`)
 > and **never** overwritten nor committed back — so you can edit them freely in
@@ -105,9 +108,16 @@ brew install just
 **2. Clone your fork and bootstrap:**
 
 ```sh
-git clone git@github.com:<you>/big-bang.git && cd big-bang
+git clone git@github.com:<you>/big-bang.git ~/dev/<you>/big-bang
+cd ~/dev/<you>/big-bang
 just bootstrap
 ```
+
+> 📁 **Folder convention:** projects live in `~/dev/<owner>/<project>` — the
+> owner is the GitHub user/org (e.g. `~/dev/<you>/big-bang`). Only dotfiles go
+> in the home root (`~/`), via symlink/seed. It's not mandatory (everything is
+> auto-discovered, and `BIG_BANG_REPO` covers exceptions), but it's the pattern
+> the repo assumes as a fallback.
 
 `just bootstrap` is **idempotent** (run it as many times as you like) and runs:
 

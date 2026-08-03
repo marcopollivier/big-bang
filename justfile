@@ -66,7 +66,7 @@ seed:
     just _seed "{{ repo }}/dotfiles/.aws/config"          "{{ home }}/.aws/config"
     just _seed "{{ repo }}/dotfiles/.npmrc"               "{{ home }}/.npmrc"
     just _seed "{{ repo }}/dotfiles/.clojure/deps.edn"    "{{ home }}/.clojure/deps.edn"
-    just _seed "{{ repo }}/claude/settings.json"          "{{ home }}/.claude/settings.json"
+    just _seed_template "{{ repo }}/claude/settings.json" "{{ home }}/.claude/settings.json"
     just _seed "{{ repo }}/claude/usage-budget.example"   "{{ home }}/.claude/usage-budget"
     @echo "→ Now fill identity/keys in ~/.gitconfig, ~/.wakatime.cfg and ~/.zshrc.local"
     @echo "→ Set your monthly token limit (US\$) in ~/.claude/usage-budget"
@@ -131,4 +131,15 @@ _seed src dst:
     if [[ -e "$dst" ]]; then echo "keep   $dst (already exists)"; exit 0; fi
     mkdir -p "$(dirname "$dst")"; cp "$src" "$dst"
     # Arquivos seedados recebem identidade/tokens — nascem legíveis só pelo dono
+    chmod 600 "$dst"; echo "seed   $dst"
+
+# Como _seed, mas substitui __REPO__ pelo caminho real deste clone — assim o
+# template funciona em qualquer fork/diretório, sem caminho fixo do autor
+_seed_template src dst:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    src="{{ src }}"; dst="{{ dst }}"
+    if [[ -e "$dst" ]]; then echo "keep   $dst (already exists)"; exit 0; fi
+    mkdir -p "$(dirname "$dst")"
+    sed "s|__REPO__|{{ repo }}|g" "$src" >"$dst"
     chmod 600 "$dst"; echo "seed   $dst"

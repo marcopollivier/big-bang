@@ -16,3 +16,7 @@
 ## Contextos EKS usados por k8s-p / k8s-h (ARNs da sua infra)
 # export EKS_PRD_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-prd>"
 # export EKS_HML_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-hml>"
+
+## Caminho deste clone (só se a descoberta automática falhar — o WezTerm resolve
+## o symlink do próprio wezterm.lua; ver wezterm/.wezterm.lua)
+# export BIG_BANG_REPO="$HOME/dev/<seu-usuario>/big-bang"

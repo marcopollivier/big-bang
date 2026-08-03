@@ -55,8 +55,9 @@ Pra quem já sabe o que está fazendo (primeira vez? pule para
 # 2. just
 brew install just
 
-# 3. clone + bootstrap (idempotente)
-git clone git@github.com:marcopollivier/big-bang.git && cd big-bang
+# 3. clone (na convenção ~/dev/<github-user>/<projeto>) + bootstrap (idempotente)
+git clone git@github.com:marcopollivier/big-bang.git ~/dev/marcopollivier/big-bang
+cd ~/dev/marcopollivier/big-bang
 just bootstrap
 
 # 4. preencha identidade/segredos e valide
@@ -89,6 +90,8 @@ tem segredo versionado — só *templates* — mas vários defaults são meus:
 | **Pacotes** | [`Brewfile`](./Brewfile) | tire/ponha apps e CLIs conforme o seu gosto |
 | **Linguagens do editor** | [`nvim/`](./nvim) | o Neovim vem pronto pra **Go, .NET/C# e Kotlin**; adapte os LSPs ao seu stack |
 | **Toolchains** | [`mise/config.toml`](./mise/config.toml) | versões de Go/Java/Node/… que serão instaladas |
+| **Caminho do clone** | nenhum, se usar `just seed`/`just link` | o statusline do Claude ([`claude/settings.json`](./claude/settings.json)) e o status do WezTerm descobrem o clone sozinhos (fallback: convenção `~/dev/<github-user>/big-bang`); se algo falhar, defina `BIG_BANG_REPO` no `~/.zshrc.local` |
+| **Token do npm** | `~/.npmrc` (após `just seed`) | o template ([`dotfiles/.npmrc`](./dotfiles/.npmrc)) lê `NPM_TOKEN` do ambiente — defina no `~/.zshrc.local` se usa registry privado |
 
 > 💡 **Regra de ouro:** os arquivos com identidade/segredo são apenas *copiados*
 > (`just seed`) e **nunca** sobrescritos nem versionados de volta — então pode
@@ -106,9 +109,16 @@ brew install just
 **2. Clone o seu fork e rode o bootstrap:**
 
 ```sh
-git clone git@github.com:<você>/big-bang.git && cd big-bang
+git clone git@github.com:<você>/big-bang.git ~/dev/<você>/big-bang
+cd ~/dev/<você>/big-bang
 just bootstrap
 ```
+
+> 📁 **Convenção de pastas:** projetos vivem em `~/dev/<dono>/<projeto>` — o
+> dono é o usuário/org do GitHub (ex.: `~/dev/<você>/big-bang`). Só os dotfiles
+> ficam na raiz da home (`~/`), via symlink/seed. Não é obrigatório (tudo se
+> descobre sozinho, e `BIG_BANG_REPO` cobre exceções), mas é o padrão que o
+> repo assume como fallback.
 
 O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e executa:
 

@@ -106,9 +106,38 @@ config.keys = {
 --             mês vs limite + hoje + projeção; estimativa local via ccusage, bate
 --             com a UI do Claude; limite em ~/.claude/usage-budget).
 -- Ambos os scripts têm cache próprio, então cada tick aqui é barato.
-local repo = wezterm.home_dir .. "/dev/marcopollivier/big-bang"
-local usage_script = repo .. "/claude/usage.sh"
-local sysinfo_script = repo .. "/wezterm/sysinfo.sh"
+
+-- Onde está o clone deste repo? Sem caminho fixo do autor: o wezterm.lua da
+-- home é um symlink para <repo>/wezterm/.wezterm.lua (criado pelo `just link`),
+-- então resolver o link revela o clone — funciona em qualquer fork/diretório.
+-- Ordem: $BIG_BANG_REPO (override manual) → symlink resolvido → convenção
+-- de pastas do repo (~/dev/<github-user>/big-bang, ver README).
+local function repo_dir()
+  local override = os.getenv("BIG_BANG_REPO")
+  if override and override ~= "" then
+    return override
+  end
+  local f = io.popen('readlink -f "' .. wezterm.config_file .. '" 2>/dev/null')
+  if f then
+    local resolved = f:read("*l")
+    f:close()
+    if resolved and resolved ~= "" then
+      local dir = resolved:match("^(.*)/wezterm/[^/]+$")
+      if dir then
+        return dir
+      end
+    end
+  end
+  for _, dir in ipairs(wezterm.glob(wezterm.home_dir .. "/dev/*/big-bang")) do
+    return dir
+  end
+  return nil
+end
+
+-- Sem clone encontrado (nem override): status bars ficam vazios, sem erro.
+local repo = repo_dir()
+local usage_script = repo and (repo .. "/claude/usage.sh")
+local sysinfo_script = repo and (repo .. "/wezterm/sysinfo.sh")
 
 -- Cor por nível de uso (verde → amarelo → laranja → vermelho).
 local function level_color(pct, yellow, orange, red)
@@ -125,6 +154,11 @@ local function level_color(pct, yellow, orange, red)
 end
 
 wezterm.on("update-status", function(window, _pane)
+  if not repo then
+    window:set_right_status("")
+    window:set_left_status("")
+    return
+  end
   -- Direita: consumo do Claude Code. Cor pela % do limite (60/70/85).
   local ok, usage = wezterm.run_child_process({ usage_script })
   usage = (ok and usage or ""):gsub("%s+$", "")
