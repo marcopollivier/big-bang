@@ -114,7 +114,7 @@ just bootstrap
 - `just brew` — install everything in the [`Brewfile`](./Brewfile)
 - `just link` — symlink the shared configs (zsh, starship, nvim, mise…); existing real files are backed up first
 - `just mise-install` — install the toolchains from [`mise/config.toml`](./mise/config.toml)
-- `just seed` — copy secret/identity templates (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **only if missing**
+- `just seed` — copy secret/identity templates **only if missing**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` and the two Claude Code ones (`~/.claude/settings.json` and `~/.claude/usage-budget` — see [`claude/`](./claude))
 - `just podman-machine` — create/start the podman Linux VM (on macOS containers run inside it)
 
 **3. Fill in your identity and secrets** (see the table in
@@ -159,6 +159,8 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 | [`wezterm/`](./wezterm) | [WezTerm](https://wezfurlong.org/wezterm/) terminal configuration. |
 | [`starship/`](./starship) | [Starship](https://starship.rs/) shell prompt configuration. |
 | [`mise/`](./mise) | Global [mise](https://mise.jdx.dev/) config — toolchain versions. |
+| [`claude/`](./claude) | [Claude Code](https://claude.com/claude-code) config + token-usage tracking (statusline and month status in WezTerm). See its [`README`](./claude/README.md). |
+| [`cmux/`](./cmux) | AI agent orchestrator (embedded Ghostty terminal), being tried as a WezTerm alternative. See its [`README`](./cmux/README.md). |
 | [`defaultdots/`](./defaultdots) | Pristine/original dotfiles, kept as a reset reference. |
 
 Each folder has its own `README.md`. Root files worth knowing:
@@ -167,11 +169,14 @@ Each folder has its own `README.md`. Root files worth knowing:
 - [`Brewfile`](./Brewfile) — Homebrew packages (`brew bundle`).
 - [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) — local quality/secret hooks.
 - [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — CI (lint, syntax, secret scan).
+- `.claude/` — slash commands for Claude Code users in this repo:
+  **`/setup-machine`** (guided from-scratch machine setup) and **`/sync`**
+  (re-syncs symlinks/Brewfile and reports drift).
 
 ## Tooling / stack
 
 - **Version manager:** [mise](https://mise.jdx.dev/) — Go, Java, Kotlin, Node,
-  .NET, Python… (replaced asdf/nvm/pyenv).
+  .NET… (replaced asdf/nvm/pyenv). See [`mise/config.toml`](./mise/config.toml).
 - **Packages:** [Homebrew](https://brew.sh/) (see [`Brewfile`](./Brewfile)).
 - **Shell:** zsh + oh-my-zsh, **Starship** prompt.
 - **Editor:** Neovim (see [`nvim/`](./nvim)).
@@ -209,6 +214,11 @@ both at once** — there is no sync step:
 To re-apply or repair the links after adding a new config, just run `just link`
 again.
 
+> ⚠️ **Symlink side effect:** installers that do `>> ~/.zshrc` (many CLIs do)
+> write **straight into the repo's versioned file**. Before committing, check
+> `git diff` — move anything machine-specific to `~/.zshrc.local` instead of
+> leaving it in the repo's `.zshrc`.
+
 ### How it stays safe (no secret leaks)
 
 The trick is that **only secret-free files are symlinked and committed**.
@@ -217,7 +227,7 @@ Anything that carries identity or credentials is handled differently:
 | Kind of file | Strategy | Committed? | Examples |
 |---|---|---|---|
 | Shared, **secret-free** config | **symlink** (`just link`) | ✅ yes | `.zshrc`, `starship.toml`, `nvim/`, `mise/config.toml` |
-| Identity / secret-bearing | **seed** — copied **only if missing** (`just seed`), never overwritten | ❌ no | `.gitconfig`, `.wakatime.cfg` |
+| Identity / secret-bearing | **seed** — copied **only if missing** (`just seed`), never overwritten | ❌ no | `.gitconfig`, `.wakatime.cfg`, `.npmrc` |
 | Pure secrets / machine-specific | kept in a **git-ignored** file you fill in by hand | ❌ no | `~/.zshrc.local` |
 
 So the layered protection is:

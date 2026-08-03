@@ -22,7 +22,10 @@ nova pronta com o mínimo de esforço, sem expor segredos.
    - `brew install just`
 
 2. **Bootstrap** (na raiz do repo)
-   - `just bootstrap` = `brew` (instala o Brewfile) → `link` → `mise-install` → `seed`.
+   - `just bootstrap` compõe as sub-recipes na ordem do `justfile` — hoje:
+     `brew` (Brewfile) → `link` (symlinks) → `mise-install` → `seed` →
+     `podman-machine` (cria/inicia a VM Linux do podman). Confira `just --list`
+     se a composição mudar.
    - `mise-install` já roda `mise trust` no `mise/config.toml` do repo, então entrar na
      pasta não dispara o erro de config não confiada. Se mesmo assim aparecer
      `Config files ... are not trusted`, rode `mise trust mise/config.toml`.
@@ -32,6 +35,9 @@ nova pronta com o mínimo de esforço, sem expor segredos.
    - Git: `git config --global user.name`, `user.email`, `user.signingkey` (assinatura GPG está ligada no `.gitconfig`).
    - `~/.zshrc.local`: `AWS_*`, `GITHUB_TOKEN`, `EKS_PRD_ARN`, `EKS_HML_ARN` — modelo em `dotfiles/.zshrc.local.example`.
    - WakaTime: dentro do `nvim`, `:WakaTimeApiKey` (chave em https://wakatime.com/settings/api-key).
+   - Claude Code: limite mensal (US$) em `~/.claude/usage-budget` — trabalho: o
+     limite dado; pessoal/Pro: `0` (mostra só o gasto). Opcional: `just ruflo`
+     instala o plugin ruflo (requer a CLI `claude`).
 
 4. **Autenticações interativas** (não dá pra rodar headless)
    - `gh auth login` — peça ao usuário rodar com `! gh auth login --git-protocol ssh --web`.

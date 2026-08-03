@@ -3,6 +3,8 @@
 Config de Neovim como IDE para **Go**, **.NET/C#** e **Kotlin**, com integração
 ao **Claude Code** e **WakaTime**. Histórico completo e racional em [`SETUP.md`](./SETUP.md).
 
+> 🔥 Pegando prática? Siga as lições guiadas em [`PRACTICE.md`](./PRACTICE.md).
+
 ## Instalação nesta máquina
 
 Pré-requisitos: Neovim ≥ 0.11, `git`, `ripgrep`, `fd`, um compilador C (Xcode CLT no macOS)

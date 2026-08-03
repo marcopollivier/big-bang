@@ -14,7 +14,8 @@ máquina ficam em `~/.zshrc.local` (não versionado).
 | `.gitignore.global` | `.gitignore` global (referenciado por `core.excludesFile`). |
 | `.aws/config` | Config do AWS CLI (apenas região; sem credenciais). |
 | `.clojure/deps.edn` | Aliases globais do Clojure CLI. |
-| `.opentofurc` | Config do OpenTofu (network mirror de providers via SSH). |
+| `.npmrc` | Config do npm. O token de registry privado vem de `${NPM_TOKEN}` do ambiente (defina em `~/.zshrc.local`) — nunca do arquivo. |
+| `.opentofurc` | Config do CLI do OpenTofu. |
 | `.wakatime.cfg` | Config do WakaTime (tracking de tempo). `api_key` em branco — a chave real vai na máquina, não no repo. |
 
 ## Como instalar (máquina nova)

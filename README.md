@@ -115,7 +115,7 @@ O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e execut
 - `just brew` — instala tudo que está no [`Brewfile`](./Brewfile)
 - `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise…); arquivos reais existentes têm backup feito antes
 - `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
-- `just seed` — copia os templates de segredo/identidade (`.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`) **só se não existirem**
+- `just seed` — copia os templates de segredo/identidade **só se não existirem**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` e os dois do Claude Code (`~/.claude/settings.json` e `~/.claude/usage-budget` — veja [`claude/`](./claude))
 - `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
 
 **3. Preencha sua identidade e segredos** (veja a tabela em
@@ -160,6 +160,8 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | [`wezterm/`](./wezterm) | Configuração do terminal [WezTerm](https://wezfurlong.org/wezterm/). |
 | [`starship/`](./starship) | Configuração do prompt [Starship](https://starship.rs/). |
 | [`mise/`](./mise) | Config global do [mise](https://mise.jdx.dev/) — versões dos toolchains. |
+| [`claude/`](./claude) | Config do [Claude Code](https://claude.com/claude-code) + acompanhamento de consumo de tokens (statusline e status do mês no WezTerm). Veja o [`README`](./claude/README.md). |
+| [`cmux/`](./cmux) | Orquestrador de agentes de IA (terminal Ghostty embutido), em teste como alternativa ao WezTerm. Veja o [`README`](./cmux/README.md). |
 | [`defaultdots/`](./defaultdots) | Dotfiles originais/de fábrica, mantidos como referência de reset. |
 
 Cada pasta tem o seu próprio `README.md`. Arquivos da raiz que vale conhecer:
@@ -168,11 +170,14 @@ Cada pasta tem o seu próprio `README.md`. Arquivos da raiz que vale conhecer:
 - [`Brewfile`](./Brewfile) — pacotes do Homebrew (`brew bundle`).
 - [`.pre-commit-config.yaml`](./.pre-commit-config.yaml) — hooks locais de qualidade/segredos.
 - [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — CI (lint, sintaxe, scan de segredos).
+- `.claude/` — slash commands para quem usa o Claude Code no repo:
+  **`/setup-machine`** (configura a máquina do zero, guiado) e **`/sync`**
+  (re-sincroniza symlinks/Brewfile e reporta divergências).
 
 ## Ferramentas / stack
 
 - **Gerenciador de versões:** [mise](https://mise.jdx.dev/) — Go, Java, Kotlin,
-  Node, .NET, Python… (substituiu asdf/nvm/pyenv).
+  Node, .NET… (substituiu asdf/nvm/pyenv). Veja o [`mise/config.toml`](./mise/config.toml).
 - **Pacotes:** [Homebrew](https://brew.sh/) (veja o [`Brewfile`](./Brewfile)).
 - **Shell:** zsh + oh-my-zsh, prompt **Starship**.
 - **Editor:** Neovim (veja [`nvim/`](./nvim)).
@@ -209,6 +214,11 @@ lados atualiza os dois de uma vez** — não existe passo de sincronização:
 
 Pra reaplicar ou consertar os links depois de adicionar um config novo, é só
 rodar `just link` de novo.
+
+> ⚠️ **Efeito colateral do symlink:** instaladores que fazem `>> ~/.zshrc`
+> (muitos CLIs fazem) escrevem **direto no arquivo versionado do repo**. Antes
+> de commitar, confira o `git diff` — mova o que for específico da máquina para
+> `~/.zshrc.local` em vez de deixar no `.zshrc` do repo.
 
 ### Como ele se mantém seguro (sem vazar segredos)
 
