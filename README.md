@@ -122,6 +122,20 @@ O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e execut
 [Faça seu fork](#faça-seu-fork-torne-seu)): nome/e-mail do git em `~/.gitconfig`,
 chave do WakaTime em `~/.wakatime.cfg` e os segredos em `~/.zshrc.local`.
 
+> 🔑 **Chave GPG — não pule esta etapa.** O `.gitconfig` vem com assinatura de
+> commits **ligada** (`commit.gpgSign = true`); sem uma chave configurada, todo
+> `git commit` falha. Crie a sua:
+>
+> ```sh
+> gpg --full-generate-key                        # RSA 4096; use o mesmo e-mail do git
+> gpg --list-secret-keys --keyid-format=long     # copie o ID após "sec rsa4096/"
+> git config --global user.signingkey <ID>
+> gpg --armor --export <ID>                      # cole no GitHub → Settings → SSH and GPG keys
+> ```
+>
+> Não quer assinar commits? Desligue de vez:
+> `git config --global commit.gpgsign false`
+
 **4. Abra um novo terminal** (ou `exec zsh`) e **valide** que está tudo no lugar:
 
 ```sh
