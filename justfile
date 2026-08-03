@@ -11,9 +11,17 @@ default:
     @just --list
 
 # Full setup on a new machine (idempotent)
-bootstrap: brew link mise-install seed podman-machine
+bootstrap: brew omz link mise-install seed podman-machine
     @echo ""
     @echo "✅ Bootstrap complete. Open a new terminal (or run: exec zsh)."
+
+# Install oh-my-zsh if missing (the .zshrc expects it; idempotent)
+omz:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [[ -d "$HOME/.oh-my-zsh" ]]; then echo "ok     oh-my-zsh already installed"; exit 0; fi
+    echo "→ installing oh-my-zsh"
+    RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Install/upgrade everything in the Brewfile
 brew:
@@ -62,25 +70,32 @@ seed:
     just _seed "{{ repo }}/claude/usage-budget.example"   "{{ home }}/.claude/usage-budget"
     @echo "→ Now fill identity/keys in ~/.gitconfig, ~/.wakatime.cfg and ~/.zshrc.local"
     @echo "→ Set your monthly token limit (US\$) in ~/.claude/usage-budget"
+    @echo "→ GPG: commits são assinados por padrão — crie uma chave (gpg --full-generate-key)"
+    @echo "  e preencha user.signingKey, ou rode: git config --global commit.gpgsign false"
 
 # Update the Brewfile from what's currently installed
 brew-dump:
     brew bundle dump --force --file="{{ repo }}/Brewfile"
 
-# Sanity check: tools present + symlinks resolved
+# Sanity check: tools present + symlinks resolved (exit 1 on any failure)
 doctor:
     #!/usr/bin/env bash
     set -uo pipefail
+    fail=0
     echo "## tools"
-    for t in brew mise nvim starship fzf git just podman; do
-      printf "  %-10s %s\n" "$t" "$(command -v "$t" || echo MISSING)"
+    for t in brew mise nvim starship fzf git just podman gh jq gpg git-lfs; do
+      if p="$(command -v "$t")"; then printf "  %-10s %s\n" "$t" "$p"; else printf "  %-10s MISSING\n" "$t"; fail=1; fi
     done
     echo "## podman"
     printf "  machine    %s\n" "$(podman machine inspect podman-machine-default --format '{{{{.State}}' 2>/dev/null || echo 'NOT INITIALIZED (run: just podman-machine)')"
     echo "## symlinks"
-    for f in "{{ home }}/.zshrc" "{{ home }}/.config/starship.toml" "{{ home }}/.config/nvim" "{{ home }}/.config/mise/config.toml"; do
-      if [[ -L "$f" ]]; then echo "  ok   $f -> $(readlink "$f")"; else echo "  NOT A SYMLINK: $f"; fi
+    for f in "{{ home }}/.zshrc" "{{ home }}/.gitignore.global" "{{ home }}/.opentofurc" \
+             "{{ home }}/.config/starship.toml" "{{ home }}/.config/nvim" \
+             "{{ home }}/.config/mise/config.toml" "{{ home }}/.config/wezterm/wezterm.lua" \
+             "{{ home }}/.config/ghostty/config" "{{ home }}/.config/cmux/cmux.json"; do
+      if [[ -L "$f" ]]; then echo "  ok   $f -> $(readlink "$f")"; else echo "  NOT A SYMLINK: $f"; fail=1; fi
     done
+    exit $fail
 
 # Open a PR for the current branch in the browser (requires: gh auth login)
 pr:
@@ -114,4 +129,6 @@ _seed src dst:
     set -euo pipefail
     src="{{ src }}"; dst="{{ dst }}"
     if [[ -e "$dst" ]]; then echo "keep   $dst (already exists)"; exit 0; fi
-    mkdir -p "$(dirname "$dst")"; cp "$src" "$dst"; echo "seed   $dst"
+    mkdir -p "$(dirname "$dst")"; cp "$src" "$dst"
+    # Arquivos seedados recebem identidade/tokens — nascem legíveis só pelo dono
+    chmod 600 "$dst"; echo "seed   $dst"

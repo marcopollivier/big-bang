@@ -29,7 +29,15 @@ nova pronta com o mínimo de esforço, sem expor segredos.
    - Se algo falhar, rode as recipes individuais (`just brew`, `just link`, etc.) e investigue.
 
 3. **Identidade e segredos** (peça ao usuário; não preencha sozinho)
-   - Git: `git config --global user.name`, `user.email`, `user.signingkey` (assinatura GPG está ligada no `.gitconfig`).
+   - Git: `git config --global user.name`, `user.email`, `user.signingkey`.
+   - **Chave GPG (obrigatório antes do primeiro commit):** a assinatura vem
+     ligada no `.gitconfig` (`commit.gpgSign = true`), então sem chave todo
+     `git commit` falha. Guie o usuário:
+     1. `gpg --full-generate-key` (interativo — peça pra rodar com `!` se preciso; RSA 4096, e-mail igual ao do git)
+     2. `gpg --list-secret-keys --keyid-format=long` → copiar o ID depois de `sec rsa4096/`
+     3. `git config --global user.signingkey <ID>`
+     4. Cadastrar a chave pública no GitHub: `gpg --armor --export <ID>` → Settings → SSH and GPG keys
+     - Se o usuário **não quiser assinar**: `git config --global commit.gpgsign false` e pronto.
    - `~/.zshrc.local`: `AWS_*`, `GITHUB_TOKEN`, `EKS_PRD_ARN`, `EKS_HML_ARN` — modelo em `dotfiles/.zshrc.local.example`.
    - WakaTime: dentro do `nvim`, `:WakaTimeApiKey` (chave em https://wakatime.com/settings/api-key).
 

@@ -121,6 +121,20 @@ just bootstrap
 [Fork it](#fork-it-make-it-yours)): git name/email in `~/.gitconfig`, WakaTime
 key in `~/.wakatime.cfg`, and the secrets in `~/.zshrc.local`.
 
+> 🔑 **GPG key — don't skip this step.** The `.gitconfig` ships with commit
+> signing **enabled** (`commit.gpgSign = true`); without a configured key,
+> every `git commit` fails. Create yours:
+>
+> ```sh
+> gpg --full-generate-key                        # RSA 4096; use the same e-mail as git
+> gpg --list-secret-keys --keyid-format=long     # copy the ID after "sec rsa4096/"
+> git config --global user.signingkey <ID>
+> gpg --armor --export <ID>                      # paste into GitHub → Settings → SSH and GPG keys
+> ```
+>
+> Don't want signed commits? Turn it off for good:
+> `git config --global commit.gpgsign false`
+
 **4. Open a new terminal** (or `exec zsh`) and **validate** everything is in place:
 
 ```sh

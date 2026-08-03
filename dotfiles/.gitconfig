@@ -11,6 +11,9 @@
 	process = git-lfs filter-process
 	clean = git-lfs clean -- %f
 	required = true
+# Assinatura de commits ligada por padrão: exige uma chave GPG configurada.
+# Crie a sua (gpg --full-generate-key) e preencha user.signingKey acima, ou
+# desligue com: git config --global commit.gpgsign false
 [commit]
 	gpgSign = true
 [tag]

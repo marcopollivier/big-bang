@@ -121,7 +121,12 @@ plugins=(
     yarn
     )
 
-source $ZSH/oh-my-zsh.sh
+# Guard: sem oh-my-zsh o shell segue funcionando (instale com `just omz`)
+if [ -f "$ZSH/oh-my-zsh.sh" ]; then
+  source "$ZSH/oh-my-zsh.sh"
+else
+  echo "big-bang: oh-my-zsh não encontrado em $ZSH — rode 'just omz' no repo" >&2
+fi
 
 # User configuration
 
