@@ -12,6 +12,7 @@ brew "ripgrep"         # fast grep (used by Neovim/telescope)
 brew "fd"              # fast find (used by Neovim/telescope)
 brew "bat"             # cat with syntax highlighting
 brew "eza"             # modern ls
+brew "jq"              # processador de JSON — usado por claude/statusline.sh e claude/usage.sh
 
 # --- Editor & version manager ---
 brew "neovim"          # editor / IDE (see nvim/)
@@ -22,6 +23,10 @@ brew "gh"              # GitHub CLI
 brew "just"            # command runner — this repo's bootstrap (see justfile)
 brew "lazygit"
 brew "lazydocker"
+brew "git-lfs"         # exigido pelo filtro lfs do .gitconfig (required = true)
+brew "gnupg"           # assinatura de commits (.gitconfig: commit.gpgSign = true)
+brew "pinentry-mac"    # prompt de senha do GPG integrado ao macOS/Keychain
+brew "pre-commit"      # hooks de qualidade locais (pre-commit install; ver .pre-commit-config.yaml)
 
 # --- Cloud / infra ---
 brew "awscli"
