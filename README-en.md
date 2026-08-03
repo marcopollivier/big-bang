@@ -88,6 +88,7 @@ committed secrets — only *templates* — but several defaults are mine:
 | **Machine secrets** | `~/.zshrc.local` (after `just seed`) | `AWS_*`, `GITHUB_TOKEN`, EKS ARNs, WakaTime key — see [`.zshrc.local.example`](./dotfiles/.zshrc.local.example) |
 | **WakaTime** | `~/.wakatime.cfg` | your API key (optional; remove if unused) |
 | **Packages** | [`Brewfile`](./Brewfile) | add/remove apps and CLIs to taste |
+| **Containers (work vs personal)** | [`Brewfile`](./Brewfile) + bootstrap | at **work**: podman (Docker Desktop has a commercial license); on a **personal machine**: docker is fine — swap `brew "podman"` for the `docker` cask (commented in the Brewfile) and `just podman-machine` skips itself |
 | **Editor languages** | [`nvim/`](./nvim) | Neovim ships ready for **Go, .NET/C# and Kotlin**; adapt the LSPs to your stack |
 | **Toolchains** | [`mise/config.toml`](./mise/config.toml) | Go/Java/Node/… versions that get installed |
 | **Clone path** | nothing, if you use `just seed`/`just link` | the Claude statusline ([`claude/settings.json`](./claude/settings.json)) and the WezTerm status discover the clone by themselves (fallback: the `~/dev/<github-user>/big-bang` convention); if something fails, set `BIG_BANG_REPO` in `~/.zshrc.local` |

@@ -44,3 +44,5 @@ cask "visual-studio-code"  # instala também o CLI `code` no PATH
 cask "google-drive"        # Google Drive (sync)
 cask "bruno"               # client de API (alternativa a Insomnia/Postman)
 cask "studio-3t"           # GUI de MongoDB (Studio 3T Free/Community)
+# cask "docker"            # máquina PESSOAL: alternativa ao podman (no trabalho,
+                           # podman por causa da licença comercial do Docker Desktop)
