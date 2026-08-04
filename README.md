@@ -206,7 +206,7 @@ Cada pasta tem o seu próprio `README.md`. Arquivos da raiz que vale conhecer:
 - **Pacotes:** [Homebrew](https://brew.sh/) (veja o [`Brewfile`](./Brewfile)).
 - **Shell:** zsh + oh-my-zsh, prompt **Starship**.
 - **Editor:** Neovim (veja [`nvim/`](./nvim)).
-- **CLIs do dia a dia:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, opentofu.
+- **CLIs do dia a dia:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, argocd, opentofu.
 
 ## Como funciona por dentro
 
