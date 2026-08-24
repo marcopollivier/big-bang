@@ -205,7 +205,7 @@ Each folder has its own `README.md`. Root files worth knowing:
 - **Packages:** [Homebrew](https://brew.sh/) (see [`Brewfile`](./Brewfile)).
 - **Shell:** zsh + oh-my-zsh, **Starship** prompt.
 - **Editor:** Neovim (see [`nvim/`](./nvim)).
-- **Day-to-day CLIs:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, opentofu.
+- **Day-to-day CLIs:** lazygit, lazydocker, fzf, bat, eza, awscli, kubectl, argocd, opentofu.
 
 ## How it works under the hood
 

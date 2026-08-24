@@ -31,6 +31,7 @@ brew "pre-commit"      # hooks de qualidade locais (pre-commit install; ver .pre
 # --- Cloud / infra ---
 brew "awscli"
 brew "kubernetes-cli"  # kubectl
+brew "argocd"          # GitOps CD p/ Kubernetes (ArgoCD) — vale trabalho e casa
 brew "opentofu"
 brew "ansible"         # ad-hoc only; remove if you don't use it
 brew "podman"          # container engine (Mac: roda via `podman machine`)
