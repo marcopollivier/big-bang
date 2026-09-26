@@ -41,6 +41,7 @@ cask "wezterm"
 cask "font-hack-nerd-font"
 
 # --- Apps ---
+cask "claude-code@latest"  # CLI do Claude Code — cask "@latest" acompanha releases mais rápido que o cask estável
 cask "visual-studio-code"  # instala também o CLI `code` no PATH
 cask "google-drive"        # Google Drive (sync)
 cask "bruno"               # client de API (alternativa a Insomnia/Postman)
