@@ -169,6 +169,7 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 | `just brew-dump` | update the `Brewfile` from what's installed |
 | `just mise-install` | install the toolchains from [`mise/config.toml`](./mise/config.toml) |
 | `just seed` | copy the identity/secret templates (only if missing) |
+| `just cmux-settings` | enable the cmux settings that only live in the UI (Extensions beta = plugins button) |
 | `just podman-machine` | create/start the podman Linux VM |
 | `just pr` | open a PR for the current branch in the browser (needs `gh auth login`) |
 | `just ruflo` | install the ruflo Claude Code plugin (needs the `claude` CLI) |

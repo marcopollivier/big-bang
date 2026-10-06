@@ -33,9 +33,9 @@ Validar: `cmux config validate` / `cmux config doctor`. O `just link` faz backup
 > padrão" e `cmux config doctor` lista só `$schema, automation, schemaVersion`.
 > `just doctor` acusa `NOT A SYMLINK` — basta rodar `just link` de novo.
 
-Há uma **terceira camada** que **não cabe em arquivo**: toggles de beta e alguns
-switches ficam só na UI de Settings (UserDefaults do app). É o caso do botão de
-plugins (ver [checklist](#replicar-em-outra-máquina-checklist)).
+Há uma **terceira camada** que **não cabe em arquivo**: toggles de beta ficam só
+na UI de Settings (UserDefaults do app). É o caso do botão de plugins — a receita
+`just cmux-settings` grava isso por você (ver [checklist](#replicar-em-outra-máquina-checklist)).
 
 ## Atalhos (espelhando o WezTerm)
 
@@ -71,9 +71,11 @@ primeiro é o repo. Siga na ordem:
    `~/.config/ghostty/config` e `~/.config/cmux/cmux.json` têm de aparecer como
    `ok … ->`. `cmux config doctor` deve listar `automation, shortcuts, terminal`.
 3. **Settings só da UI** (não têm chave no `cmux.json`):
-   - **Extensions (beta)** — é o **botão de plugins** na sidebar. Ligue nas
-     Settings; confira com
-     `defaults read com.cmuxterm.app extensions.beta.enabled` → `1`.
+   - **Extensions (beta)** — é o **botão de plugins** na sidebar. Rode
+     `just cmux-settings` (grava o UserDefaults) e reabra o app; ou ligue nas
+     Settings. Confira com
+     `defaults read com.cmuxterm.app extensions.beta.enabled` → `1`
+     (o `just doctor` também mostra).
    - **Automation › Claude Code Integration** e **Terminal › Resume Agent
      Sessions on Reopen**: o `cmux.json` do repo já força os dois como `true`;
      só confira que a UI reflete.

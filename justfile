@@ -174,6 +174,15 @@ ruflo:
     claude plugin install ruflo-core@ruflo --scope user
     @echo "→ ruflo-core installed (user scope). New skills/agents load next Claude Code session."
 
+# cmux: settings que só existem na UI (UserDefaults) e não têm chave no cmux.json —
+# hoje, o beta "Extensions" (botão de plugins na sidebar). Idempotente. Ver cmux/README.md.
+cmux-settings:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    defaults write com.cmuxterm.app extensions.beta.enabled -bool true
+    echo "ok     cmux: Extensions (beta) ligado (extensions.beta.enabled=1)"
+    echo "→ Reabra o cmux (Cmd+Q e abrir de novo) pra aplicar."
+
 # --- internal helpers (hidden from --list) ---
 
 # Symlink src -> dst, backing up an existing real file
