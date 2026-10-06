@@ -3,16 +3,33 @@
   "schemaVersion": 1,
 
   // Config do cmux gerenciada por este repo (symlinkado por `just link`).
-  // JSONC (JSON com comentários). Só listamos as chaves que QUEREMOS sobrescrever;
+  // JSONC (JSON com comentários). Só listamos as chaves que QUEREMOS fixar;
   // o que não está aqui cai no default salvo nas Settings do app.
   // Recarrega com:  cmux reload-config   (ou CMD+Shift+,)
+  // Valida com:     cmux config validate
   //
-  // OBS: a APARÊNCIA do terminal (fonte, tema, transparência, copy-on-select)
-  // fica no Ghostty -> cmux/ghostty.config. Aqui ficam só os atalhos de janela/split.
+  // ATENÇÃO: o cmux já SOBRESCREVEU este symlink com um template em updates.
+  // `just doctor` acusa "NOT A SYMLINK" quando isso acontece — rode `just link` de novo.
+  //
+  // OBS: a APARÊNCIA do terminal (fonte, tema, transparência) fica no Ghostty
+  // -> cmux/ghostty.config. O que NÃO cabe aqui (só na UI de Settings):
+  // o beta "Extensions" (botão de plugins). Ver cmux/README.md.
 
   "terminal": {
     // Selecionar com o mouse já copia (espelha o copy-on-select do Ghostty).
-    "copyOnSelect": true
+    "copyOnSelect": true,
+    // Ao reabrir o cmux, religa as sessões de agente (Claude) com `--resume`.
+    // É o que faz a sessão do Claude sobreviver a fechar/reabrir o app.
+    // (Settings > Terminal > Resume Agent Sessions on Reopen)
+    "autoResumeAgentSessions": true
+  },
+
+  "automation": {
+    // Hooks do cmux no Claude Code (wrapper que registra o id da sessão).
+    // Sem isso não há o que retomar no reopen. (Settings > Automation)
+    "claudeCodeIntegration": true,
+    // Controle via socket só pelo próprio cmux (default; fixado p/ não divergir).
+    "socketControlMode": "cmuxOnly"
   },
 
   // Atalhos remapeados pra bater com a memória muscular do WezTerm.
@@ -21,8 +38,8 @@
     "bindings": {
       // Splits: CMD+Enter = pane novo EMBAIXO · CMD+Shift+Enter = pane novo À DIREITA
       // (no cmux não existe "split à esquerda"; o canvas só divide p/ direita/baixo).
-      "splitDown": "cmd+\r",         // default: cmd+shift+d
-      "splitRight": "cmd+shift+\r",  // default: cmd+d
+      "splitDown": "cmd+return",         // default: cmd+shift+d
+      "splitRight": "cmd+shift+return",  // default: cmd+d
 
       // Foco entre panes com CMD+setas (no wezterm é assim).
       "focusLeft": "cmd+←",          // default: cmd+opt+←
@@ -31,7 +48,7 @@
       "focusDown": "cmd+↓",          // default: cmd+opt+↓
 
       // Zoom no pane focado (CMD+Shift+Z, igual wezterm).
-      "toggleSplitZoom": "cmd+shift+z", // default: cmd+shift+\r
+      "toggleSplitZoom": "cmd+shift+z", // default: cmd+shift+return
 
       // Modo de cópia pelo teclado (CMD+Shift+X, igual wezterm).
       "toggleTerminalCopyMode": "cmd+shift+x" // default: cmd+shift+m
@@ -41,7 +58,7 @@
       //   closeTab        = cmd+w      (fecha o pane/surface focado)
       //   newTab          = cmd+n
       //   newSurface      = cmd+t
-      //   equalizeSplits  = cmd+ctrl+= (no wezterm o resize é CMD+CTRL+setas; aqui é arrastar)
+      //   equalizeSplits  = cmd+shift+ctrl+= (no wezterm o resize é CMD+CTRL+setas; aqui é arrastar)
     }
   }
 }
