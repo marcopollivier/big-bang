@@ -6,6 +6,24 @@ set shell := ["bash", "-euc"]
 repo := justfile_directory()
 home := env_var('HOME')
 
+# Symlinks (repo -> home), uma lista só, usada por `link` e por `doctor`.
+# Formato: <caminho no repo> <caminho na home>, separados por espaço.
+links := '''
+dotfiles/.zshrc            .zshrc
+dotfiles/.gitignore.global .gitignore.global
+dotfiles/.opentofurc       .opentofurc
+starship/starship.toml     .config/starship.toml
+nvim                       .config/nvim
+mise/config.toml           .config/mise/config.toml
+wezterm/.wezterm.lua       .config/wezterm/wezterm.lua
+cmux/ghostty.config        .config/ghostty/config
+cmux/cmux.json             .config/cmux/cmux.json
+'''
+
+# Versão mínima do cmux com Extensions (beta) e wrapper do Claude (ver cmux/README.md).
+# O cask é auto_updates, então o número do brew não reflete o app: `doctor` confere o binário.
+cmux_min := "0.64.22"
+
 # Show available recipes
 default:
     @just --list
@@ -52,15 +70,12 @@ podman-machine:
 
 # Symlink shared, secret-free configs into place (idempotent; backs up real files)
 link:
-    just _link "{{ repo }}/dotfiles/.zshrc"            "{{ home }}/.zshrc"
-    just _link "{{ repo }}/dotfiles/.gitignore.global" "{{ home }}/.gitignore.global"
-    just _link "{{ repo }}/dotfiles/.opentofurc"       "{{ home }}/.opentofurc"
-    just _link "{{ repo }}/starship/starship.toml"     "{{ home }}/.config/starship.toml"
-    just _link "{{ repo }}/nvim"                        "{{ home }}/.config/nvim"
-    just _link "{{ repo }}/mise/config.toml"           "{{ home }}/.config/mise/config.toml"
-    just _link "{{ repo }}/wezterm/.wezterm.lua"       "{{ home }}/.config/wezterm/wezterm.lua"
-    just _link "{{ repo }}/cmux/ghostty.config"        "{{ home }}/.config/ghostty/config"
-    just _link "{{ repo }}/cmux/cmux.json"             "{{ home }}/.config/cmux/cmux.json"
+    #!/usr/bin/env bash
+    set -euo pipefail
+    printf '%s\n' "{{ links }}" | while read -r src dst; do
+      [[ -z "$src" ]] && continue
+      just _link "{{ repo }}/$src" "{{ home }}/$dst"
+    done
 
 # Seed template files that hold identity/secrets — only if missing (never clobbers)
 seed:
@@ -84,7 +99,7 @@ brew-dump:
     brew bundle dump --force --file="{{ repo }}/Brewfile"
     @echo "⚠️  Brewfile sobrescrito pelo dump cru — revise o diff antes de commitar (comentários/seções se perdem)"
 
-# Sanity check: tools present + symlinks resolved (exit 1 on any failure)
+# Sanity check: tools, symlinks, git identity/GPG, Brewfile, cmux (exit 1 on any failure)
 doctor:
     #!/usr/bin/env bash
     set -uo pipefail
@@ -96,12 +111,55 @@ doctor:
     echo "## podman"
     printf "  machine    %s\n" "$(podman machine inspect podman-machine-default --format '{{{{.State}}' 2>/dev/null || echo 'NOT INITIALIZED (run: just podman-machine)')"
     echo "## symlinks"
-    for f in "{{ home }}/.zshrc" "{{ home }}/.gitignore.global" "{{ home }}/.opentofurc" \
-             "{{ home }}/.config/starship.toml" "{{ home }}/.config/nvim" \
-             "{{ home }}/.config/mise/config.toml" "{{ home }}/.config/wezterm/wezterm.lua" \
-             "{{ home }}/.config/ghostty/config" "{{ home }}/.config/cmux/cmux.json"; do
-      if [[ -L "$f" ]]; then echo "  ok   $f -> $(readlink "$f")"; else echo "  NOT A SYMLINK: $f"; fail=1; fi
+    while read -r src dst; do
+      [[ -z "$src" ]] && continue
+      f="{{ home }}/$dst"
+      if [[ -L "$f" ]]; then echo "  ok   $f -> $(readlink "$f")"; else echo "  NOT A SYMLINK: $f (run: just link)"; fail=1; fi
+    done < <(printf '%s\n' "{{ links }}")
+    echo "## git"
+    # Identidade: ~/.gitconfig é seedado com os campos vazios — e já foi recriado
+    # vazio por ferramenta externa sem ninguém notar. Sem isso o commit falha.
+    for k in user.name user.email; do
+      v="$(git config --global --get "$k" 2>/dev/null || true)"
+      if [[ -n "$v" ]]; then printf "  %-14s %s\n" "$k" "$v"; else printf "  %-14s EMPTY (fill ~/.gitconfig)\n" "$k"; fail=1; fi
     done
+    # Assinatura fica ligada de propósito: a chave TEM de existir nesta máquina.
+    if [[ "$(git config --global --get commit.gpgsign 2>/dev/null || true)" == "true" ]]; then
+      key="$(git config --global --get user.signingKey 2>/dev/null || true)"
+      if [[ -z "$key" ]]; then
+        printf "  %-14s %s\\n" gpgsign "on, but user.signingKey EMPTY (gpg --full-generate-key, then fill ~/.gitconfig)"; fail=1
+      elif gpg --list-secret-keys "$key" >/dev/null 2>&1; then
+        printf "  %-14s %s\\n" gpgsign "on, key $key present"
+      else
+        printf "  %-14s %s\\n" gpgsign "on, but key $key NOT FOUND in gpg (import it or generate a new one)"; fail=1
+      fi
+    else
+      printf "  %-14s %s\\n" gpgsign "off (repo default is on — see dotfiles/.gitconfig)"
+    fi
+    echo "## brew"
+    if brew bundle check --file="{{ repo }}/Brewfile" >/dev/null 2>&1; then
+      echo "  ok   Brewfile satisfied"
+    else
+      echo "  DIVERGENT from Brewfile (run: just brew). Missing:"
+      brew bundle check --verbose --file="{{ repo }}/Brewfile" 2>&1 | grep '^→' | sed 's/^→/   /'
+      fail=1
+    fi
+    echo "## cmux"
+    if command -v cmux >/dev/null 2>&1; then
+      v="$(cmux --version 2>/dev/null | awk '{print $2}')"
+      if [[ "$(printf '%s\n%s\n' "{{ cmux_min }}" "$v" | sort -V | head -1)" == "{{ cmux_min }}" ]]; then
+        echo "  ok   cmux $v (min {{ cmux_min }})"
+      else
+        echo "  cmux $v is OLDER than {{ cmux_min }} (update the app: Extensions beta / Claude resume need it)"; fail=1
+      fi
+      if [[ "$(defaults read com.cmuxterm.app extensions.beta.enabled 2>/dev/null || echo 0)" == "1" ]]; then
+        echo "  ok   Extensions (beta) enabled — plugins button"
+      else
+        echo "  Extensions (beta) OFF — no plugins button (Settings > enable; see cmux/README.md)"
+      fi
+    else
+      echo "  skip cmux not installed (it's in the Brewfile)"
+    fi
     exit $fail
 
 # Open a PR for the current branch in the browser (requires: gh auth login)

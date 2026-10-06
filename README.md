@@ -150,7 +150,7 @@ chave do WakaTime em `~/.wakatime.cfg` e os segredos em `~/.zshrc.local`.
 **4. Abra um novo terminal** (ou `exec zsh`) e **valide** que está tudo no lugar:
 
 ```sh
-just doctor   # checa ferramentas + symlinks + VM do podman
+just doctor   # checa ferramentas, symlinks, identidade git + chave GPG, Brewfile, cmux e VM do podman
 ```
 
 > 🏢 Em **Mac gerenciado** (MDM) ou **atrás de proxy corporativo (Zscaler)**, alguns
@@ -164,7 +164,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 |---|---|
 | `just` | lista todas as recipes disponíveis |
 | `just bootstrap` | setup completo de máquina nova (idempotente) |
-| `just doctor` | checa ferramentas, symlinks e a VM do podman |
+| `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, divergência do Brewfile, versão do cmux e a VM do podman |
 | `just link` | reaplica os symlinks (rode após adicionar um config novo) |
 | `just brew` | instala/atualiza os pacotes do [`Brewfile`](./Brewfile) |
 | `just brew-dump` | atualiza o `Brewfile` a partir do que está instalado |
