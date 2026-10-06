@@ -36,12 +36,17 @@ jobs:
       - name: Lint shell scripts (shellcheck)
         run: shellcheck claude/usage.sh claude/statusline.sh wezterm/sysinfo.sh
 
-      # cmux/cmux.json fica de fora: é JSONC (comentários) por design
+      # cmux/cmux.json é JSONC (comentários): validado à parte, contra o schema do cmux
       - name: Validate JSON files
         run: |
           for f in claude/settings.json .claude/settings.json nvim/lazy-lock.json; do
             jq empty "$f" && echo "ok $f"
           done
+
+      - name: Validate cmux/cmux.json against the cmux schema
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check jsonschema
+          python3 cmux/validate.py cmux/cmux.json
 
       - name: Set up just
         uses: extractions/setup-just@v2
