@@ -3,4 +3,7 @@
 .idea/
 .vscode/
 
+# Claude Code: permissões locais de cada projeto
+**/.claude/settings.local.json
+
 .DS_Store

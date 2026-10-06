@@ -133,6 +133,15 @@ doctor:
       f="{{ home }}/$dst"
       if [[ -L "$f" ]]; then echo "  ok   $f -> $(readlink "$f")"; else echo "  NOT A SYMLINK: $f (run: just link)"; fail=1; fi
     done < <(printf '%s\n' "{{ links }}")
+    # O WezTerm prefere ~/.wezterm.lua a ~/.config/wezterm/wezterm.lua: um arquivo
+    # antigo ali esconde o symlink do repo em silêncio.
+    if [[ -e "{{ home }}/.wezterm.lua" ]]; then
+      echo "  SHADOWED: ~/.wezterm.lua overrides ~/.config/wezterm/wezterm.lua (move it away)"; fail=1
+    fi
+    # O mise lê ~/.tool-versions (legado do asdf), e as versões dele passam por cima das do repo.
+    if [[ -e "{{ home }}/.tool-versions" ]]; then
+      echo "  SHADOWED: ~/.tool-versions (asdf leftover) overrides mise/config.toml (move it away)"; fail=1
+    fi
     echo "## git"
     # Identidade: ~/.gitconfig é seedado com os campos vazios — e já foi recriado
     # vazio por ferramenta externa sem ninguém notar. Sem isso o commit falha.
