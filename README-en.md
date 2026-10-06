@@ -149,7 +149,7 @@ key in `~/.wakatime.cfg`, and the secrets in `~/.zshrc.local`.
 **4. Open a new terminal** (or `exec zsh`) and **validate** everything is in place:
 
 ```sh
-just doctor   # checks tools + symlinks + the podman VM
+just doctor   # checks tools, symlinks, git identity + GPG key, Brewfile, cmux and the podman VM
 ```
 
 > 🏢 On a **managed Mac** (MDM) or **behind a corporate proxy (Zscaler)**, some
@@ -163,7 +163,7 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 |---|---|
 | `just` | list all available recipes |
 | `just bootstrap` | full new-machine setup (idempotent) |
-| `just doctor` | check tools, symlinks and the podman VM |
+| `just doctor` | checks tools, symlinks, git identity + GPG key, Brewfile drift, cmux version and the podman VM |
 | `just link` | re-apply symlinks (run after adding a new config) |
 | `just brew` | install/upgrade the [`Brewfile`](./Brewfile) packages |
 | `just brew-dump` | update the `Brewfile` from what's installed |
