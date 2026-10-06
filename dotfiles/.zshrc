@@ -191,5 +191,12 @@ command -v gpgconf >/dev/null && gpgconf --kill gpg-agent
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 # !!!!!! fim da DANGEROUS ZONE !!!!!!
 
+## cmux já SOBRESCREVEU o symlink de ~/.config/cmux/cmux.json com um template em
+## updates do app (duas vezes), e o repo some da config sem ninguém notar.
+## Teste barato a cada shell nova; conserta com `just link`. Detalhes: cmux/README.md
+if [[ -e ~/.config/cmux/cmux.json && ! -L ~/.config/cmux/cmux.json ]]; then
+    echo "⚠ ~/.config/cmux/cmux.json não é symlink do repo (o cmux sobrescreveu) — rode: just link"
+fi
+
 ## Prompt (starship) — substitui o tema do oh-my-zsh. Config: ~/.config/starship.toml
 command -v starship >/dev/null && eval "$(starship init zsh)"
