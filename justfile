@@ -92,6 +92,23 @@ seed:
     @echo "→ GPG: commits são assinados por padrão — crie uma chave (gpg --full-generate-key)"
     @echo "  e preencha user.signingKey, ou rode: git config --global commit.gpgsign false"
 
+# Lista (ou apaga, com `just clean-backups yes`) os `.bak.<timestamp>` que `just link`
+# deixa ao lado de cada symlink quando encontra um arquivo real no lugar.
+clean-backups confirm="no":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    found=0
+    while read -r src dst; do
+      [[ -z "$src" ]] && continue
+      for b in "{{ home }}/$dst".bak.*; do
+        [[ -e "$b" ]] || continue
+        found=1
+        if [[ "{{ confirm }}" == "yes" ]]; then rm -rf "$b"; echo "rm     $b"; else echo "found  $b"; fi
+      done
+    done < <(printf '%s\n' "{{ links }}")
+    if [[ $found -eq 0 ]]; then echo "ok     no .bak files next to the symlinks"
+    elif [[ "{{ confirm }}" != "yes" ]]; then echo "→ Para apagar: just clean-backups yes"; fi
+
 # Update the Brewfile from what's currently installed.
 # ⚠️ Sobrescreve o Brewfile CURADO (comentários e seções são perdidos) pelo dump
 # cru do brew — revise o `git diff Brewfile` e restaure a organização antes de commitar.

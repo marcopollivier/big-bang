@@ -168,6 +168,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | `just link` | reaplica os symlinks (rode após adicionar um config novo) |
 | `just brew` | instala/atualiza os pacotes do [`Brewfile`](./Brewfile) |
 | `just brew-dump` | atualiza o `Brewfile` a partir do que está instalado |
+| `just clean-backups` | lista os `.bak.*` que o `just link` deixou (apaga com `just clean-backups yes`) |
 | `just mise-install` | instala os toolchains do [`mise/config.toml`](./mise/config.toml) |
 | `just seed` | copia os templates de identidade/segredo (só se faltarem) |
 | `just cmux-settings` | liga no cmux o que só existe na UI (Extensions beta = botão de plugins) |
