@@ -167,6 +167,7 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 | `just link` | re-apply symlinks (run after adding a new config) |
 | `just brew` | install/upgrade the [`Brewfile`](./Brewfile) packages |
 | `just brew-dump` | update the `Brewfile` from what's installed |
+| `just clean-backups` | list the `.bak.*` files left by `just link` (delete with `just clean-backups yes`) |
 | `just mise-install` | install the toolchains from [`mise/config.toml`](./mise/config.toml) |
 | `just seed` | copy the identity/secret templates (only if missing) |
 | `just podman-machine` | create/start the podman Linux VM |
