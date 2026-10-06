@@ -38,6 +38,8 @@ brew "podman"          # container engine (Mac: roda via `podman machine`)
 
 # --- Terminal & fonts ---
 cask "wezterm"
+cask "cmux"                # orquestrador de agentes de IA (terminal Ghostty embutido); ver cmux/README.md
+                           # já instalado à mão? adote antes do `just brew`: brew install --cask --adopt cmux
 cask "font-hack-nerd-font"
 
 # --- Apps ---

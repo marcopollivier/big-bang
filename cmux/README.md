@@ -1,7 +1,13 @@
 # cmux
 
-[cmux](https://cmux.com) (`com.cmuxterm.app`) instalado em `/Applications/cmux.app`.
-Em teste como alternativa ao WezTerm.
+[cmux](https://cmux.com) (`com.cmuxterm.app`) instalado em `/Applications/cmux.app`
+pelo [`Brewfile`](../Brewfile) (`cask "cmux"`). Em teste como alternativa ao WezTerm.
+
+> Já tinha o app instalado à mão (DMG)? Faça o brew adotá-lo **antes** do
+> `just brew`, senão o `brew bundle` falha com "app já existe":
+> `brew install --cask --adopt cmux` (em Mac gerenciado pede senha — rode no
+> seu terminal). Confira a versão com `cmux --version` (este setup foi validado
+> em 0.64.22; o beta de Extensions e o wrapper do Claude são recentes).
 
 > **Importante — o que o cmux *é*:** ele **não é um terminal genérico** como o
 > WezTerm. É um **orquestrador de agentes de IA de código**: roda vários agentes
@@ -11,7 +17,7 @@ Em teste como alternativa ao WezTerm.
 > embutido — então dá pra usar como terminal com splits/abas, mas esse é só um
 > pedaço do que ele faz. Veja ["Potencial"](#potencial).
 
-## Como a config funciona (duas camadas)
+## Como a config funciona (camadas)
 
 | Camada | Arquivo (symlink via `just link`) | Controla |
 |---|---|---|
@@ -19,7 +25,17 @@ Em teste como alternativa ao WezTerm.
 | **cmux** | `cmux/cmux.json` → `~/.config/cmux/cmux.json` | Atalhos de **janela/split/foco**, abas, comportamento do app |
 
 Recarregar as duas sem reiniciar o app: `cmux reload-config` (ou **CMD+Shift+,**).
-Validar: `cmux config validate`. O `just link` faz backup do `cmux.json` real em `.bak`.
+Validar: `cmux config validate` / `cmux config doctor`. O `just link` faz backup do
+`cmux.json` real em `.bak`.
+
+> ⚠ **O cmux já sobrescreveu o symlink do `cmux.json`** com um template dele
+> (aconteceu duas vezes em updates do app). Sintoma: os atalhos abaixo "voltam ao
+> padrão" e `cmux config doctor` lista só `$schema, automation, schemaVersion`.
+> `just doctor` acusa `NOT A SYMLINK` — basta rodar `just link` de novo.
+
+Há uma **terceira camada** que **não cabe em arquivo**: toggles de beta e alguns
+switches ficam só na UI de Settings (UserDefaults do app). É o caso do botão de
+plugins (ver [checklist](#replicar-em-outra-máquina-checklist)).
 
 ## Atalhos (espelhando o WezTerm)
 
@@ -36,13 +52,57 @@ Validar: `cmux config validate`. O `just link` faz backup do `cmux.json` real em
 | Limpar terminal | `CMD+K` | `CMD+K` (via Ghostty) |
 | Fonte +/-/0 | `CMD +/-/0` | `CMD +/-/0` (via Ghostty) |
 | Nova aba / surface | — | `CMD+N` / `CMD+T` |
-| Equalizar splits | `CMD+Ctrl+setas` (resize) | `CMD+Ctrl+=` (resize por arrasto) |
+| Equalizar splits | `CMD+Ctrl+setas` (resize) | `CMD+Shift+Ctrl+=` (resize por arrasto) |
 
 ### Diferenças que ficam (não têm equivalente 1:1)
 - **Sem "split à esquerda".** O canvas do cmux só divide para a direita/baixo.
 - **Resize de pane por teclado** (o `CMD+Ctrl+setas` do wezterm) não existe — no
-  cmux se redimensiona arrastando a borda, ou `CMD+Ctrl+=` para equalizar.
+  cmux se redimensiona arrastando a borda, ou `CMD+Shift+Ctrl+=` para equalizar.
 - Dim de panes inativos: o wezterm escurece; aqui não há equivalente direto.
+
+## Replicar em outra máquina (checklist)
+
+O que faz o cmux "funcionar igual" está espalhado em **três lugares**; só o
+primeiro é o repo. Siga na ordem:
+
+1. **Versão.** `just brew` (ou `brew install --cask cmux`; `--adopt` se o app já
+   existia). `cmux --version` deve ser ≥ 0.64.
+2. **Arquivos do repo.** `just link` e depois `just doctor`: as duas linhas
+   `~/.config/ghostty/config` e `~/.config/cmux/cmux.json` têm de aparecer como
+   `ok … ->`. `cmux config doctor` deve listar `automation, shortcuts, terminal`.
+3. **Settings só da UI** (não têm chave no `cmux.json`):
+   - **Extensions (beta)** — é o **botão de plugins** na sidebar. Ligue nas
+     Settings; confira com
+     `defaults read com.cmuxterm.app extensions.beta.enabled` → `1`.
+   - **Automation › Claude Code Integration** e **Terminal › Resume Agent
+     Sessions on Reopen**: o `cmux.json` do repo já força os dois como `true`;
+     só confira que a UI reflete.
+4. **Sessão do Claude sobreviver ao fechar/reabrir.** O cmux envolve o `claude`
+   num *wrapper* que injeta hooks: cada sessão grava seu id em
+   `~/.cmuxterm/claude-hook-sessions.json` e, ao reabrir o app, o cmux roda
+   `claude --resume <id>` em cada pane. Para isso funcionar:
+   - abra o `claude` **de um shell do cmux** — dentro dele, `type claude` tem de
+     mostrar `…/cmux-cli-shims/<id>/claude` (a função `claude()` que o cmux define
+     no `.zshenv`, antes do seu `.zshrc`);
+   - **não tenha `alias claude=…`** no `~/.zshrc`/`~/.zshrc.local`: alias ganha da
+     função e pula o wrapper (sem hooks, sem resume). Mesma coisa para `exec` de
+     outro shell/tmux no `.zshrc`;
+   - feche o app normalmente (Cmd+Q); kill/force-quit não salva a sessão.
+
+**Diagnóstico rápido** (rode dentro de um terminal do cmux):
+
+```sh
+cmux --version                                     # versão do app
+cmux config doctor                                 # cmux.json ativo e suas chaves
+just doctor                                        # symlinks (cmux.json é o que o app sobrescreve)
+type -a claude                                     # 1ª linha deve ser o shim do cmux
+defaults read com.cmuxterm.app extensions.beta.enabled   # 1 = botão de plugins
+ls -la ~/.cmuxterm/claude-hook-sessions.json       # sessões registradas p/ resume
+```
+
+Sintoma → causa provável: *sem botão de plugins* → Extensions (beta) desligado
+ou versão antiga; *abas voltam mas o Claude não* → `claude` não passou pelo
+wrapper (alias/PATH), integração desligada, ou versão antiga do cmux.
 
 ## Potencial
 
