@@ -15,6 +15,11 @@
   // -> cmux/ghostty.config. O que NÃO cabe aqui (só na UI de Settings):
   // o beta "Extensions" (botão de plugins). Ver cmux/README.md.
 
+  "app": {
+    // Não perguntar ao sair (Cmd+Q): o auto-resume abaixo religa as sessões.
+    "confirmQuit": "never"
+  },
+
   "terminal": {
     // Selecionar com o mouse já copia (espelha o copy-on-select do Ghostty).
     "copyOnSelect": true,
