@@ -90,7 +90,7 @@ committed secrets — only *templates* — but several defaults are mine:
 | **Packages** | [`Brewfile`](./Brewfile) | add/remove apps and CLIs to taste |
 | **Containers (work vs personal)** | [`Brewfile`](./Brewfile) + bootstrap | at **work**: podman (Docker Desktop has a commercial license); on a **personal machine**: docker is fine — swap `brew "podman"` for the `docker` cask (commented in the Brewfile) and `just podman-machine` skips itself |
 | **Editor languages** | [`nvim/`](./nvim) | Neovim ships ready for **Go, .NET/C# and Kotlin**; adapt the LSPs to your stack |
-| **Toolchains** | [`mise/config.toml`](./mise/config.toml) | Go/Java/Node/… versions that get installed |
+| **Toolchains** | [`mise/config.toml`](./mise/config.toml) | Go/Java/Node/… versions that get installed. Languages only your machine needs (e.g. Clojure, Maven on a personal one) go in `~/.config/mise/conf.d/*.toml`, outside the repo. Coming from asdf? Drop the asdf line from your shell and move `~/.tool-versions` out of your home (mise reads it, and its versions override the repo's) |
 | **Clone path** | nothing, if you use `just seed`/`just link` | the Claude statusline ([`claude/settings.json`](./claude/settings.json)) and the WezTerm status discover the clone by themselves (fallback: the `~/dev/<github-user>/big-bang` convention); if something fails, set `BIG_BANG_REPO` in `~/.zshrc.local` |
 | **npm token** | `~/.npmrc` (after `just seed`) | the template ([`dotfiles/.npmrc`](./dotfiles/.npmrc)) reads `NPM_TOKEN` from the environment — set it in `~/.zshrc.local` if you use a private registry |
 
