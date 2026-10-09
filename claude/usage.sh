@@ -22,6 +22,9 @@ cache="${TMPDIR:-/tmp}/claude-usage"
 budget_file="$HOME/.claude/usage-budget"
 ttl=120
 
+# Números com ponto decimal, independente do locale (pt_BR usa vírgula).
+export LC_NUMERIC=C
+
 # Sem ccusage ou jq não há como medir: mostra "?" em vez de um falso "$0".
 if [ -z "$ccusage_bin" ] || ! command -v jq >/dev/null 2>&1; then
   printf '?'

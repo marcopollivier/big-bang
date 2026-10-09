@@ -14,6 +14,9 @@
 
 input=$(cat)
 
+# Números com ponto decimal: em locale pt_BR o printf '%.2f' rejeita "1.2".
+export LC_NUMERIC=C
+
 # Paleta Tokyo Night (truecolor — o WezTerm suporta).
 c_green=$'\033[38;2;158;206;106m'
 c_yellow=$'\033[38;2;224;175;104m'
