@@ -1,0 +1,11 @@
+{
+  "environment": [
+    "$defaults",
+    "**Primary use of Claude Code**: software development on a personal or work macOS developer machine whose environment is managed by the big-bang dotfiles repo at __REPO__",
+    "**Source control**: github.com/__GH_USER__ — every repository under this GitHub account is the user's own work, so pushing branches and opening PRs there is routine. Many of these repos are PUBLIC: only each repo's own work belongs in it, never secrets or material ported from elsewhere",
+    "**Secrets management**: no secret manager — credentials live only in ~/.zshrc.local (gitignored, chmod 600), never in any repository",
+    "**Sensitive data locations & audiences**: ~/.zshrc.local and every value in it (AWS_*, GITHUB_TOKEN, EKS_* ARNs), ~/.aws credentials, ~/.gnupg private keys, the WakaTime API key in ~/.wakatime.cfg — never commit, paste, upload or send them anywhere",
+    "**Org-specific CLIs**: `just` (justfile recipes in each repo), `mise` (toolchains), `gh` (GitHub CLI authenticated as __GH_USER__), `cmux` (AI agent orchestrator), `podman`/`docker` (containers)",
+    "Routine: editing files under __REPO__ (dotfiles, nvim, justfile, CLAUDE.md, skills, slash commands) and running its `just link`, `just seed`, `just automode` and `just doctor` recipes — these change the user's own home config by design"
+  ]
+}

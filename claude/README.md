@@ -11,6 +11,8 @@ consumo de tokens.
 | `statusline.sh` | Statusline **dentro** do Claude Code: `modelo · $custo-sessão · branch✓/✗ · %contexto · %5h · %7d · $mês/$limite`. O gasto do mês reaproveita o `usage.sh` (mesma fonte/cores do WezTerm). Ligado pela chave `statusLine` do `settings.json`. |
 | `usage.sh` | Consumo do **mês** vs o limite mensal + gasto de hoje + projeção do fechamento (`$59/$300 · 20% · hoje $9 · proj $295`). Usado pelo statusline e pelo `right_status` do WezTerm. |
 | `usage-budget.example` | Modelo do limite mensal. Seedado para `~/.claude/usage-budget` (local, **fora do git**, como o `~/.zshrc.local`). |
+| `automode.json` | Contexto do *auto mode* (o que é confiável/sensível para o classificador), válido em **qualquer** máquina e projeto. Aplicado pelo `just automode`. |
+| `automode.local.example` | Modelo das entradas de auto mode **só desta máquina** (ex.: org do trabalho, cluster de prod). Seedado para `~/.claude/automode.local.json` (fora do git). |
 
 ## De onde vêm os números
 
@@ -29,13 +31,39 @@ da máquina (`CPU x% · MEM y%`), de [`../wezterm/sysinfo.sh`](../wezterm/sysinf
 
 ## Setup numa máquina nova
 
-`just seed` cria `~/.claude/settings.json` e `~/.claude/usage-budget`. Depois:
+`just seed` cria `~/.claude/settings.json`, `~/.claude/usage-budget` e
+`~/.claude/automode.local.json`; o `just automode` grava o auto mode. Depois:
 
 1. Ajuste o limite mensal (US$) em `~/.claude/usage-budget` — varia por máquina
    (trabalho: o limite que te deram; pessoal/Pro: `0` para mostrar só o gasto).
 2. `mise install` garante o `ccusage` (já entra no `just bootstrap`).
 3. O statusline aparece em novas sessões do Claude Code; o status do mês aparece
    no WezTerm (recarrega o config sozinho).
+
+## Auto mode
+
+O classificador do auto mode **só lê** o bloco `autoMode` do `~/.claude/settings.json`
+(e de managed settings): ele **ignora** o `.claude/settings.json` do projeto, de
+propósito, para um repo clonado não poder liberar ações para si mesmo. Por isso o
+repo guarda o conteúdo em `automode.json`, e o `just automode` (no `bootstrap`)
+grava **só a chave `autoMode`** no settings, sem mexer em plugins/prefs:
+
+- `automode.json` — genérico: começa com `"$defaults"` (mantém as regras padrão e
+  a confiança no repo em que a sessão abriu) e acrescenta conta do GitHub, onde
+  ficam os segredos e as CLIs. `__GH_USER__` vem do remote `origin` e `__REPO__`
+  do caminho do clone, então funciona em fork.
+- `~/.claude/automode.local.json` — o que é **só desta máquina** (trabalho: org do
+  GitHub da empresa, AWS, cluster de prod). Cada lista é concatenada à do repo.
+- Regras específicas de um projeto (ex.: "este repo é público", "nada de push na
+  `main`") vão no `CLAUDE.md` dele — o classificador também lê o `CLAUDE.md`.
+
+Depois de editar qualquer um dos dois, rode `just automode` e confira com
+`claude auto-mode config`. O `just doctor` avisa se o settings divergir.
+
+> ⚠️ Não use o `/auto-mode-setup` para gravar direto: ele gera entradas presas ao
+> projeto onde rodou (ex.: "trusted repo: big-bang **only**"), que valem para
+> **todos** os projetos. Use-o só como rascunho e copie o que fizer sentido para os
+> arquivos acima.
 
 > O `settings.json` é **seedado** (cópia, não symlink) de propósito: ele acumula
 > estado por máquina (plugins, prefs), então cada máquina tem o seu. O plugin

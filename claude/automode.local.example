@@ -1,0 +1,13 @@
+{
+  "_comment": [
+    "Entradas de auto mode SÓ desta máquina (ex.: trabalho) — fora do git, como o ~/.zshrc.local.",
+    "O `just seed` copia este modelo para ~/.claude/automode.local.json (só se não existir);",
+    "o `just automode` junta este arquivo ao claude/automode.json e grava no ~/.claude/settings.json.",
+    "Cada lista é concatenada à do repo. Entradas são prosa, não regex. Máquina pessoal: deixe vazio.",
+    "Em allow/soft_deny/hard_deny, comece com \"$defaults\" — senão as regras padrão daquela lista somem.",
+    "Exemplos (trabalho), para colocar em environment:",
+    "  **Organization**: ACME — Source control: github.com/acme-corp and all repos under it",
+    "  **Sensitive remote targets**: the EKS cluster referenced by EKS_PRD_ARN (production)"
+  ],
+  "environment": []
+}

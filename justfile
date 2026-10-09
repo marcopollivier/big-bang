@@ -29,7 +29,7 @@ default:
     @just --list
 
 # Full setup on a new machine (idempotent)
-bootstrap: brew omz link mise-install seed podman-machine
+bootstrap: brew omz link mise-install seed automode podman-machine
     @echo ""
     @echo "✅ Bootstrap complete. Open a new terminal (or run: exec zsh)."
 
@@ -87,10 +87,27 @@ seed:
     just _seed "{{ repo }}/dotfiles/.clojure/deps.edn"    "{{ home }}/.clojure/deps.edn"
     just _seed_template "{{ repo }}/claude/settings.json" "{{ home }}/.claude/settings.json"
     just _seed "{{ repo }}/claude/usage-budget.example"   "{{ home }}/.claude/usage-budget"
+    just _seed "{{ repo }}/claude/automode.local.example" "{{ home }}/.claude/automode.local.json"
     @echo "→ Now fill identity/keys in ~/.gitconfig, ~/.wakatime.cfg and ~/.zshrc.local"
     @echo "→ Set your monthly token limit (US\$) in ~/.claude/usage-budget"
     @echo "→ GPG: commits são assinados por padrão — crie uma chave (gpg --full-generate-key)"
     @echo "  e preencha user.signingKey, ou rode: git config --global commit.gpgsign false"
+
+# Claude Code auto mode: grava claude/automode.json (+ ~/.claude/automode.local.json)
+# como a chave `autoMode` do ~/.claude/settings.json — o único lugar (além de managed
+# settings) de onde o classificador lê isso. Só toca nessa chave; idempotente.
+automode:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    settings="{{ home }}/.claude/settings.json"
+    want="$(just _automode_expected)"
+    [[ -f "$settings" ]] || { mkdir -p "$(dirname "$settings")"; echo '{}' >"$settings"; chmod 600 "$settings"; }
+    if [[ "$(jq -S '.autoMode // null' "$settings")" == "$(jq -S . <<<"$want")" ]]; then
+      echo "ok     $settings autoMode already in sync"; exit 0
+    fi
+    tmp="$(mktemp)"
+    jq --argjson am "$want" '.autoMode = $am' "$settings" >"$tmp" && cat "$tmp" >"$settings" && rm -f "$tmp"
+    echo "write  $settings autoMode (check: claude auto-mode config)"
 
 # Lista (ou apaga, com `just clean-backups yes`) os `.bak.<timestamp>` que `just link`
 # deixa ao lado de cada symlink quando encontra um arquivo real no lugar.
@@ -161,6 +178,18 @@ doctor:
       brew bundle check --verbose --file="{{ repo }}/Brewfile" 2>&1 | grep '^→' | sed 's/^→/   /'
       fail=1
     fi
+    echo "## claude"
+    cs="{{ home }}/.claude/settings.json"
+    if [[ "$(jq -S '.autoMode // null' "$cs" 2>/dev/null)" == "$(just _automode_expected | jq -S .)" ]]; then
+      echo "  ok   autoMode in sync with claude/automode.json"
+    else
+      echo "  autoMode DIVERGENT from claude/automode.json (run: just automode)"; fail=1
+    fi
+    if [[ -n "$(jq -r '.statusLine.command // empty' "$cs" 2>/dev/null)" ]]; then
+      echo "  ok   statusLine configured"
+    else
+      echo "  statusLine MISSING in $cs (copy the key from claude/settings.json)"
+    fi
     echo "## cmux"
     if command -v cmux >/dev/null 2>&1; then
       v="$(cmux --version 2>/dev/null | awk '{print $2}')"
@@ -223,6 +252,21 @@ _seed src dst:
     mkdir -p "$(dirname "$dst")"; cp "$src" "$dst"
     # Arquivos seedados recebem identidade/tokens — nascem legíveis só pelo dono
     chmod 600 "$dst"; echo "seed   $dst"
+
+# autoMode esperado: claude/automode.json com __REPO__/__GH_USER__ resolvidos (o user
+# vem do remote origin, então funciona em fork) + listas do ~/.claude/automode.local.json
+_automode_expected:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    user="$(git -C "{{ repo }}" remote get-url origin | sed -E 's#.*github\.com[:/]([^/]+)/.*#\1#')"
+    base="$(sed -e "s|__REPO__|{{ repo }}|g" -e "s|__GH_USER__|$user|g" "{{ repo }}/claude/automode.json")"
+    extra='{}'
+    [[ -f "{{ home }}/.claude/automode.local.json" ]] && extra="$(cat "{{ home }}/.claude/automode.local.json")"
+    jq -n --argjson a "$base" --argjson b "$extra" '
+      reduce ($b | del(._comment) | to_entries[]) as $e ($a;
+        if ($e.value | type) == "array"
+        then (if ($e.value | length) > 0 then .[$e.key] = ((.[$e.key] // []) + $e.value) else . end)
+        else .[$e.key] = $e.value end)'
 
 # Como _seed, mas substitui __REPO__ pelo caminho real deste clone — assim o
 # template funciona em qualquer fork/diretório, sem caminho fixo do autor

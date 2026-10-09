@@ -125,7 +125,8 @@ just bootstrap
 - `just brew` — install everything in the [`Brewfile`](./Brewfile)
 - `just link` — symlink the shared configs (zsh, starship, nvim, mise…); existing real files are backed up first
 - `just mise-install` — install the toolchains from [`mise/config.toml`](./mise/config.toml)
-- `just seed` — copy secret/identity templates **only if missing**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` and the two Claude Code ones (`~/.claude/settings.json` and `~/.claude/usage-budget` — see [`claude/`](./claude))
+- `just seed` — copy secret/identity templates **only if missing**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` and the Claude Code ones (`~/.claude/settings.json`, `~/.claude/usage-budget` and `~/.claude/automode.local.json` — see [`claude/`](./claude))
+- `just automode` — write the Claude Code *auto mode* config ([`claude/automode.json`](./claude/automode.json)) into `~/.claude/settings.json`
 - `just podman-machine` — create/start the podman Linux VM (on macOS containers run inside it)
 
 **3. Fill in your identity and secrets** (see the table in
@@ -163,13 +164,14 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 |---|---|
 | `just` | list all available recipes |
 | `just bootstrap` | full new-machine setup (idempotent) |
-| `just doctor` | checks tools, symlinks, git identity + GPG key, Brewfile drift, cmux version and the podman VM |
+| `just doctor` | checks tools, symlinks, git identity + GPG key, Brewfile drift, Claude Code config (auto mode + statusline), cmux version and the podman VM |
 | `just link` | re-apply symlinks (run after adding a new config) |
 | `just brew` | install/upgrade the [`Brewfile`](./Brewfile) packages |
 | `just brew-dump` | update the `Brewfile` from what's installed |
 | `just clean-backups` | list the `.bak.*` files left by `just link` (delete with `just clean-backups yes`) |
 | `just mise-install` | install the toolchains from [`mise/config.toml`](./mise/config.toml) |
 | `just seed` | copy the identity/secret templates (only if missing) |
+| `just automode` | re-apply the Claude Code auto mode config (repo + `~/.claude/automode.local.json`) |
 | `just cmux-settings` | enable the cmux settings that only live in the UI (Extensions beta = plugins button) |
 | `just podman-machine` | create/start the podman Linux VM |
 | `just pr` | open a PR for the current branch in the browser (needs `gh auth login`) |

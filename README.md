@@ -126,7 +126,8 @@ O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e execut
 - `just brew` — instala tudo que está no [`Brewfile`](./Brewfile)
 - `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise…); arquivos reais existentes têm backup feito antes
 - `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
-- `just seed` — copia os templates de segredo/identidade **só se não existirem**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` e os dois do Claude Code (`~/.claude/settings.json` e `~/.claude/usage-budget` — veja [`claude/`](./claude))
+- `just seed` — copia os templates de segredo/identidade **só se não existirem**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` e os do Claude Code (`~/.claude/settings.json`, `~/.claude/usage-budget` e `~/.claude/automode.local.json` — veja [`claude/`](./claude))
+- `just automode` — grava a config do *auto mode* do Claude Code ([`claude/automode.json`](./claude/automode.json)) no `~/.claude/settings.json`
 - `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
 
 **3. Preencha sua identidade e segredos** (veja a tabela em
@@ -164,13 +165,14 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 |---|---|
 | `just` | lista todas as recipes disponíveis |
 | `just bootstrap` | setup completo de máquina nova (idempotente) |
-| `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, divergência do Brewfile, versão do cmux e a VM do podman |
+| `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, divergência do Brewfile, config do Claude Code (auto mode + statusline), versão do cmux e a VM do podman |
 | `just link` | reaplica os symlinks (rode após adicionar um config novo) |
 | `just brew` | instala/atualiza os pacotes do [`Brewfile`](./Brewfile) |
 | `just brew-dump` | atualiza o `Brewfile` a partir do que está instalado |
 | `just clean-backups` | lista os `.bak.*` que o `just link` deixou (apaga com `just clean-backups yes`) |
 | `just mise-install` | instala os toolchains do [`mise/config.toml`](./mise/config.toml) |
 | `just seed` | copia os templates de identidade/segredo (só se faltarem) |
+| `just automode` | reaplica a config do auto mode do Claude Code (repo + `~/.claude/automode.local.json`) |
 | `just cmux-settings` | liga no cmux o que só existe na UI (Extensions beta = botão de plugins) |
 | `just podman-machine` | cria/inicia a VM Linux do podman |
 | `just pr` | abre um PR da branch atual no navegador (requer `gh auth login`) |
