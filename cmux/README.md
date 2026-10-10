@@ -60,6 +60,18 @@ na UI de Settings (UserDefaults do app). É o caso do botão de plugins — a re
   cmux se redimensiona arrastando a borda, ou `CMD+Shift+Ctrl+=` para equalizar.
 - Dim de panes inativos: o wezterm escurece; aqui não há equivalente direto.
 
+## Links: browser embutido × navegador do sistema
+
+Não há escolha por clique (nenhum modificador documentado). A regra fica no
+bloco `browser` do `cmux.json`, por destino:
+
+- `hostsToOpenInEmbeddedBrowser` — ficam no browser do cmux (aqui: localhost/dev).
+- `urlsToAlwaysOpenExternally` — vão sempre pro navegador do sistema (aqui:
+  GitHub, Jira/Atlassian).
+- `openTerminalLinksInCmuxBrowser: false` manda **todos** os links do terminal
+  pro sistema; `interceptTerminalOpenCommandInCmuxBrowser` faz o `open https://…`
+  seguir as mesmas regras.
+
 ## Replicar em outra máquina (checklist)
 
 O que faz o cmux "funcionar igual" está espalhado em **três lugares**; só o
@@ -69,7 +81,7 @@ primeiro é o repo. Siga na ordem:
    existia). `cmux --version` deve ser ≥ 0.64.
 2. **Arquivos do repo.** `just link` e depois `just doctor`: as duas linhas
    `~/.config/ghostty/config` e `~/.config/cmux/cmux.json` têm de aparecer como
-   `ok … ->`. `cmux config doctor` deve listar `automation, shortcuts, terminal`.
+   `ok … ->`. `cmux config doctor` deve listar `app, automation, browser, shortcuts, terminal`.
 3. **Settings só da UI** (não têm chave no `cmux.json`):
    - **Extensions (beta)** — é o **botão de plugins** na sidebar. Rode
      `just cmux-settings` (grava o UserDefaults) e reabra o app; ou ligue nas

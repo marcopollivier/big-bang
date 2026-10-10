@@ -29,6 +29,17 @@
     "autoResumeAgentSessions": true
   },
 
+  "browser": {
+    // Onde abrir links clicados no terminal: dev local no browser embutido do
+    // cmux, o resto (GitHub, Jira…) no navegador do sistema.
+    // Para mandar TUDO pro sistema: "openTerminalLinksInCmuxBrowser": false.
+    "openTerminalLinksInCmuxBrowser": true,
+    // `open https://…` no terminal segue as mesmas regras (default; fixado).
+    "interceptTerminalOpenCommandInCmuxBrowser": true,
+    "hostsToOpenInEmbeddedBrowser": ["localhost", "127.0.0.1", "*.localhost"],
+    "urlsToAlwaysOpenExternally": ["github.com", "*.github.com", "*.atlassian.net"]
+  },
+
   "automation": {
     // Hooks do cmux no Claude Code (wrapper que registra o id da sessão).
     // Sem isso não há o que retomar no reopen. (Settings > Automation)
