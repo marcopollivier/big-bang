@@ -47,33 +47,62 @@ is to fork and [make it yours](#fork-it-make-it-yours) before running it.
 
 ## Quick Start
 
-For those who already know what they're doing (first time? jump to
+From a blank Mac to a ready environment, copy-pasting top to bottom (first
+time? read [Prerequisites](#prerequisites) and
 [Fork it](#fork-it-make-it-yours) first):
 
 ```sh
-# 1. Homebrew (if you don't have it) → https://brew.sh
+# 0. Xcode Command Line Tools (git, compilers) — opens a dialog; wait for it to finish
+xcode-select --install
+
+# 1. Homebrew + PATH for this session (Intel: /usr/local/bin/brew)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # 2. just
 brew install just
 
-# 3. clone (following the ~/dev/<github-user>/<project> convention) + bootstrap (idempotent)
-git clone git@github.com:marcopollivier/big-bang.git ~/dev/marcopollivier/big-bang
+# 3. clone via HTTPS (no SSH key needed yet) + bootstrap (idempotent)
+git clone https://github.com/marcopollivier/big-bang.git ~/dev/marcopollivier/big-bang
 cd ~/dev/marcopollivier/big-bang
 just bootstrap
 
-# 4. fill in identity/secrets and validate
+# 4. new terminal → GitHub login (creates/uploads the SSH key) → validate
+exec zsh
+gh auth login --git-protocol ssh --web
+git remote set-url origin git@github.com:marcopollivier/big-bang.git
 just doctor
 ```
 
+After that, fill in identity/secrets and the GPG key — step 3 of the
+[Step-by-step setup](#step-by-step-setup).
+
 ## Prerequisites
 
-- **macOS** (Apple Silicon or Intel). The project is *macOS-first*.
-- **Xcode Command Line Tools** — required for git and Homebrew:
+What needs to exist **before** the bootstrap — not much:
+
+- **macOS** (Apple Silicon or Intel), with an **administrator** user (the
+  Homebrew installer asks for `sudo`). The project is *macOS-first*.
+- **Xcode Command Line Tools** — they bring `git` and the compilers Homebrew
+  uses. The command opens a system dialog; wait for the install to finish:
   ```sh
   xcode-select --install
   ```
-- **[Homebrew](https://brew.sh/)** installed (`just bootstrap` handles the rest
-  of the packages from the [`Brewfile`](./Brewfile)).
-- An SSH key on GitHub (to clone via `git@github.com:…`) or use the HTTPS URL.
+- **[Homebrew](https://brew.sh/)** — install it with the official one-liner and
+  put it on the current session's PATH (the installer prints this at the end):
+  ```sh
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"   # Intel: eval "$(/usr/local/bin/brew shellenv)"
+  ```
+  No need to edit `~/.zprofile`: the repo's [`.zshrc`](./dotfiles/.zshrc)
+  makes it permanent after `just link`.
+- **A GitHub account.** An **SSH key is _not_ a prerequisite:** on a new
+  machine, clone via **HTTPS** (no auth needed for a public repo). After the
+  bootstrap, `gh` (shipped in the [`Brewfile`](./Brewfile)) creates and
+  registers the SSH key for you — see step 4 of the [Step-by-step setup](#step-by-step-setup).
+
+Everything else (`gh`, `git-lfs`, `gnupg`, `mise`, oh-my-zsh, toolchains…) is
+installed by `just bootstrap`.
 
 ## Fork it (make it yours)
 
@@ -100,16 +129,17 @@ committed secrets — only *templates* — but several defaults are mine:
 
 ## Step-by-step setup
 
-**1. Install [Homebrew](https://brew.sh/), then `just`:**
+**1. Install the [Prerequisites](#prerequisites) (Xcode Command Line Tools
+and Homebrew), then `just`:**
 
 ```sh
 brew install just
 ```
 
-**2. Clone your fork and bootstrap:**
+**2. Clone your fork (via HTTPS) and bootstrap:**
 
 ```sh
-git clone git@github.com:<you>/big-bang.git ~/dev/<you>/big-bang
+git clone https://github.com/<you>/big-bang.git ~/dev/<you>/big-bang
 cd ~/dev/<you>/big-bang
 just bootstrap
 ```
@@ -123,6 +153,7 @@ just bootstrap
 `just bootstrap` is **idempotent** (run it as many times as you like) and runs:
 
 - `just brew` — install everything in the [`Brewfile`](./Brewfile)
+- `just omz` — install oh-my-zsh if missing (the `.zshrc` depends on it)
 - `just link` — symlink the shared configs (zsh, starship, nvim, mise…); existing real files are backed up first
 - `just mise-install` — install the toolchains from [`mise/config.toml`](./mise/config.toml)
 - `just seed` — copy secret/identity templates **only if missing**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` and the Claude Code ones (`~/.claude/settings.json`, `~/.claude/usage-budget` and `~/.claude/automode.local.json` — see [`claude/`](./claude))
@@ -147,7 +178,27 @@ key in `~/.wakatime.cfg`, and the secrets in `~/.zshrc.local`.
 > Don't want signed commits? Turn it off for good:
 > `git config --global commit.gpgsign false`
 
-**4. Open a new terminal** (or `exec zsh`) and **validate** everything is in place:
+**4. Authenticate with GitHub and set up the SSH key** (used for clone/push —
+not to be confused with the GPG key above, which only signs commits):
+
+```sh
+gh auth login --git-protocol ssh --web   # if there's no key, gh generates one and registers it on GitHub
+git remote set-url origin git@github.com:<you>/big-bang.git   # switch the HTTPS clone to SSH
+ssh -T git@github.com                    # should answer "Hi <you>! …"
+```
+
+<details>
+<summary>Prefer to create the SSH key by hand?</summary>
+
+```sh
+ssh-keygen -t ed25519 -C "<your-email>"  # accept the default path (~/.ssh/id_ed25519)
+gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(scutil --get ComputerName)"
+# or paste the .pub contents into GitHub → Settings → SSH and GPG keys
+```
+
+</details>
+
+**5. Open a new terminal** (or `exec zsh`) and **validate** everything is in place:
 
 ```sh
 just doctor   # checks tools, symlinks, git identity + GPG key, Brewfile, cmux and the podman VM
