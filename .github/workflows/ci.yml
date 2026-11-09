@@ -34,7 +34,7 @@ jobs:
           args: --check nvim/
 
       - name: Lint shell scripts (shellcheck)
-        run: shellcheck claude/usage.sh claude/statusline.sh wezterm/sysinfo.sh
+        run: shellcheck claude/usage.sh claude/statusline.sh wezterm/sysinfo.sh scripts/report.sh
 
       # cmux/cmux.json é JSONC (comentários): validado à parte, contra o schema do cmux
       - name: Validate JSON files

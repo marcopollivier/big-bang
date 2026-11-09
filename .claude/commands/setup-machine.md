@@ -10,7 +10,7 @@ Resumo do fluxo (a skill tem o detalhe):
 0. Pergunte o contexto da máquina: trabalho ou pessoal → containers (podman no
    trabalho por licença; docker ok na pessoal) e linguagens além de Go/.NET.
 1. Garanta Homebrew e `just` (`brew install just`); instale o Homebrew se faltar.
-2. `just bootstrap` — instala o `@Brewfile`, symlinka os configs (com backup),
+2. `just report` antes (revise `missing`/`conflict` com o usuário), depois `just bootstrap` — instala o `@Brewfile`, symlinka os configs (com backup),
    confia e instala as toolchains do `mise` (`mise trust` + `mise install`) e faz o *seed* dos templates.
 3. Identidade/segredos: git `user.name/email/signingkey`; **chave GPG** (a
    assinatura de commits vem ligada — crie a chave e preencha `signingkey`, ou

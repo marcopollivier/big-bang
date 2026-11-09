@@ -37,9 +37,14 @@ nova pronta com o mínimo de esforço, sem expor segredos.
    - `brew install just`
 
 2. **Bootstrap** (na raiz do repo)
+   - **Antes**, rode `just report` e revise com o usuário: `missing` = o bootstrap
+     vai instalar; `conflict` = já existe por fora (app manual → `brew install
+     --cask --adopt <cask>`; config real no lugar de symlink → vai virar `.bak.*`).
+     O relatório fica em `~/.big-bang/reports/latest.md`.
    - `just bootstrap` compõe as sub-recipes na ordem do `justfile` — hoje:
-     `brew` (Brewfile) → `link` (symlinks) → `mise-install` → `seed` →
-     `podman-machine` (cria/inicia a VM Linux do podman). Confira `just --list`
+     `brew` (Brewfile) → `omz` → `link` (symlinks) → `mise-install` → `seed` →
+     `automode` → `podman-machine` (cria/inicia a VM Linux do podman) e, no fim,
+     `report` (inventário pós-bootstrap). Confira `just --list`
      se a composição mudar.
    - `mise-install` já roda `mise trust` no `mise/config.toml` do repo, então entrar na
      pasta não dispara o erro de config não confiada. Se mesmo assim aparecer
@@ -75,5 +80,5 @@ nova pronta com o mínimo de esforço, sem expor segredos.
    - Se o usuário tiver instalado ferramentas novas que deveriam ser versionadas, sugira `just brew-dump`.
 
 ## Manutenção (máquina já configurada)
-- `just link` reaplica symlinks · `just doctor` checa estado · `just brew` atualiza pacotes.
+- `just link` reaplica symlinks · `just doctor` checa estado · `just report` inventário · `just brew` atualiza pacotes.
 - PRs: `just pr`. Nunca push direto na `main`.

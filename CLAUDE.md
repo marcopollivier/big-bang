@@ -16,6 +16,9 @@ são escopo agora** — não adicione suporte a Linux/Windows sem pedido explíc
 - `cmux/` — orquestrador de agentes de IA (terminal via Ghostty embutido); em teste como alternativa ao WezTerm. Detalhes em `cmux/README.md`
 - `claude/` — config do Claude Code + acompanhamento de consumo de tokens (statusline + status do mês no WezTerm); detalhes em `claude/README.md`
 - `defaultdots/` — dotfiles de fábrica, referência de reset (não são os do dia a dia)
+- `scripts/` — scripts maiores chamados pelo `justfile` (ex.: `report.sh`, o inventário do `just report`)
+- `~/.big-bang/` (na home, **fora do repo**) — estado da máquina: relatórios do
+  `just report` em `reports/` e, no futuro, o perfil do menu interativo (#69). Nunca versione.
 - `.claude/` — skills e slash commands deste repo: `/setup-machine` (configura a
   máquina do zero), `/sync` (re-sincroniza symlinks/Brewfile e reporta divergências)
   e a skill `machine-bootstrap`
@@ -49,5 +52,5 @@ são escopo agora** — não adicione suporte a Linux/Windows sem pedido explíc
 
 ## Setup de máquina nova
 Use o comando **`/setup-machine`** (ou deixe a skill *machine-bootstrap* guiar). Em resumo:
-`brew install just` → `just bootstrap` → preencher segredos/identidade → `gh auth login`
+`brew install just` → `just report` (ver o que vai acontecer) → `just bootstrap` → preencher segredos/identidade → `gh auth login`
 → validar com `just doctor`. Para re-sincronizar uma máquina existente, use **`/sync`**.
