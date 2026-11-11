@@ -71,7 +71,7 @@ nova pronta com o mínimo de esforço, sem expor segredos.
    - `gh auth login` — peça ao usuário rodar com `! gh auth login --git-protocol ssh --web`.
 
 5. **Validação**
-   - `just doctor` — ferramentas, symlinks, identidade git + chave GPG, Brewfile e cmux.
+   - `just doctor` — ferramentas, symlinks, identidade git + chave GPG, configs/segredos (FAIL/TODO, sem valores), Brewfile e cmux.
    - Abra o `nvim` uma vez: o lazy.nvim instala os plugins e o Mason os LSPs/formatadores.
    - Abra uma shell nova: confira o prompt do **starship** e os aliases (`vim`→nvim, `ls`→eza).
 
