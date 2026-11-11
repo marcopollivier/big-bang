@@ -8,6 +8,8 @@ home := env_var('HOME')
 
 # Symlinks (repo -> home), uma lista só, usada por `link` e por `doctor`.
 # Formato: <caminho no repo> <caminho na home>, separados por espaço.
+# Skills do Claude entram uma a uma: ~/.claude/skills/ tem pastas que não são do
+# repo (ex.: `synced/`, gerenciada pela org), então a pasta inteira não vira symlink.
 links := '''
 dotfiles/.zshrc            .zshrc
 dotfiles/.gitignore.global .gitignore.global
@@ -18,6 +20,12 @@ mise/config.toml           .config/mise/config.toml
 wezterm/.wezterm.lua       .config/wezterm/wezterm.lua
 cmux/ghostty.config        .config/ghostty/config
 cmux/cmux.json             .config/cmux/cmux.json
+claude/CLAUDE.md           .claude/CLAUDE.md
+claude/commands            .claude/commands
+claude/agents              .claude/agents
+claude/output-styles       .claude/output-styles
+claude/keybindings.json    .claude/keybindings.json
+claude/skills/adr          .claude/skills/adr
 '''
 
 # Versão mínima do cmux com Extensions (beta) e wrapper do Claude (ver cmux/README.md).
@@ -44,7 +52,7 @@ default:
     @just --list
 
 # Full setup on a new machine (idempotent)
-bootstrap: brew omz link mise-install seed automode gpg-agent podman-machine
+bootstrap: brew omz link mise-install seed automode gpg-agent claude-hooks podman-machine
     @just report >/dev/null && echo "→ inventário salvo em ~/.big-bang/reports/latest.md"
     @echo ""
     @echo "✅ Bootstrap complete. Open a new terminal (or run: exec zsh)."
@@ -143,6 +151,21 @@ gpg-agent:
     gpgconf --kill gpg-agent 2>/dev/null || true
     echo "write  $conf pinentry-program -> pinentry-mac"
 
+# Claude Code hooks: grava claude/hooks.json (com __REPO__ resolvido) como a chave
+# `hooks` do ~/.claude/settings.json. Só toca nessa chave; idempotente. Ver claude/README.md.
+claude-hooks:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    settings="{{ home }}/.claude/settings.json"
+    want="$(just _claude_hooks_expected)"
+    [[ -f "$settings" ]] || { mkdir -p "$(dirname "$settings")"; echo '{}' >"$settings"; chmod 600 "$settings"; }
+    if [[ "$(jq -S '.hooks // null' "$settings")" == "$(jq -S . <<<"$want")" ]]; then
+      echo "ok     $settings hooks already in sync"; exit 0
+    fi
+    tmp="$(mktemp)"
+    jq --argjson h "$want" '.hooks = $h' "$settings" >"$tmp" && cat "$tmp" >"$settings" && rm -f "$tmp"
+    echo "write  $settings hooks (check: /hooks numa sessão nova do Claude)"
+
 # Lista (ou apaga, com `just clean-backups yes`) os `.bak.<timestamp>` que `just link`
 # deixa ao lado de cada symlink quando encontra um arquivo real no lugar.
 clean-backups confirm="no":
@@ -178,7 +201,7 @@ doctor:
     set -uo pipefail
     fail=0
     echo "## tools"
-    for t in brew mise nvim starship fzf git just podman gh jq gpg git-lfs; do
+    for t in brew mise nvim starship fzf git just podman gh jq gpg git-lfs gitleaks; do
       if p="$(command -v "$t")"; then printf "  %-10s %s\n" "$t" "$p"; else printf "  %-10s MISSING\n" "$t"; fail=1; fi
     done
     echo "## podman"
@@ -243,6 +266,11 @@ doctor:
     else
       echo "  statusLine MISSING in $cs (copy the key from claude/settings.json)"
     fi
+    if [[ "$(jq -S '.hooks // null' "$cs" 2>/dev/null)" == "$(just _claude_hooks_expected | jq -S .)" ]]; then
+      echo "  ok   hooks in sync with claude/hooks.json"
+    else
+      echo "  hooks DIVERGENT from claude/hooks.json (run: just claude-hooks)"; fail=1
+    fi
     echo "## cmux"
     if command -v cmux >/dev/null 2>&1; then
       v="$(cmux --version 2>/dev/null | awk '{print $2}')"
@@ -272,6 +300,20 @@ ruflo:
     claude plugin marketplace add ruvnet/ruflo
     claude plugin install ruflo-core@ruflo --scope user
     @echo "→ ruflo-core installed (user scope). New skills/agents load next Claude Code session."
+
+# Standalone (not in `bootstrap`): depende da CLI `claude`, e MCP de terceiro em
+# máquina de trabalho precisa de aprovação. Adiciona (user scope) os servidores de
+# claude/mcp.json que ainda não existem; não mexe nos que já estão lá.
+# Add the MCP servers listed in claude/mcp.json (user scope)
+claude-mcp:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    command -v claude >/dev/null || { echo "claude CLI não encontrada"; exit 1; }
+    while IFS=$'\t' read -r name cfg; do
+      if claude mcp get "$name" >/dev/null 2>&1; then echo "ok     mcp $name (already configured)"; continue; fi
+      claude mcp add-json --scope user "$name" "$cfg" >/dev/null && echo "add    mcp $name"
+    done < <(jq -r '.servers | to_entries[] | [.key, (.value | tojson)] | @tsv' "{{ repo }}/claude/mcp.json")
+    echo "→ confira com: claude mcp list"
 
 # cmux: settings que só existem na UI (UserDefaults) e não têm chave no cmux.json —
 # hoje, o beta "Extensions" (botão de plugins na sidebar). Idempotente. Ver cmux/README.md.
@@ -320,6 +362,10 @@ _automode_expected:
         if ($e.value | type) == "array"
         then (if ($e.value | length) > 0 then .[$e.key] = ((.[$e.key] // []) + $e.value) else . end)
         else .[$e.key] = $e.value end)'
+
+# hooks esperados: claude/hooks.json com __REPO__ trocado pelo caminho deste clone
+_claude_hooks_expected:
+    @sed "s|__REPO__|{{ repo }}|g" "{{ repo }}/claude/hooks.json" | jq -c .
 
 # Como _seed, mas substitui __REPO__ pelo caminho real deste clone — assim o
 # template funciona em qualquer fork/diretório, sem caminho fixo do autor
