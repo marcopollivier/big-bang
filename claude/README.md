@@ -7,7 +7,7 @@ consumo de tokens.
 
 | Arquivo | O que é |
 |---|---|
-| `settings.json` | **Modelo** das settings do Claude Code (sem nada da empresa). Seedado para `~/.claude/settings.json` pelo `just seed` — só se não existir. O placeholder `__REPO__` do statusline é trocado pelo caminho real do clone na cópia (por isso, se copiar à mão, troque você mesmo). |
+| `settings.json` | **Modelo** das settings do Claude Code (sem nada da empresa), incluindo o modelo padrão (`model`; ver [Modelo padrão](#modelo-padrão)). Seedado para `~/.claude/settings.json` pelo `just seed` — só se não existir. O placeholder `__REPO__` do statusline é trocado pelo caminho real do clone na cópia (por isso, se copiar à mão, troque você mesmo). |
 | `statusline.sh` | Statusline **dentro** do Claude Code: `modelo · $custo-sessão · branch✓/✗ · %contexto · %5h · %7d · $mês/$limite`. O gasto do mês reaproveita o `usage.sh` (mesma fonte/cores do WezTerm). Ligado pela chave `statusLine` do `settings.json`. |
 | `usage.sh` | Consumo do **mês** vs o limite mensal + gasto de hoje + projeção do fechamento (`$59/$300 · 20% · hoje $9 · proj $295`). Usado pelo statusline e pelo `right_status` do WezTerm. |
 | `usage-budget.example` | Modelo do limite mensal. Seedado para `~/.claude/usage-budget` (local, **fora do git**, como o `~/.zshrc.local`). |
@@ -117,6 +117,35 @@ existem (não mexe nos já configurados). Fica **fora do `bootstrap`**, como o `
 > aprovado para o caso de uso; senão, remova-o do `mcp.json` no seu fork ou não rode
 > o `just claude-mcp` ali. **Nada de token no `mcp.json`**: se um servidor precisar,
 > use `${VAR}` e defina a variável no `~/.zshrc.local`.
+
+## Modelo padrão
+
+O modelo padrão fica na chave `model` do [`settings.json`](./settings.json) (ex.:
+`"model": "opus"`; aceita alias `opus` | `sonnet` | `haiku` ou o ID completo). O
+`just seed` leva isso para o `~/.claude/settings.json` de uma máquina nova. Como o
+seed **não sobrescreve**, numa máquina que já tem o arquivo é preciso pôr a chave à
+mão ou usar o `/model`, que grava nela.
+
+**E a conta de organização?** Pela [documentação](https://code.claude.com/docs/en/model-config.md)
+(Claude Code ≥ 2.1.196), o *organization default* é só um ponto de partida: o
+`model` do settings do usuário **ganha** dele. A exceção é quando o admin liga o
+**override** do padrão da org. Aí o padrão da org passa a valer mais que o `model`
+do settings, o `/model` vale só para a sessão e aparece o aviso *"Your organization's
+default (…) applies on restart"*. Nesse caso, o que continua ganhando é a env:
+
+```zsh
+# ~/.zshrc.local — só na máquina onde a org força outro padrão
+export ANTHROPIC_MODEL=opus
+
+# ou, por sessão / via alias:
+claude --model opus
+```
+
+Abra um terminal novo e confira com `/status` dentro do Claude.
+
+> Se a org **restringe** os modelos (`availableModels` em managed settings, ou
+> modelo desabilitado no console), nada do lado do usuário contorna. Peça ao admin
+> do Claude da org para liberar o modelo.
 
 ## Auto mode
 
