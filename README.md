@@ -234,8 +234,15 @@ gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(scutil --get ComputerName)"
 **5. Abra um novo terminal** (ou `exec zsh`) e **valide** que está tudo no lugar:
 
 ```sh
-just doctor   # checa ferramentas, symlinks, identidade git + chave GPG, Brewfile, cmux e VM do podman
+just doctor   # checa ferramentas, symlinks, identidade git + chave GPG, configs/segredos, Brewfile, cmux e VM do podman
 ```
+
+> 🔒 Na parte de **config**, o `doctor` aponta arquivos seedados faltando ou com
+> placeholder, permissões abertas demais (`chmod 600`), JSON inválido, token
+> escrito direto no `~/.npmrc` e quais variáveis do `~/.zshrc.local` estão
+> definidas — **sem nunca imprimir valores** e sem executar o `~/.zshrc.local`
+> (lê o ambiente do terminal; abra um novo depois de editar). `FAIL` muda o exit
+> code; `TODO` é só lembrete.
 
 > 🏢 Em **Mac gerenciado** (MDM) ou **atrás de proxy corporativo (Zscaler)**, alguns
 > passos pedem ajuste — veja [Troubleshooting / FAQ](#troubleshooting--faq).
@@ -248,7 +255,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 |---|---|
 | `just` | lista todas as recipes disponíveis |
 | `just bootstrap` | setup completo de máquina nova (idempotente) |
-| `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, divergência do Brewfile, config do Claude Code (auto mode + hooks + statusline), versão do cmux e a VM do podman |
+| `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, configs/segredos (sem mostrar valores), divergência do Brewfile, config do Claude Code (auto mode + hooks + statusline), versão do cmux e a VM do podman |
 | `just report` | inventário da máquina (status, versão e origem de cada item; conflitos com o que foi instalado à mão) em `~/.big-bang/reports/` |
 | `just link` | reaplica os symlinks (rode após adicionar um config novo) |
 | `just brew` | instala/atualiza os pacotes do [`Brewfile`](./Brewfile) |

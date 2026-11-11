@@ -233,8 +233,15 @@ gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(scutil --get ComputerName)"
 **5. Open a new terminal** (or `exec zsh`) and **validate** everything is in place:
 
 ```sh
-just doctor   # checks tools, symlinks, git identity + GPG key, Brewfile, cmux and the podman VM
+just doctor   # checks tools, symlinks, git identity + GPG key, configs/secrets, Brewfile, cmux and the podman VM
 ```
+
+> 🔒 In the **config** part, `doctor` flags seeded files that are missing or still
+> have placeholders, permissions that are too open (`chmod 600`), invalid JSON,
+> a token written straight into `~/.npmrc`, and which `~/.zshrc.local` variables
+> are set — **never printing values** and without executing `~/.zshrc.local`
+> (it reads the terminal's environment; open a new one after editing). `FAIL`
+> changes the exit code; `TODO` is just a reminder.
 
 > 🏢 On a **managed Mac** (MDM) or **behind a corporate proxy (Zscaler)**, some
 > steps need tweaks — see [Troubleshooting / FAQ](#troubleshooting--faq).
@@ -247,7 +254,7 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 |---|---|
 | `just` | list all available recipes |
 | `just bootstrap` | full new-machine setup (idempotent) |
-| `just doctor` | checks tools, symlinks, git identity + GPG key, Brewfile drift, Claude Code config (auto mode + hooks + statusline), cmux version and the podman VM |
+| `just doctor` | checks tools, symlinks, git identity + GPG key, configs/secrets (values never shown), Brewfile drift, Claude Code config (auto mode + hooks + statusline), cmux version and the podman VM |
 | `just report` | machine inventory (status, version and origin of each item; conflicts with manually installed things) under `~/.big-bang/reports/` |
 | `just link` | re-apply symlinks (run after adding a new config) |
 | `just brew` | install/upgrade the [`Brewfile`](./Brewfile) packages |

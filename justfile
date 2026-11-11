@@ -246,6 +246,59 @@ doctor:
     else
       printf "  %-14s %s\\n" pinentry "NOT pinentry-mac — passphrase asked in the terminal (run: just gpg-agent)"
     fi
+    # Config da máquina (identidade/segredos). SEGURANÇA: só reporta se existe/está
+    # preenchido — nunca imprime valor. Não faz `source` do ~/.zshrc.local (não
+    # executa nada): lê as variáveis do ambiente herdado do shell que rodou o doctor.
+    # FAIL = quebrado/inseguro; TODO = ainda não preenchido (não muda o exit code).
+    echo "## config"
+    while read -r src dst _; do
+      [[ -z "$src" ]] && continue
+      f="{{ home }}/$dst"
+      if [[ ! -e "$f" ]]; then echo "  FAIL ~/$dst missing (run: just seed)"; fail=1; continue; fi
+      # Arquivo de segredo apontando para dentro do repo = segredo indo para o git.
+      if [[ "$(realpath "$f")" == "{{ repo }}"/* ]]; then
+        echo "  FAIL ~/$dst is a symlink into the repo — secrets would land in git (replace it with a copy)"; fail=1; continue
+      fi
+      if grep -qE '__REPO__|__GH_USER__' "$f"; then echo "  FAIL ~/$dst still has __REPO__/__GH_USER__ placeholders"; fail=1; continue; fi
+      echo "  ok   ~/$dst"
+    done < <(printf '%s\n' "{{ seeds }}")
+    # Permissões: segredo legível por group/others é falha (chmod resolve). Arquivos
+    # com segredo em 600; dos diretórios, só os que ssh/gpg exigem 700 (o ~/.aws
+    # nasce 755 pelo próprio AWS CLI — quem guarda segredo é o credentials).
+    for p in .zshrc.local .wakatime.cfg .npmrc .aws/credentials .claude/settings.json .gnupg .ssh; do
+      f="{{ home }}/$p"; [[ -e "$f" ]] || continue
+      m="$(stat -f %Lp "$f")"; [[ -d "$f" ]] && want=700 || want=600
+      if (( 8#$m & 8#077 )); then echo "  FAIL ~/$p is mode $m — readable by others (run: chmod $want ~/$p)"; fail=1; fi
+    done
+    for j in .claude/settings.json .claude/automode.local.json; do
+      f="{{ home }}/$j"; [[ -f "$f" ]] || continue
+      jq empty "$f" 2>/dev/null || { echo "  FAIL ~/$j is not valid JSON"; fail=1; }
+    done
+    if [[ -f "{{ home }}/.claude/usage-budget" ]] && ! grep -v '^[[:space:]]*#' "{{ home }}/.claude/usage-budget" | grep -qE '^[[:space:]]*[0-9]+([.][0-9]+)?[[:space:]]*$'; then
+      echo "  FAIL ~/.claude/usage-budget has no numeric limit (put e.g. 300, or 0)"; fail=1
+    fi
+    if [[ -f "{{ home }}/.wakatime.cfg" ]] && ! grep -qE '^[[:space:]]*api_key[[:space:]]*=[[:space:]]*[^[:space:]]' "{{ home }}/.wakatime.cfg"; then
+      echo "  TODO ~/.wakatime.cfg api_key empty (WakaTime won't track — key at wakatime.com/api-key)"
+    fi
+    # Token literal no ~/.npmrc (em vez de ${NPM_TOKEN}) é segredo fora do lugar.
+    npmrc="{{ home }}/.npmrc"
+    if [[ -f "$npmrc" ]]; then
+      if grep -E '^[[:space:]]*[^#;].*_authToken[[:space:]]*=' "$npmrc" | grep -qvE '_authToken[[:space:]]*=[[:space:]]*\$\{'; then
+        echo "  FAIL ~/.npmrc has a hardcoded _authToken — use \${NPM_TOKEN} and export it in ~/.zshrc.local"; fail=1
+      elif grep -qE '^[[:space:]]*[^#;].*_authToken[[:space:]]*=[[:space:]]*\$\{NPM_TOKEN\}' "$npmrc" && [[ -z "${NPM_TOKEN:-}" ]]; then
+        echo "  TODO ~/.npmrc reads \${NPM_TOKEN}, but NPM_TOKEN is unset (export it in ~/.zshrc.local)"
+      fi
+    fi
+    # Variáveis: a lista vem do template (fonte única). São opcionais — dizem só se
+    # estão no ambiente. Nome validado antes do ${!v} (expansão indireta).
+    echo "## env (from ~/.zshrc.local — optional; values never shown)"
+    sed -nE 's/^#?[[:space:]]*export[[:space:]]+([A-Za-z_][A-Za-z0-9_]*)=.*/\1/p' "{{ repo }}/dotfiles/.zshrc.local.example" | sort -u |
+    while read -r v; do
+      [[ "$v" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || continue
+      if [[ -z "${!v:-}" ]]; then printf "  %-24s unset\n" "$v"
+      elif [[ "${!v}" == *"<"*">"* ]]; then printf "  %-24s TODO still the template placeholder\n" "$v"
+      else printf "  %-24s set\n" "$v"; fi
+    done
     echo "## brew"
     if brew bundle check --file="{{ repo }}/Brewfile" >/dev/null 2>&1; then
       echo "  ok   Brewfile satisfied"
