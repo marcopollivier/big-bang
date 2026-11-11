@@ -27,6 +27,7 @@ brew "git-lfs"         # exigido pelo filtro lfs do .gitconfig (required = true)
 brew "gnupg"           # assinatura de commits (.gitconfig: commit.gpgSign = true)
 brew "pinentry-mac"    # prompt de senha do GPG integrado ao macOS/Keychain
 brew "pre-commit"      # hooks de qualidade locais (pre-commit install; ver .pre-commit-config.yaml)
+brew "gitleaks"        # scan de segredos local: hook do Claude antes do git commit (o CI também roda)
 
 # --- Cloud / infra ---
 brew "awscli"
