@@ -167,10 +167,11 @@ O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e execut
 
 - `just brew` — instala tudo que está no [`Brewfile`](./Brewfile)
 - `just omz` — instala o oh-my-zsh, se faltar (o `.zshrc` depende dele)
-- `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise…); arquivos reais existentes têm backup feito antes
+- `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise… e a config pessoal do Claude Code: `CLAUDE.md` global, commands, agents, skills, output styles e keybindings); arquivos reais existentes têm backup feito antes
 - `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
 - `just seed` — copia os templates de segredo/identidade **só se não existirem**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` e os do Claude Code (`~/.claude/settings.json`, `~/.claude/usage-budget` e `~/.claude/automode.local.json` — veja [`claude/`](./claude))
 - `just automode` — grava a config do *auto mode* do Claude Code ([`claude/automode.json`](./claude/automode.json)) no `~/.claude/settings.json`
+- `just claude-hooks` — grava os hooks do Claude Code ([`claude/hooks.json`](./claude/hooks.json): bloqueio de comandos perigosos, gitleaks antes do commit, proteção de arquivos de segredo, formatação e notificação) no `~/.claude/settings.json`
 - `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
 - `just report` — salva o inventário pós-bootstrap em `~/.big-bang/reports/`
 
@@ -236,7 +237,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 |---|---|
 | `just` | lista todas as recipes disponíveis |
 | `just bootstrap` | setup completo de máquina nova (idempotente) |
-| `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, configs/segredos (sem mostrar valores), divergência do Brewfile, config do Claude Code (auto mode + statusline), versão do cmux e a VM do podman |
+| `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, configs/segredos (sem mostrar valores), divergência do Brewfile, config do Claude Code (auto mode + hooks + statusline), versão do cmux e a VM do podman |
 | `just report` | inventário da máquina (status, versão e origem de cada item; conflitos com o que foi instalado à mão) em `~/.big-bang/reports/` |
 | `just link` | reaplica os symlinks (rode após adicionar um config novo) |
 | `just brew` | instala/atualiza os pacotes do [`Brewfile`](./Brewfile) |
@@ -245,6 +246,8 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | `just mise-install` | instala os toolchains do [`mise/config.toml`](./mise/config.toml) |
 | `just seed` | copia os templates de identidade/segredo (só se faltarem) |
 | `just automode` | reaplica a config do auto mode do Claude Code (repo + `~/.claude/automode.local.json`) |
+| `just claude-hooks` | reaplica os hooks do Claude Code ([`claude/hooks.json`](./claude/hooks.json)) |
+| `just claude-mcp` | adiciona os servidores MCP de [`claude/mcp.json`](./claude/mcp.json) (user scope; trabalho: só os aprovados) |
 | `just cmux-settings` | liga no cmux o que só existe na UI (Extensions beta = botão de plugins) |
 | `just podman-machine` | cria/inicia a VM Linux do podman |
 | `just pr` | abre um PR da branch atual no navegador (requer `gh auth login`) |
@@ -261,7 +264,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | [`wezterm/`](./wezterm) | Configuração do terminal [WezTerm](https://wezfurlong.org/wezterm/). |
 | [`starship/`](./starship) | Configuração do prompt [Starship](https://starship.rs/). |
 | [`mise/`](./mise) | Config global do [mise](https://mise.jdx.dev/) — versões dos toolchains. |
-| [`claude/`](./claude) | Config do [Claude Code](https://claude.com/claude-code) + acompanhamento de consumo de tokens (statusline e status do mês no WezTerm). Veja o [`README`](./claude/README.md). |
+| [`claude/`](./claude) | Config pessoal do [Claude Code](https://claude.com/claude-code) (`CLAUDE.md` global, commands, agents, skills, output styles, keybindings, hooks e MCP) + acompanhamento de consumo de tokens (statusline e status do mês no WezTerm). Veja o [`README`](./claude/README.md). |
 | [`cmux/`](./cmux) | Orquestrador de agentes de IA (terminal Ghostty embutido), em teste como alternativa ao WezTerm. Veja o [`README`](./cmux/README.md). |
 | [`defaultdots/`](./defaultdots) | Dotfiles originais/de fábrica, mantidos como referência de reset. |
 | [`scripts/`](./scripts) | Scripts maiores chamados pelo `justfile` — ex.: `report.sh` (`just report`). |
@@ -400,7 +403,8 @@ Casks de CLI/fonts (que não vão para `/Applications`) instalam normalmente.
 ## Qualidade
 
 - **CI** ([`ci.yml`](./.github/workflows/ci.yml)): sintaxe do zsh, formatação Lua
-  (stylua), validação do justfile e scan de segredos (gitleaks) em todo push/PR.
+  (stylua), shellcheck, testes dos hooks do Claude, validação do justfile e scan de
+  segredos (gitleaks) em todo push/PR.
 - **Hooks locais** ([`.pre-commit-config.yaml`](./.pre-commit-config.yaml)):
   `brew install pre-commit && pre-commit install`.
 - **Formatação:** [`.editorconfig`](./.editorconfig) + [`.stylua.toml`](./.stylua.toml).
