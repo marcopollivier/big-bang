@@ -52,7 +52,7 @@ default:
     @just --list
 
 # Full setup on a new machine (idempotent)
-bootstrap: brew omz link mise-install seed automode claude-hooks podman-machine
+bootstrap: brew omz link mise-install seed automode gpg-agent claude-hooks podman-machine
     @just report >/dev/null && echo "→ inventário salvo em ~/.big-bang/reports/latest.md"
     @echo ""
     @echo "✅ Bootstrap complete. Open a new terminal (or run: exec zsh)."
@@ -130,6 +130,26 @@ automode:
     tmp="$(mktemp)"
     jq --argjson am "$want" '.autoMode = $am' "$settings" >"$tmp" && cat "$tmp" >"$settings" && rm -f "$tmp"
     echo "write  $settings autoMode (check: claude auto-mode config)"
+
+# A senha da chave GPG passa a ser pedida numa janela do macOS com "Save in
+# Keychain", em vez de no terminal. Só acrescenta a linha se não houver
+# `pinentry-program`; nunca sobrescreve a escolha de quem já configurou.
+# Point gpg-agent at pinentry-mac (passphrase in a macOS dialog / Keychain; idempotent)
+gpg-agent:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    conf="{{ home }}/.gnupg/gpg-agent.conf"
+    pin="$(brew --prefix)/bin/pinentry-mac"
+    [[ -x "$pin" ]] || { echo "skip   pinentry-mac não instalado (run: just brew)"; exit 0; }
+    mkdir -p "{{ home }}/.gnupg" && chmod 700 "{{ home }}/.gnupg"
+    if cur="$(grep -E '^[[:space:]]*pinentry-program' "$conf" 2>/dev/null)"; then
+      if [[ "$cur" == *pinentry-mac* ]]; then echo "ok     $conf already uses pinentry-mac"
+      else echo "keep   $conf has its own pinentry ($cur) — not touching it"; fi
+      exit 0
+    fi
+    echo "pinentry-program $pin" >>"$conf" && chmod 600 "$conf"
+    gpgconf --kill gpg-agent 2>/dev/null || true
+    echo "write  $conf pinentry-program -> pinentry-mac"
 
 # Claude Code hooks: grava claude/hooks.json (com __REPO__ resolvido) como a chave
 # `hooks` do ~/.claude/settings.json. Só toca nessa chave; idempotente. Ver claude/README.md.
@@ -220,6 +240,11 @@ doctor:
       fi
     else
       printf "  %-14s %s\\n" gpgsign "off (repo default is on — see dotfiles/.gitconfig)"
+    fi
+    if grep -qE '^[[:space:]]*pinentry-program.*pinentry-mac' "{{ home }}/.gnupg/gpg-agent.conf" 2>/dev/null; then
+      printf "  %-14s %s\\n" pinentry "pinentry-mac (passphrase can live in the Keychain)"
+    else
+      printf "  %-14s %s\\n" pinentry "NOT pinentry-mac — passphrase asked in the terminal (run: just gpg-agent)"
     fi
     echo "## brew"
     if brew bundle check --file="{{ repo }}/Brewfile" >/dev/null 2>&1; then

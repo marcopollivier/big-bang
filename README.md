@@ -171,6 +171,7 @@ O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e execut
 - `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
 - `just seed` — copia os templates de segredo/identidade **só se não existirem**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` e os do Claude Code (`~/.claude/settings.json`, `~/.claude/usage-budget` e `~/.claude/automode.local.json` — veja [`claude/`](./claude))
 - `just automode` — grava a config do *auto mode* do Claude Code ([`claude/automode.json`](./claude/automode.json)) no `~/.claude/settings.json`
+- `just gpg-agent` — aponta o `gpg-agent` para o `pinentry-mac` (senha da chave GPG numa janela do macOS, com opção de guardar no Keychain)
 - `just claude-hooks` — grava os hooks do Claude Code ([`claude/hooks.json`](./claude/hooks.json): bloqueio de comandos perigosos, gitleaks antes do commit, proteção de arquivos de segredo, formatação e notificação) no `~/.claude/settings.json`
 - `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
 - `just report` — salva o inventário pós-bootstrap em `~/.big-bang/reports/`
@@ -184,11 +185,28 @@ chave do WakaTime em `~/.wakatime.cfg` e os segredos em `~/.zshrc.local`.
 > `git commit` falha. Crie a sua:
 >
 > ```sh
-> gpg --full-generate-key                        # RSA 4096; use o mesmo e-mail do git
-> gpg --list-secret-keys --keyid-format=long     # copie o ID após "sec rsa4096/"
+> gpg --full-generate-key                        # respostas abaixo
+> gpg --list-secret-keys --keyid-format=long     # copie o ID após "sec ed25519/"
 > git config --global user.signingkey <ID>
 > gpg --armor --export <ID>                      # cole no GitHub → Settings → SSH and GPG keys
 > ```
+>
+> Respostas do `gpg --full-generate-key`:
+>
+> | Pergunta | Resposta | Por quê |
+> |---|---|---|
+> | Tipo de chave | **`9` — ECC (de assinar e cifrar)**, o padrão | Gera ed25519 (assinatura) + cv25519 (cifra): chave curta, rápida e aceita pelo GitHub. Evite `16` (ECC e Kyber, pós-quântica): o GitHub ainda não aceita. `1`/`4` (RSA 4096) também funcionam, só são mais lentas e maiores. |
+> | Curva | **`1` — Curve 25519**, o padrão | É a recomendada; NIST/Brainpool só por exigência de compliance. |
+> | Validade | **`2y`** (ou `0` = nunca expira) | Expirar limita o estrago se a chave vazar. Renovar é um comando (`gpg --quick-set-expire <ID> 2y`) e reenviar a pública ao GitHub; commits antigos continuam verificados. |
+> | Nome e e-mail | **Os mesmos do `~/.gitconfig`** | O GitHub só marca *Verified* se o e-mail da chave for um e-mail **verificado na sua conta**. |
+> | Comentário | vazio | — |
+> | Senha | uma senha forte | Veja abaixo: você não vai digitá-la a cada commit. |
+>
+> **A senha não é pedida a cada commit.** Ela só é usada para *assinar*, e o
+> `just gpg-agent` (já incluso no `bootstrap`) configura o `pinentry-mac`: na
+> primeira assinatura abre uma janela do macOS — marque **"Save in Keychain"** e
+> ela passa a ser liberada sozinha enquanto você estiver logado. Sem o Keychain,
+> o `gpg-agent` ainda guarda a senha em cache por alguns minutos.
 >
 > Não quer assinar commits? Desligue de vez:
 > `git config --global commit.gpgsign false`
@@ -242,6 +260,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | `just claude-hooks` | reaplica os hooks do Claude Code ([`claude/hooks.json`](./claude/hooks.json)) |
 | `just claude-mcp` | adiciona os servidores MCP de [`claude/mcp.json`](./claude/mcp.json) (user scope; trabalho: só os aprovados) |
 | `just cmux-settings` | liga no cmux o que só existe na UI (Extensions beta = botão de plugins) |
+| `just gpg-agent` | configura o `pinentry-mac` no `~/.gnupg/gpg-agent.conf` (só se não houver outro pinentry) |
 | `just podman-machine` | cria/inicia a VM Linux do podman |
 | `just pr` | abre um PR da branch atual no navegador (requer `gh auth login`) |
 | `just ruflo` | instala o plugin ruflo do Claude Code (requer a CLI `claude`) |
