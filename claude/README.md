@@ -121,7 +121,7 @@ existem (não mexe nos já configurados). Fica **fora do `bootstrap`**, como o `
 ## Modelo padrão
 
 O modelo padrão fica na chave `model` do [`settings.json`](./settings.json) (ex.:
-`"model": "sonnet"`; aceita alias `opus` | `sonnet` | `haiku` ou o ID completo). O
+`"model": "opus"`; aceita alias `opus` | `sonnet` | `haiku` ou o ID completo). O
 `just seed` leva isso para o `~/.claude/settings.json` de uma máquina nova. Como o
 seed **não sobrescreve**, numa máquina que já tem o arquivo é preciso pôr a chave à
 mão ou usar o `/model`, que grava nela.
