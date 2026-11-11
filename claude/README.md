@@ -40,6 +40,35 @@ da máquina (`CPU x% · MEM y%`), de [`../wezterm/sysinfo.sh`](../wezterm/sysinf
 3. O statusline aparece em novas sessões do Claude Code; o status do mês aparece
    no WezTerm (recarrega o config sozinho).
 
+## Modelo padrão
+
+O `/model` grava a escolha na chave `model` do `~/.claude/settings.json`, mas
+numa conta de **organização** o padrão da org vale mais que o settings do usuário.
+O sintoma é o aviso *"Your organization's default (…) applies on restart"*: a
+cada sessão nova o modelo volta para o da org.
+
+O que fica acima do padrão da org (do mais simples ao mais explícito):
+
+```zsh
+# ~/.zshrc.local — só na máquina onde a org define outro padrão
+export ANTHROPIC_MODEL=opus          # alias: opus | sonnet | haiku, ou o ID completo
+
+# ou, por sessão / via alias:
+claude --model opus
+```
+
+Abra um terminal novo e confira com `/status` dentro do Claude.
+
+> Se ainda assim voltar ao modelo da org, ela está **restringindo** os modelos
+> permitidos, não só sugerindo um padrão. Isso não se contorna do lado do
+> usuário: peça ao admin do Claude da org para liberar o modelo. Enquanto isso,
+> use `/model` a cada sessão.
+
+O repo **não** define o modelo por padrão (o `settings.json` seedado não tem a
+chave `model`): é escolha de cada máquina/conta. Se vale deixar um placeholder
+no `.zshrc.local.example` está em discussão na
+[#71](https://github.com/marcopollivier/big-bang/issues/71).
+
 ## Auto mode
 
 O classificador do auto mode **só lê** o bloco `autoMode` do `~/.claude/settings.json`
