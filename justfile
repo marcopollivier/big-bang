@@ -24,12 +24,28 @@ cmux/cmux.json             .config/cmux/cmux.json
 # O cask é auto_updates, então o número do brew não reflete o app: `doctor` confere o binário.
 cmux_min := "0.64.22"
 
+# Templates com identidade/segredo (repo -> home), copiados só se não existirem.
+# Uma lista só, usada por `seed` e por `report`. Formato: <caminho no repo> <caminho
+# na home> [template] — template substitui __REPO__ pelo caminho deste clone.
+seeds := '''
+dotfiles/.zshrc.local.example .zshrc.local
+dotfiles/.gitconfig           .gitconfig
+dotfiles/.wakatime.cfg        .wakatime.cfg
+dotfiles/.aws/config          .aws/config
+dotfiles/.npmrc               .npmrc
+dotfiles/.clojure/deps.edn    .clojure/deps.edn
+claude/settings.json          .claude/settings.json       template
+claude/usage-budget.example   .claude/usage-budget
+claude/automode.local.example .claude/automode.local.json
+'''
+
 # Show available recipes
 default:
     @just --list
 
 # Full setup on a new machine (idempotent)
 bootstrap: brew omz link mise-install seed automode podman-machine
+    @just report >/dev/null && echo "→ inventário salvo em ~/.big-bang/reports/latest.md"
     @echo ""
     @echo "✅ Bootstrap complete. Open a new terminal (or run: exec zsh)."
 
@@ -79,19 +95,17 @@ link:
 
 # Seed template files that hold identity/secrets — only if missing (never clobbers)
 seed:
-    just _seed "{{ repo }}/dotfiles/.zshrc.local.example" "{{ home }}/.zshrc.local"
-    just _seed "{{ repo }}/dotfiles/.gitconfig"           "{{ home }}/.gitconfig"
-    just _seed "{{ repo }}/dotfiles/.wakatime.cfg"        "{{ home }}/.wakatime.cfg"
-    just _seed "{{ repo }}/dotfiles/.aws/config"          "{{ home }}/.aws/config"
-    just _seed "{{ repo }}/dotfiles/.npmrc"               "{{ home }}/.npmrc"
-    just _seed "{{ repo }}/dotfiles/.clojure/deps.edn"    "{{ home }}/.clojure/deps.edn"
-    just _seed_template "{{ repo }}/claude/settings.json" "{{ home }}/.claude/settings.json"
-    just _seed "{{ repo }}/claude/usage-budget.example"   "{{ home }}/.claude/usage-budget"
-    just _seed "{{ repo }}/claude/automode.local.example" "{{ home }}/.claude/automode.local.json"
-    @echo "→ Now fill identity/keys in ~/.gitconfig, ~/.wakatime.cfg and ~/.zshrc.local"
-    @echo "→ Set your monthly token limit (US\$) in ~/.claude/usage-budget"
-    @echo "→ GPG: commits são assinados por padrão — crie uma chave (gpg --full-generate-key)"
-    @echo "  e preencha user.signingKey, ou rode: git config --global commit.gpgsign false"
+    #!/usr/bin/env bash
+    set -euo pipefail
+    printf '%s\n' "{{ seeds }}" | while read -r src dst mode; do
+      [[ -z "$src" ]] && continue
+      if [[ "$mode" == template ]]; then just _seed_template "{{ repo }}/$src" "{{ home }}/$dst"
+      else just _seed "{{ repo }}/$src" "{{ home }}/$dst"; fi
+    done
+    echo "→ Now fill identity/keys in ~/.gitconfig, ~/.wakatime.cfg and ~/.zshrc.local"
+    echo "→ Set your monthly token limit (US\$) in ~/.claude/usage-budget"
+    echo "→ GPG: commits são assinados por padrão — crie uma chave (gpg --full-generate-key)"
+    echo "  e preencha user.signingKey, ou rode: git config --global commit.gpgsign false"
 
 # Claude Code auto mode: grava claude/automode.json (+ ~/.claude/automode.local.json)
 # como a chave `autoMode` do ~/.claude/settings.json — o único lugar (além de managed
@@ -132,6 +146,11 @@ clean-backups confirm="no":
 brew-dump:
     brew bundle dump --force --file="{{ repo }}/Brewfile"
     @echo "⚠️  Brewfile sobrescrito pelo dump cru — revise o diff antes de commitar (comentários/seções se perdem)"
+
+# Inventory: what's installed, its version and where it came from (-> ~/.big-bang/reports/)
+# Rode antes do bootstrap: missing = vai instalar; conflict = já existe por fora do brew.
+report:
+    @bash "{{ repo }}/scripts/report.sh"
 
 # Sanity check: tools, symlinks, git identity/GPG, Brewfile, cmux (exit 1 on any failure)
 doctor:

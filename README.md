@@ -65,6 +65,7 @@ brew install just
 # 3. clone via HTTPS (ainda não precisa de chave SSH) + bootstrap (idempotente)
 git clone https://github.com/marcopollivier/big-bang.git ~/dev/marcopollivier/big-bang
 cd ~/dev/marcopollivier/big-bang
+just report      # opcional: o que já existe, o que falta e o que vai conflitar
 just bootstrap
 
 # 4. novo terminal → login no GitHub (gera/sobe a chave SSH) → valide
@@ -142,8 +143,19 @@ brew install just
 ```sh
 git clone https://github.com/<você>/big-bang.git ~/dev/<você>/big-bang
 cd ~/dev/<você>/big-bang
+just report      # antes: o que o bootstrap vai fazer nesta máquina
 just bootstrap
 ```
+
+> 🔎 **Antes de rodar o bootstrap**, `just report` mostra o inventário da máquina:
+> cada item do Brewfile, toolchain do mise, symlink e seed com status (`ok`,
+> `missing` = vai instalar, `conflict` = já existe por fora do brew — ex.: app
+> instalado à mão, resolva com `brew install --cask --adopt <cask>`), versão e
+> **de onde veio**; mais o que está instalado fora do repo (brew extra, apps
+> manuais/App Store, `/usr/local/bin`, `npm -g`). O relatório fica salvo em
+> `~/.big-bang/reports/` (o `latest.md` é o último) e o bootstrap gera um novo
+> no final — compare os dois com `diff`. `~/.big-bang/` é o estado **da máquina**
+> e nunca vai pro repo.
 
 > 📁 **Convenção de pastas:** projetos vivem em `~/dev/<dono>/<projeto>` — o
 > dono é o usuário/org do GitHub (ex.: `~/dev/<você>/big-bang`). Só os dotfiles
@@ -160,6 +172,7 @@ O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e execut
 - `just seed` — copia os templates de segredo/identidade **só se não existirem**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` e os do Claude Code (`~/.claude/settings.json`, `~/.claude/usage-budget` e `~/.claude/automode.local.json` — veja [`claude/`](./claude))
 - `just automode` — grava a config do *auto mode* do Claude Code ([`claude/automode.json`](./claude/automode.json)) no `~/.claude/settings.json`
 - `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
+- `just report` — salva o inventário pós-bootstrap em `~/.big-bang/reports/`
 
 **3. Preencha sua identidade e segredos** (veja a tabela em
 [Faça seu fork](#faça-seu-fork-torne-seu)): nome/e-mail do git em `~/.gitconfig`,
@@ -217,6 +230,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | `just` | lista todas as recipes disponíveis |
 | `just bootstrap` | setup completo de máquina nova (idempotente) |
 | `just doctor` | checa ferramentas, symlinks, identidade git + chave GPG, divergência do Brewfile, config do Claude Code (auto mode + statusline), versão do cmux e a VM do podman |
+| `just report` | inventário da máquina (status, versão e origem de cada item; conflitos com o que foi instalado à mão) em `~/.big-bang/reports/` |
 | `just link` | reaplica os symlinks (rode após adicionar um config novo) |
 | `just brew` | instala/atualiza os pacotes do [`Brewfile`](./Brewfile) |
 | `just brew-dump` | atualiza o `Brewfile` a partir do que está instalado |
@@ -243,6 +257,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | [`claude/`](./claude) | Config do [Claude Code](https://claude.com/claude-code) + acompanhamento de consumo de tokens (statusline e status do mês no WezTerm). Veja o [`README`](./claude/README.md). |
 | [`cmux/`](./cmux) | Orquestrador de agentes de IA (terminal Ghostty embutido), em teste como alternativa ao WezTerm. Veja o [`README`](./cmux/README.md). |
 | [`defaultdots/`](./defaultdots) | Dotfiles originais/de fábrica, mantidos como referência de reset. |
+| [`scripts/`](./scripts) | Scripts maiores chamados pelo `justfile` — ex.: `report.sh` (`just report`). |
 
 Cada pasta tem o seu próprio `README.md`. Arquivos da raiz que vale conhecer:
 
