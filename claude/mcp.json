@@ -1,0 +1,11 @@
+{
+  "_comment": [
+    "Servidores MCP de user scope, aplicados por `just claude-mcp` (claude mcp add --scope user).",
+    "Nada de token aqui: se um servidor precisar, use ${VAR} no header/env e defina a VAR no ~/.zshrc.local.",
+    "Máquina de trabalho: servidor de terceiro que pode receber dado/código da empresa precisa estar aprovado para o caso de uso."
+  ],
+  "servers": {
+    "playwright": { "type": "stdio", "command": "npx", "args": ["-y", "@playwright/mcp@latest"] },
+    "context7": { "type": "http", "url": "https://mcp.context7.com/mcp" }
+  }
+}

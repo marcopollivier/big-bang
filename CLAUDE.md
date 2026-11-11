@@ -14,7 +14,10 @@ são escopo agora** — não adicione suporte a Linux/Windows sem pedido explíc
   histórico/racional em `nvim/SETUP.md`, treino guiado em `nvim/PRACTICE.md`
 - `wezterm/`, `starship/`, `mise/` — terminal, prompt e toolchains
 - `cmux/` — orquestrador de agentes de IA (terminal via Ghostty embutido); em teste como alternativa ao WezTerm. Detalhes em `cmux/README.md`
-- `claude/` — config do Claude Code + acompanhamento de consumo de tokens (statusline + status do mês no WezTerm); detalhes em `claude/README.md`
+- `claude/` — config **pessoal** do Claude Code (vira `~/.claude/`): `CLAUDE.md` global,
+  commands, agents, skills, output styles e keybindings via `just link`; hooks
+  (`just claude-hooks`, testes em `claude/hooks/test.sh`), MCP (`just claude-mcp`) e
+  acompanhamento de consumo de tokens. Detalhes em `claude/README.md`
 - `defaultdots/` — dotfiles de fábrica, referência de reset (não são os do dia a dia)
 - `scripts/` — scripts maiores chamados pelo `justfile` (ex.: `report.sh`, o inventário do `just report`)
 - `~/.big-bang/` (na home, **fora do repo**) — estado da máquina: relatórios do

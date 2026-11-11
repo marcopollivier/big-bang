@@ -20,3 +20,7 @@
 ## Caminho deste clone (só se a descoberta automática falhar — o WezTerm resolve
 ## o symlink do próprio wezterm.lua; ver wezterm/.wezterm.lua)
 # export BIG_BANG_REPO="$HOME/dev/<seu-usuario>/big-bang"
+
+## Claude Code — modelo padrão. O normal é a chave `model` do ~/.claude/settings.json;
+## use isto só se a org força o padrão dela (ver claude/README.md, "Modelo padrão")
+# export ANTHROPIC_MODEL=opus

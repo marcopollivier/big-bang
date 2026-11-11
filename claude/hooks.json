@@ -1,0 +1,31 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        { "type": "command", "command": "\"__REPO__/claude/hooks/block-dangerous.sh\"", "timeout": 10 },
+        { "type": "command", "command": "\"__REPO__/claude/hooks/gitleaks-commit.sh\"", "timeout": 60 }
+      ]
+    },
+    {
+      "matcher": "Read|Edit|Write|MultiEdit|NotebookEdit",
+      "hooks": [
+        { "type": "command", "command": "\"__REPO__/claude/hooks/protect-secrets.sh\"", "timeout": 10 }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "Edit|Write|MultiEdit",
+      "hooks": [
+        { "type": "command", "command": "\"__REPO__/claude/hooks/format.sh\"", "timeout": 30 }
+      ]
+    }
+  ],
+  "Notification": [
+    { "hooks": [{ "type": "command", "command": "\"__REPO__/claude/hooks/notify.sh\"", "timeout": 10 }] }
+  ],
+  "Stop": [
+    { "hooks": [{ "type": "command", "command": "\"__REPO__/claude/hooks/notify.sh\"", "timeout": 10 }] }
+  ]
+}
