@@ -170,6 +170,7 @@ just bootstrap
 - `just mise-install` — install the toolchains from [`mise/config.toml`](./mise/config.toml)
 - `just seed` — copy secret/identity templates **only if missing**: `.gitconfig`, `.wakatime.cfg`, `~/.zshrc.local`, `~/.npmrc`, `~/.aws/config`, `~/.clojure/deps.edn` and the Claude Code ones (`~/.claude/settings.json`, `~/.claude/usage-budget` and `~/.claude/automode.local.json` — see [`claude/`](./claude))
 - `just automode` — write the Claude Code *auto mode* config ([`claude/automode.json`](./claude/automode.json)) into `~/.claude/settings.json`
+- `just gpg-agent` — point `gpg-agent` at `pinentry-mac` (GPG key passphrase in a macOS dialog, with the option to store it in the Keychain)
 - `just podman-machine` — create/start the podman Linux VM (on macOS containers run inside it)
 - `just report` — save the post-bootstrap inventory under `~/.big-bang/reports/`
 
@@ -182,11 +183,28 @@ key in `~/.wakatime.cfg`, and the secrets in `~/.zshrc.local`.
 > every `git commit` fails. Create yours:
 >
 > ```sh
-> gpg --full-generate-key                        # RSA 4096; use the same e-mail as git
-> gpg --list-secret-keys --keyid-format=long     # copy the ID after "sec rsa4096/"
+> gpg --full-generate-key                        # answers below
+> gpg --list-secret-keys --keyid-format=long     # copy the ID after "sec ed25519/"
 > git config --global user.signingkey <ID>
 > gpg --armor --export <ID>                      # paste into GitHub → Settings → SSH and GPG keys
 > ```
+>
+> Answers for `gpg --full-generate-key`:
+>
+> | Question | Answer | Why |
+> |---|---|---|
+> | Key type | **`9` — ECC (sign and encrypt)**, the default | Creates ed25519 (signing) + cv25519 (encryption): short, fast and accepted by GitHub. Avoid `16` (ECC and Kyber, post-quantum): GitHub doesn't accept it yet. `1`/`4` (RSA 4096) also work, they're just slower and bigger. |
+> | Curve | **`1` — Curve 25519**, the default | The recommended one; NIST/Brainpool only if compliance requires it. |
+> | Expiration | **`2y`** (or `0` = never expires) | Expiring limits the damage if the key leaks. Renewing is one command (`gpg --quick-set-expire <ID> 2y`) plus re-uploading the public key to GitHub; old commits stay verified. |
+> | Name and e-mail | **The same as in `~/.gitconfig`** | GitHub only shows *Verified* if the key's e-mail is a **verified e-mail on your account**. |
+> | Comment | empty | — |
+> | Passphrase | a strong one | See below: you won't type it on every commit. |
+>
+> **You won't be asked for the passphrase on every commit.** It's only used to
+> *sign*, and `just gpg-agent` (already part of `bootstrap`) sets up
+> `pinentry-mac`: the first signature opens a macOS dialog — tick **"Save in
+> Keychain"** and it's unlocked automatically while you're logged in. Without the
+> Keychain, `gpg-agent` still caches it for a few minutes.
 >
 > Don't want signed commits? Turn it off for good:
 > `git config --global commit.gpgsign false`
@@ -238,6 +256,7 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 | `just seed` | copy the identity/secret templates (only if missing) |
 | `just automode` | re-apply the Claude Code auto mode config (repo + `~/.claude/automode.local.json`) |
 | `just cmux-settings` | enable the cmux settings that only live in the UI (Extensions beta = plugins button) |
+| `just gpg-agent` | set `pinentry-mac` in `~/.gnupg/gpg-agent.conf` (only if no other pinentry is set) |
 | `just podman-machine` | create/start the podman Linux VM |
 | `just pr` | open a PR for the current branch in the browser (needs `gh auth login`) |
 | `just ruflo` | install the ruflo Claude Code plugin (needs the `claude` CLI) |
