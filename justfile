@@ -277,6 +277,9 @@ doctor:
     if [[ -f "{{ home }}/.claude/usage-budget" ]] && ! grep -v '^[[:space:]]*#' "{{ home }}/.claude/usage-budget" | grep -qE '^[[:space:]]*[0-9]+([.][0-9]+)?[[:space:]]*$'; then
       echo "  FAIL ~/.claude/usage-budget has no numeric limit (put e.g. 300, or 0)"; fail=1
     fi
+    if [[ -f "{{ home }}/.claude/usage-budget" ]] && grep -qE '^[[:space:]]*offset' "{{ home }}/.claude/usage-budget" && ! grep -qE '^[[:space:]]*offset[[:space:]]*=[[:space:]]*[0-9]+([.][0-9]+)?[[:space:]]*$' "{{ home }}/.claude/usage-budget"; then
+      echo "  FAIL ~/.claude/usage-budget has a non-numeric offset (use e.g. offset=39)"; fail=1
+    fi
     if [[ -f "{{ home }}/.wakatime.cfg" ]] && ! grep -qE '^[[:space:]]*api_key[[:space:]]*=[[:space:]]*[^[:space:]]' "{{ home }}/.wakatime.cfg"; then
       echo "  TODO ~/.wakatime.cfg api_key empty (WakaTime won't track — key at wakatime.com/api-key)"
     fi

@@ -34,6 +34,12 @@ Os dois são **estimativa local**. O saldo/percentual real da conta (ex.: "US$30
 21% usado") é server-side e só aparece no menu da conta — não é exposto por API.
 Por isso o limite mensal é configurado à mão em `~/.claude/usage-budget`.
 
+Como o `ccusage` só vê os logs **desta** máquina, o gasto de outras máquinas e
+superfícies (claude.ai, desktop, Claude Code na web) não entra. Para compensar,
+coloque `offset=<US$>` no `~/.claude/usage-budget`: o valor é somado ao gasto local
+(e entra no % e na projeção), e a saída ganha um `~` (`~$97/$600 · 16% · ...`) para
+lembrar que tem ajuste manual. Atualize à mão comparando com a interface.
+
 No **WezTerm** o consumo do Claude aparece à direita; à esquerda ficam os recursos
 da máquina (`CPU x% · MEM y%`), de [`../wezterm/sysinfo.sh`](../wezterm/sysinfo.sh).
 
@@ -46,7 +52,8 @@ symlinka `CLAUDE.md`, commands, agents, skills, output styles e keybindings; o
 parte: `just claude-mcp`, só onde fizer sentido. Depois:
 
 1. Ajuste o limite mensal (US$) em `~/.claude/usage-budget` — varia por máquina
-   (trabalho: o limite que te deram; pessoal/Pro: `0` para mostrar só o gasto).
+   (trabalho: o limite que te deram; pessoal/Pro: `0` para mostrar só o gasto) e,
+   se usar o Claude fora desta máquina, o `offset=` (veja acima).
 2. `mise install` garante o `ccusage` (já entra no `just bootstrap`).
 3. O statusline aparece em novas sessões do Claude Code; o status do mês aparece
    no WezTerm (recarrega o config sozinho).

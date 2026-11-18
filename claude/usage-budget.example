@@ -7,3 +7,8 @@
 #   - Máquina de trabalho: o limite que te deram (ex.: 300)
 #   - Máquina pessoal (Pro): use 0 (ou apague o número) p/ mostrar só o gasto, sem %
 300
+#
+# Opcional — ajuste manual: US$ gastos FORA desta máquina no mês (outras máquinas,
+# claude.ai, desktop, Claude Code na web), que o ccusage não enxerga. É somado ao
+# gasto local; atualize à mão comparando com a interface do Claude. Descomente:
+# offset=0
