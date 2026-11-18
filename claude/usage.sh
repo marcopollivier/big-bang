@@ -12,14 +12,20 @@
 # máquina de trabalho) é pessoal e varia por máquina, então fica num arquivo
 # LOCAL e NÃO-versionado: ~/.claude/usage-budget (modelo: usage-budget.example).
 #
+# O ccusage só vê ESTA máquina. Uso de outras máquinas/superfícies (claude.ai,
+# desktop, Claude Code na web) entra via "offset=<US$>" no mesmo arquivo, somado
+# ao gasto local; com offset, a saída ganha "~" (ex.: "~$97/$600 · ..."). O "hoje"
+# continua só local.
+#
 # Cache (TTL 120s) + refresh em background: cada tick do WezTerm só lê um arquivo.
 # ---------------------------------------------------------------------------
 
 # ccusage: shim do mise no caminho padrão; senão, o que estiver no PATH.
 ccusage_bin="$HOME/.local/share/mise/shims/ccusage"
 [ -x "$ccusage_bin" ] || ccusage_bin="$(command -v ccusage || true)"
-cache="${TMPDIR:-/tmp}/claude-usage"
-budget_file="$HOME/.claude/usage-budget"
+# Overrides por env servem para testar sem mexer no arquivo/cache reais.
+cache="${CLAUDE_USAGE_CACHE:-${TMPDIR:-/tmp}/claude-usage}"
+budget_file="${CLAUDE_USAGE_BUDGET:-$HOME/.claude/usage-budget}"
 ttl=120
 
 # Números com ponto decimal, independente do locale (pt_BR usa vírgula).
@@ -31,20 +37,34 @@ if [ -z "$ccusage_bin" ] || ! command -v jq >/dev/null 2>&1; then
   exit 0
 fi
 
-# Primeiro número no arquivo de limite (ignora linhas de comentário com #).
+# Limite: primeira linha não comentada que seja SÓ um número (assim a linha
+# "offset=" não é confundida com o limite).
 read_budget() {
   [ -f "$budget_file" ] || return
-  grep -vE '^[[:space:]]*#' "$budget_file" 2>/dev/null \
-    | grep -oE '[0-9]+(\.[0-9]+)?' | head -1
+  grep -E '^[[:space:]]*[0-9]+(\.[0-9]+)?[[:space:]]*$' "$budget_file" 2>/dev/null \
+    | head -1 | tr -d '[:space:]'
+}
+
+# Ajuste manual "offset=<n>" (US$ gastos fora desta máquina). Ausente = 0.
+read_offset() {
+  [ -f "$budget_file" ] || return
+  sed -nE 's/^[[:space:]]*offset[[:space:]]*=[[:space:]]*([0-9]+(\.[0-9]+)?)[[:space:]]*$/\1/p' \
+    "$budget_file" 2>/dev/null | head -1
 }
 
 refresh() {
-  local month spend today budget proj dom dim out
+  local month spend today budget proj dom dim out offset mark
   month=$(date +%Y-%m)
   # Gasto do mês.
   spend=$("$ccusage_bin" monthly --json 2>/dev/null \
     | jq -r --arg m "$month" '(.monthly[] | select(.period == $m) | .totalCost) // 0' 2>/dev/null)
   [ -z "$spend" ] && spend=0
+  offset=$(read_offset)
+  mark=""
+  if [ -n "$offset" ] && awk -v o="$offset" 'BEGIN { exit !(o > 0) }'; then
+    spend=$(awk -v s="$spend" -v o="$offset" 'BEGIN { printf "%.4f", s + o }')
+    mark="~"
+  fi
   # Gasto de hoje.
   today=$("$ccusage_bin" daily --json --since "$(date +%Y%m%d)" 2>/dev/null \
     | jq -r '[.daily[].modelBreakdowns[].cost] | add // 0' 2>/dev/null)
@@ -56,11 +76,11 @@ refresh() {
 
   budget=$(read_budget)
   if [ -n "$budget" ] && [ "$budget" != "0" ]; then
-    out=$(awk -v s="$spend" -v b="$budget" -v h="$today" -v p="$proj" \
-      'BEGIN { printf "$%.0f/$%.0f · %.0f%% · hoje $%.0f · proj $%d", s, b, (s / b) * 100, h, p }')
+    out=$(awk -v s="$spend" -v b="$budget" -v h="$today" -v p="$proj" -v m="$mark" \
+      'BEGIN { printf m "$%.0f/$%.0f · %.0f%% · hoje $%.0f · proj $%d", s, b, (s / b) * 100, h, p }')
   else
-    out=$(awk -v s="$spend" -v h="$today" -v p="$proj" \
-      'BEGIN { printf "$%.2f mês · hoje $%.2f · proj $%d", s, h, p }')
+    out=$(awk -v s="$spend" -v h="$today" -v p="$proj" -v m="$mark" \
+      'BEGIN { printf m "$%.2f mês · hoje $%.2f · proj $%d", s, h, p }')
   fi
   printf '%s' "$out" >"$cache.tmp" 2>/dev/null && mv "$cache.tmp" "$cache"
 }
