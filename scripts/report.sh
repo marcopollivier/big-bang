@@ -19,6 +19,7 @@ set -uo pipefail
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 state_dir="${BIG_BANG_HOME:-$HOME/.big-bang}"
 reports="$state_dir/reports"
+brewfile_local="$state_dir/Brewfile.local"
 
 for t in brew jq; do
   command -v "$t" >/dev/null 2>&1 || {
@@ -152,23 +153,34 @@ report() {
 
   # --- Extras: instalados pelo brew mas fora do Brewfile -----------------------
   echo
-  echo "## brew — fora do Brewfile"
+  echo "## brew — fora do Brewfile (itens do Brewfile.local aparecem como \`local\`)"
   echo
   head_row pacote
-  local listed
+  local listed local_listed=""
   listed="$(brew bundle list --all --file="$repo/Brewfile" 2>/dev/null | sed 's#.*/##')"
+  # Pacotes do Brewfile.local (fora do repo) não são "à mão": aparecem como `local`.
+  [[ -f "$brewfile_local" ]] &&
+    local_listed="$(brew bundle list --all --file="$brewfile_local" 2>/dev/null | sed 's#.*/##')"
   while read -r f; do
     [[ -z "$f" ]] && continue
     grep -qxF "${f##*/}" <<<"$listed" && continue
     ver="$(jq -r --arg n "$f" '.formulae[] | select(.full_name == $n) | .installed[-1].version' <<<"$installed_json")"
-    row "$f" extra "${ver:--}" "brew formula (instalada à mão)"
-    n_extra=$((n_extra + 1))
+    if grep -qxF "${f##*/}" <<<"$local_listed"; then
+      row "$f" local "${ver:--}" "brew formula (Brewfile.local)"
+    else
+      row "$f" extra "${ver:--}" "brew formula (instalada à mão)"
+      n_extra=$((n_extra + 1))
+    fi
   done < <(brew leaves --installed-on-request 2>/dev/null)
   while IFS=$'\t' read -r c ver; do
     [[ -z "$c" ]] && continue
     grep -qxF "$c" <<<"$listed" && continue
-    row "$c" extra "$ver" "brew cask (instalado à mão)"
-    n_extra=$((n_extra + 1))
+    if grep -qxF "$c" <<<"$local_listed"; then
+      row "$c" local "$ver" "brew cask (Brewfile.local)"
+    else
+      row "$c" extra "$ver" "brew cask (instalado à mão)"
+      n_extra=$((n_extra + 1))
+    fi
   done < <(jq -r '.casks[] | [.token, .installed] | @tsv' <<<"$installed_json")
 
   # --- mise ---------------------------------------------------------------------

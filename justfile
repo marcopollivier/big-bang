@@ -6,6 +6,11 @@ set shell := ["bash", "-euc"]
 repo := justfile_directory()
 home := env_var('HOME')
 
+# Pacotes só desta máquina (ex.: os do trabalho), FORA do repo: o repo é feito para
+# fork/público, então nada de empresa entra no Brewfile versionado. Opcional —
+# `brew`, `doctor` e `report` usam se existir.
+brewfile_local := env_var_or_default('BIG_BANG_HOME', home / '.big-bang') / 'Brewfile.local'
+
 # Symlinks (repo -> home), uma lista só, usada por `link` e por `doctor`.
 # Formato: <caminho no repo> <caminho na home>, separados por espaço.
 # Skills do Claude entram uma a uma: ~/.claude/skills/ tem pastas que não são do
@@ -65,9 +70,15 @@ omz:
     echo "→ installing oh-my-zsh"
     RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# Install/upgrade everything in the Brewfile
+# Install/upgrade everything in the Brewfile (+ ~/.big-bang/Brewfile.local, if present)
 brew:
+    #!/usr/bin/env bash
+    set -euo pipefail
     brew bundle --file="{{ repo }}/Brewfile"
+    if [[ -f "{{ brewfile_local }}" ]]; then
+      echo "→ Brewfile.local ({{ brewfile_local }})"
+      brew bundle --file="{{ brewfile_local }}"
+    fi
 
 # Install the toolchains pinned in mise/config.toml
 mise-install:
@@ -303,13 +314,18 @@ doctor:
       else printf "  %-24s set\n" "$v"; fi
     done
     echo "## brew"
-    if brew bundle check --file="{{ repo }}/Brewfile" >/dev/null 2>&1; then
-      echo "  ok   Brewfile satisfied"
-    else
-      echo "  DIVERGENT from Brewfile (run: just brew). Missing:"
-      brew bundle check --verbose --file="{{ repo }}/Brewfile" 2>&1 | grep '^→' | sed 's/^→/   /'
-      fail=1
-    fi
+    bfs=("{{ repo }}/Brewfile")
+    [[ -f "{{ brewfile_local }}" ]] && bfs+=("{{ brewfile_local }}")
+    for bf in "${bfs[@]}"; do
+      name="$(basename "$bf")"
+      if brew bundle check --file="$bf" >/dev/null 2>&1; then
+        echo "  ok   $name satisfied"
+      else
+        echo "  DIVERGENT from $name (run: just brew). Missing:"
+        brew bundle check --verbose --file="$bf" 2>&1 | grep '^→' | sed 's/^→/   /'
+        fail=1
+      fi
+    done
     echo "## claude"
     cs="{{ home }}/.claude/settings.json"
     if [[ "$(jq -S '.autoMode // null' "$cs" 2>/dev/null)" == "$(just _automode_expected | jq -S .)" ]]; then
