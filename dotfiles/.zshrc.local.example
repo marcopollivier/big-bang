@@ -13,6 +13,10 @@
 ## npm (token lido por ~/.npmrc via ${NPM_TOKEN})
 # export NPM_TOKEN=""
 
+## Colima no lugar do podman (sobrescreve o `DOCKER_HOST=` do ~/.zshrc; o
+## `just podman-machine` se auto-pula quando o DOCKER_HOST aponta pro Colima)
+# export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"
+
 ## Contextos EKS usados por k8s-p / k8s-h (ARNs da sua infra)
 # export EKS_PRD_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-prd>"
 # export EKS_HML_ARN="arn:aws:eks:<region>:<account-id>:cluster/<cluster-hml>"

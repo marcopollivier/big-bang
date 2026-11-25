@@ -94,6 +94,11 @@ podman-machine:
     if ! command -v podman &>/dev/null; then
       echo "skip   podman não instalado — pulando a VM (usando docker? ok; ver README)"; exit 0
     fi
+    # Quem trocou pro Colima (DOCKER_HOST no ~/.zshrc.local) não quer a VM do podman
+    # religada a cada bootstrap — as duas VMs juntas só disputam CPU/memória.
+    if [[ "${DOCKER_HOST:-}" == *colima* ]]; then
+      echo "skip   DOCKER_HOST aponta pro Colima — pulando a VM do podman"; exit 0
+    fi
     if ! podman machine inspect podman-machine-default &>/dev/null; then
       echo "→ creating podman machine"; podman machine init
     fi
