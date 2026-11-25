@@ -21,7 +21,8 @@ são escopo agora** — não adicione suporte a Linux/Windows sem pedido explíc
 - `defaultdots/` — dotfiles de fábrica, referência de reset (não são os do dia a dia)
 - `scripts/` — scripts maiores chamados pelo `justfile` (ex.: `report.sh`, o inventário do `just report`)
 - `~/.big-bang/` (na home, **fora do repo**) — estado da máquina: relatórios do
-  `just report` em `reports/` e, no futuro, o perfil do menu interativo (#69). Nunca versione.
+  `just report` em `reports/`, o `Brewfile.local` (pacotes só da máquina, ex.: do
+  trabalho) e, no futuro, o perfil do menu interativo (#69). Nunca versione.
 - `.claude/` — skills e slash commands deste repo: `/setup-machine` (configura a
   máquina do zero), `/sync` (re-sincroniza symlinks/Brewfile e reporta divergências)
   e a skill `machine-bootstrap`
@@ -42,7 +43,7 @@ são escopo agora** — não adicione suporte a Linux/Windows sem pedido explíc
   os dotfiles, via symlink/seed. Não é obrigatório (há descoberta automática e
   `BIG_BANG_REPO`), mas é o fallback que o código assume.
 - **Contexto da máquina:** o setup varia entre trabalho e pessoal — trabalho usa
-  **podman** (licença comercial do Docker Desktop) e só Go/.NET (+Kotlin em
+  **podman** ou **Colima** (licença comercial do Docker Desktop; Colima via `Brewfile.local` + `DOCKER_HOST` no `~/.zshrc.local`) e só Go/.NET (+Kotlin em
   potencial); máquina pessoal pode usar **docker** e mais linguagens. Ao guiar um
   setup, **pergunte o contexto primeiro** (passo 0 da skill *machine-bootstrap*).
 - O Lua de `nvim/` é formatado com `stylua` (o CI checa). Rode `stylua nvim/` antes de commitar.

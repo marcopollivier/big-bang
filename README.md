@@ -118,7 +118,8 @@ tem segredo versionado — só *templates* — mas vários defaults são meus:
 | **Segredos da máquina** | `~/.zshrc.local` (após `just seed`) | `AWS_*`, `GITHUB_TOKEN`, ARNs de EKS, chave do WakaTime — veja [`.zshrc.local.example`](./dotfiles/.zshrc.local.example) |
 | **WakaTime** | `~/.wakatime.cfg` | a sua API key (opcional; remova se não usa) |
 | **Pacotes** | [`Brewfile`](./Brewfile) | tire/ponha apps e CLIs conforme o seu gosto |
-| **Containers (trabalho vs pessoal)** | [`Brewfile`](./Brewfile) + bootstrap | no **trabalho**: podman (Docker Desktop tem licença comercial); na **máquina pessoal**: docker é ok — troque `brew "podman"` pelo cask `docker` (comentado no Brewfile) e o `just podman-machine` se auto-pula |
+| **Containers (trabalho vs pessoal)** | [`Brewfile`](./Brewfile) + bootstrap | no **trabalho**: podman (Docker Desktop tem licença comercial); na **máquina pessoal**: docker é ok — troque `brew "podman"` pelo cask `docker` (comentado no Brewfile) e o `just podman-machine` se auto-pula; prefere **Colima** (também sem licença comercial)? ponha `colima`/`docker`/`docker-compose` no `Brewfile.local` e o `DOCKER_HOST` do Colima no `~/.zshrc.local` — o `just podman-machine` se auto-pula |
+| **Pacotes só desta máquina** | `~/.big-bang/Brewfile.local` (fora do repo) | pacotes do trabalho/da empresa que não devem ir pro Brewfile versionado; `just brew` instala, `just doctor` checa e o `just report` mostra como `local` |
 | **Linguagens do editor** | [`nvim/`](./nvim) | o Neovim vem pronto pra **Go, .NET/C# e Kotlin**; adapte os LSPs ao seu stack |
 | **Toolchains** | [`mise/config.toml`](./mise/config.toml) | versões de Go/Java/Node/… que serão instaladas. Linguagens só da sua máquina (ex.: Clojure, Maven na pessoal) vão em `~/.config/mise/conf.d/*.toml`, fora do repo. Vindo do asdf? Tire a linha do asdf do shell e mova o `~/.tool-versions` da home (o mise lê esse arquivo e as versões dele passam por cima das do repo) |
 | **Caminho do clone** | nenhum, se usar `just seed`/`just link` | o statusline do Claude ([`claude/settings.json`](./claude/settings.json)) e o status do WezTerm descobrem o clone sozinhos (fallback: convenção `~/dev/<github-user>/big-bang`); se algo falhar, defina `BIG_BANG_REPO` no `~/.zshrc.local` |
@@ -165,7 +166,7 @@ just bootstrap
 
 O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e executa:
 
-- `just brew` — instala tudo que está no [`Brewfile`](./Brewfile)
+- `just brew` — instala tudo que está no [`Brewfile`](./Brewfile) (+ `~/.big-bang/Brewfile.local`, se existir)
 - `just omz` — instala o oh-my-zsh, se faltar (o `.zshrc` depende dele)
 - `just link` — cria os symlinks dos configs compartilhados (zsh, starship, nvim, mise… e a config pessoal do Claude Code: `CLAUDE.md` global, commands, agents, skills, output styles e keybindings); arquivos reais existentes têm backup feito antes
 - `just mise-install` — instala os toolchains do [`mise/config.toml`](./mise/config.toml)
