@@ -34,7 +34,7 @@ jobs:
           args: --check nvim/
 
       - name: Lint shell scripts (shellcheck)
-        run: shellcheck claude/usage.sh claude/statusline.sh claude/hooks/*.sh wezterm/sysinfo.sh scripts/report.sh
+        run: shellcheck -x claude/usage.sh claude/statusline.sh claude/hooks/*.sh wezterm/sysinfo.sh scripts/report.sh claude/skills/wrap-up/*.sh claude/skills/wrap-up/scripts/*.sh claude/skills/wrap-up/scripts/probes/*.sh
 
       # Os hooks do Claude bloqueiam comandos/arquivos: um erro de sintaxe neles sai com
       # exit 2 e bloquearia TUDO, então rodam contra a bateria de casos a cada PR.
@@ -43,6 +43,11 @@ jobs:
           curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz \
             | sudo tar -xz -C /usr/local/bin gitleaks
           claude/hooks/test.sh
+
+      # O wrap-up apaga worktrees e branches: a bateria garante que ele NUNCA apaga o
+      # que não está provado como mergeado (repo descartável + gh falso).
+      - name: Test wrap-up skill
+        run: claude/skills/wrap-up/test.sh
 
       # cmux/cmux.json é JSONC (comentários): validado à parte, contra o schema do cmux
       - name: Validate JSON files
