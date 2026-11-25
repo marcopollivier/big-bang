@@ -31,6 +31,7 @@ claude/agents              .claude/agents
 claude/output-styles       .claude/output-styles
 claude/keybindings.json    .claude/keybindings.json
 claude/skills/adr          .claude/skills/adr
+claude/skills/wrap-up      .claude/skills/wrap-up
 '''
 
 # Versão mínima do cmux com Extensions (beta) e wrapper do Claude (ver cmux/README.md).

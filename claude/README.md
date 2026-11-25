@@ -16,7 +16,7 @@ consumo de tokens.
 | `CLAUDE.md` | Instruções **globais** (valem em todo projeto): comunicação, git, código, stack. Symlink → `~/.claude/CLAUDE.md`. |
 | `commands/` | Slash commands pessoais (ex.: `/commit-msg`). Symlink → `~/.claude/commands/`. |
 | `agents/` | Subagents pessoais: `code-reviewer` (revisão somente leitura do diff) e `test-writer`. Symlink → `~/.claude/agents/`. |
-| `skills/<nome>/` | Skills pessoais (ex.: `adr`). **Uma linha por skill** na lista `links` do `justfile` — ver [Symlinks](#symlinks). |
+| `skills/<nome>/` | Skills pessoais: `adr` e `wrap-up` (ver [Fechar o trabalho](#fechar-o-trabalho-wrap-up)). **Uma linha por skill** na lista `links` do `justfile` — ver [Symlinks](#symlinks). |
 | `output-styles/` | Estilos de resposta (`/output-style`): `Mentor` (explica trade-offs) e `Terse` (mínimo de texto). Symlink → `~/.claude/output-styles/`. |
 | `keybindings.json` | Atalhos extras (`ctrl+x m` modelo, `ctrl+x t` thinking, `ctrl+x f` fast, `ctrl+x r` redesenhar) — alternativas aos `meta+…`, que no macOS exigem Option-como-Meta no terminal. Symlink → `~/.claude/keybindings.json`. |
 | `hooks.json` + `hooks/` | Hooks (bloqueio de comando perigoso, gitleaks antes do commit, proteção de arquivo de segredo, formatação, notificação). Gravados no settings por `just claude-hooks` — ver [Hooks](#hooks). |
@@ -72,6 +72,7 @@ O que não tem segredo nem estado da máquina é **symlinkado** pelo `just link`
 | `claude/output-styles/` | `~/.claude/output-styles/` |
 | `claude/keybindings.json` | `~/.claude/keybindings.json` |
 | `claude/skills/adr/` | `~/.claude/skills/adr/` |
+| `claude/skills/wrap-up/` | `~/.claude/skills/wrap-up/` |
 
 **Skills entram uma a uma**: `~/.claude/skills/` pode ter pastas que não são suas
 (ex.: `synced/`, gerenciada pela org), então a pasta inteira não vira symlink. Para
@@ -96,6 +97,7 @@ só nos scripts (`hooks/*.sh`) já vale na hora.
 | `gitleaks-commit.sh` | PreToolUse `Bash` | Em `git commit`, roda `gitleaks git --pre-commit --staged` (e o working tree, se `-a`). Achou segredo: bloqueia e lista `arquivo:linha [regra]` — **nunca o valor**. Sem gitleaks: avisa e deixa passar. |
 | `protect-secrets.sh` | PreToolUse `Read\|Edit\|Write\|MultiEdit\|NotebookEdit` | Bloqueia ler/editar `.env*`, `*.pem`/`*.key`/`*.p12`, chaves SSH, `~/.ssh/`, `~/.gnupg/`, `~/.aws/credentials`, `~/.zshrc.local`, `~/.npmrc`, `~/.netrc`, `~/.wakatime.cfg`, `~/.kube/config`… Passam `*.example`, `*.sample`, `*.template`, `*.pub`. |
 | `format.sh` | PostToolUse `Edit\|Write\|MultiEdit` | Formata o arquivo editado, se o formatter existir: `goimports`/`gofmt`, `stylua`, `ktlint`, `csharpier`, `shfmt`, `tofu fmt`. Nunca bloqueia. |
+| `skills/wrap-up/session-hint.sh` | SessionStart (`startup\|resume\|clear`) | Se o repo da sessão tem worktree/branch já mergeado, mostra **uma linha** sugerindo o `/wrap-up` (inventário offline, < 1s). Só avisa, nunca apaga. Fora de repo git: silêncio. |
 | `notify.sh` | Notification, Stop | Notificação do macOS quando o Claude termina ou precisa de você. |
 
 Bloqueio = `exit 2`: o motivo volta para o Claude, que ajusta o plano ou pede para
@@ -107,6 +109,33 @@ você rodar à mão (`! <comando>`). Escape para repo onde commit na `main` é n
 > regras no topo de cada script. Um erro de sintaxe num hook sai com `exit 2` e
 > bloquearia tudo — por isso **rode `claude/hooks/test.sh`** depois de mexer (o CI
 > também roda).
+
+## Fechar o trabalho (`/wrap-up`)
+
+Quando o PR é mergeado, sobram worktree, branch local, dev server rodando dentro do
+worktree e recursos da stack (daemon do Gradle, emulador, containers). O `/wrap-up`
+limpa isso **no repo atual**: inventaria, mostra em 3 blocos (pronto / atenção /
+stack), pergunta o que limpar e executa item a item.
+
+| Peça | O que faz |
+|---|---|
+| `skills/wrap-up/scripts/inventory.sh` | **Só leitura.** Classifica checkout, worktrees, branches, remotas e stashes (TSV). `--quick` = offline, para o hook. |
+| `skills/wrap-up/scripts/apply.sh` | Executa **um** item, **revalidando** antes. `git worktree remove` sem `--force`; nunca apaga remoto. |
+| `skills/wrap-up/scripts/probes/` | Uma probe por stack (processos órfãos, containers, JVM, mobile, .NET): só sugerem o comando, que roda após OK por item. |
+| `skills/wrap-up/test.sh` | Repo descartável + gh falso: merge ff, squash, branch nova, worktree sujo, processo rodando, revalidação. Roda no CI. |
+
+**Quando algo conta como mergeado:** ou o SHA da branch é ancestral de
+`origin/<default>` (merge/ff), ou há PR **mergeado** no `gh` com `headRefOid` igual ao
+SHA local (squash/rebase: nenhum commit depois do PR). Sem `gh`, vale só a primeira
+regra. Branch recém-criada (sem commits próprios) **não** conta, mesmo sendo
+ancestral da main.
+
+**Por que o `apply.sh` pode usar `git branch -D`**, se o `block-dangerous` bloqueia o
+`-D`? O bloqueio existe porque o `-D` apaga **sem checar merge**. O `-d` do git, por
+outro lado, erra para os dois lados: recusa branch squash-mergeada e recusa branch
+mergeada quando o HEAD não é a main. O script tenta o `-d` primeiro e só cai no `-D`
+**depois de provar o merge** pelas regras acima, e o `test.sh` cobre "não mergeada →
+nunca apaga". O hook continua bloqueando o `-D` digitado pelo Claude.
 
 ## MCP
 

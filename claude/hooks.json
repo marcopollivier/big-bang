@@ -22,6 +22,14 @@
       ]
     }
   ],
+  "SessionStart": [
+    {
+      "matcher": "startup|resume|clear",
+      "hooks": [
+        { "type": "command", "command": "\"__REPO__/claude/skills/wrap-up/session-hint.sh\"", "timeout": 5 }
+      ]
+    }
+  ],
   "Notification": [
     { "hooks": [{ "type": "command", "command": "\"__REPO__/claude/hooks/notify.sh\"", "timeout": 10 }] }
   ],
