@@ -102,6 +102,17 @@ primeiro é o repo. Siga na ordem:
      função e pula o wrapper (sem hooks, sem resume). Mesma coisa para `exec` de
      outro shell/tmux no `.zshrc`;
    - feche o app normalmente (Cmd+Q); kill/force-quit não salva a sessão.
+5. **Sessão do Cursor CLI (`agent`/`cursor-agent`) idem.** Não há wrapper: o
+   hook mora no config do próprio Cursor. `just cmux-settings` roda
+   `cmux hooks setup cursor` (se o `cursor-agent` estiver no PATH), que grava
+   `~/.cursor/hooks.json`; as sessões vão para
+   `~/.cmuxterm/cursor-hook-sessions.json` e voltam com
+   `cursor-agent --resume <id>`. O hook é *no-op* fora do cmux (só age com
+   `$CMUX_SURFACE_ID` definido), então o `agent` em outro terminal não muda.
+   Como não depende de função de shell, alias não atrapalha — mas o arquivo é
+   da máquina, não do repo: refaça em cada máquina. Outros agentes (Codex,
+   Gemini, Copilot…) seguem o mesmo esquema com `cmux hooks setup <agente>`
+   (lista em `cmux hooks --help`).
 
 **Diagnóstico rápido** (rode dentro de um terminal do cmux):
 
@@ -112,11 +123,15 @@ just doctor                                        # symlinks (cmux.json é o qu
 type -a claude                                     # 1ª linha deve ser o shim do cmux
 defaults read com.cmuxterm.app extensions.beta.enabled   # 1 = botão de plugins
 ls -la ~/.cmuxterm/claude-hook-sessions.json       # sessões registradas p/ resume
+grep -c cmux ~/.cursor/hooks.json                  # >0 = hook do Cursor instalado
+ls -la ~/.cmuxterm/cursor-hook-sessions.json       # sessões do Cursor p/ resume
 ```
 
 Sintoma → causa provável: *sem botão de plugins* → Extensions (beta) desligado
 ou versão antiga; *abas voltam mas o Claude não* → `claude` não passou pelo
-wrapper (alias/PATH), integração desligada, ou versão antiga do cmux.
+wrapper (alias/PATH), integração desligada, ou versão antiga do cmux; *abas
+voltam mas o Cursor não* → falta `~/.cursor/hooks.json` (rode
+`just cmux-settings`) ou o `agent` foi aberto fora de um shell do cmux.
 
 ## Potencial
 
