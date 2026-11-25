@@ -52,7 +52,7 @@ default:
     @just --list
 
 # Full setup on a new machine (idempotent)
-bootstrap: brew omz link mise-install seed automode gpg-agent claude-hooks podman-machine
+bootstrap: brew omz link mise-install seed automode gpg-agent claude-hooks claude-model podman-machine
     @just report >/dev/null && echo "→ inventário salvo em ~/.big-bang/reports/latest.md"
     @echo ""
     @echo "✅ Bootstrap complete. Open a new terminal (or run: exec zsh)."
@@ -165,6 +165,24 @@ claude-hooks:
     tmp="$(mktemp)"
     jq --argjson h "$want" '.hooks = $h' "$settings" >"$tmp" && cat "$tmp" >"$settings" && rm -f "$tmp"
     echo "write  $settings hooks (check: /hooks numa sessão nova do Claude)"
+
+# Modelo padrão do Claude Code: grava a chave `model` de claude/settings.json como
+# `env.ANTHROPIC_MODEL` do ~/.claude/settings.json. A env ganha do padrão que a org
+# força com override; a chave `model` não. Só toca nessa entrada do `env` (as outras
+# ficam); idempotente. Ver claude/README.md, "Modelo padrão".
+claude-model:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    settings="{{ home }}/.claude/settings.json"
+    want="$(just _claude_model_expected)"
+    [[ -n "$want" ]] || { echo "skip   claude/settings.json has no \"model\""; exit 0; }
+    [[ -f "$settings" ]] || { mkdir -p "$(dirname "$settings")"; echo '{}' >"$settings"; chmod 600 "$settings"; }
+    if [[ "$(jq -r '.env.ANTHROPIC_MODEL // empty' "$settings")" == "$want" ]]; then
+      echo "ok     $settings env.ANTHROPIC_MODEL already $want"; exit 0
+    fi
+    tmp="$(mktemp)"
+    jq --arg m "$want" '.env.ANTHROPIC_MODEL = $m' "$settings" >"$tmp" && cat "$tmp" >"$settings" && rm -f "$tmp"
+    echo "write  $settings env.ANTHROPIC_MODEL=$want (vale em sessões novas; confira com /status)"
 
 # Lista (ou apaga, com `just clean-backups yes`) os `.bak.<timestamp>` que `just link`
 # deixa ao lado de cada symlink quando encontra um arquivo real no lugar.
@@ -327,6 +345,14 @@ doctor:
     else
       echo "  hooks DIVERGENT from claude/hooks.json (run: just claude-hooks)"; fail=1
     fi
+    model="$(just _claude_model_expected)"
+    if [[ -z "$model" ]]; then
+      echo "  skip model: claude/settings.json has no \"model\""
+    elif [[ "$(jq -r '.env.ANTHROPIC_MODEL // empty' "$cs" 2>/dev/null)" == "$model" ]]; then
+      echo "  ok   env.ANTHROPIC_MODEL=$model (wins over an org default override)"
+    else
+      echo "  env.ANTHROPIC_MODEL DIVERGENT from claude/settings.json model=$model (run: just claude-model)"; fail=1
+    fi
     echo "## cmux"
     if command -v cmux >/dev/null 2>&1; then
       v="$(cmux --version 2>/dev/null | awk '{print $2}')"
@@ -440,6 +466,10 @@ _automode_expected:
 # hooks esperados: claude/hooks.json com __REPO__ trocado pelo caminho deste clone
 _claude_hooks_expected:
     @sed "s|__REPO__|{{ repo }}|g" "{{ repo }}/claude/hooks.json" | jq -c .
+
+# modelo esperado: a chave `model` do template claude/settings.json (fonte única)
+_claude_model_expected:
+    @jq -r '.model // empty' "{{ repo }}/claude/settings.json"
 
 # Como _seed, mas substitui __REPO__ pelo caminho real deste clone — assim o
 # template funciona em qualquer fork/diretório, sem caminho fixo do autor

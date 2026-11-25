@@ -173,6 +173,7 @@ O `just bootstrap` é **idempotente** (pode rodar quantas vezes quiser) e execut
 - `just automode` — grava a config do *auto mode* do Claude Code ([`claude/automode.json`](./claude/automode.json)) no `~/.claude/settings.json`
 - `just gpg-agent` — aponta o `gpg-agent` para o `pinentry-mac` (senha da chave GPG numa janela do macOS, com opção de guardar no Keychain)
 - `just claude-hooks` — grava os hooks do Claude Code ([`claude/hooks.json`](./claude/hooks.json): bloqueio de comandos perigosos, gitleaks antes do commit, proteção de arquivos de segredo, formatação e notificação) no `~/.claude/settings.json`
+- `just claude-model` — grava o modelo padrão (chave `model` de [`claude/settings.json`](./claude/settings.json)) como `env.ANTHROPIC_MODEL` no `~/.claude/settings.json`, que ganha até do padrão forçado pela org (ver [`claude/README.md`](./claude/README.md#modelo-padrão))
 - `just podman-machine` — cria/inicia a VM Linux do podman (no macOS containers rodam dentro dela)
 - `just report` — salva o inventário pós-bootstrap em `~/.big-bang/reports/`
 
@@ -265,6 +266,7 @@ Rode `just` (sem argumentos) para listar todas as recipes. As mais usadas:
 | `just seed` | copia os templates de identidade/segredo (só se faltarem) |
 | `just automode` | reaplica a config do auto mode do Claude Code (repo + `~/.claude/automode.local.json`) |
 | `just claude-hooks` | reaplica os hooks do Claude Code ([`claude/hooks.json`](./claude/hooks.json)) |
+| `just claude-model` | reaplica o modelo padrão do Claude Code (`model` de [`claude/settings.json`](./claude/settings.json) → `env.ANTHROPIC_MODEL`) |
 | `just claude-mcp` | adiciona os servidores MCP de [`claude/mcp.json`](./claude/mcp.json) (user scope; trabalho: só os aprovados) |
 | `just cmux-settings` | liga no cmux o que só existe na UI (Extensions beta = botão de plugins) |
 | `just gpg-agent` | configura o `pinentry-mac` no `~/.gnupg/gpg-agent.conf` (só se não houver outro pinentry) |

@@ -51,7 +51,11 @@ jobs:
             jq empty "$f" && echo "ok $f"
           done
 
+      # O schema vem do raw.githubusercontent.com, que dá 429 para pedido anônimo do
+      # IP compartilhado dos runners; com o token, o limite é o da conta.
       - name: Validate cmux/cmux.json against the cmux schema
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 -m pip install --quiet --disable-pip-version-check jsonschema
           python3 cmux/validate.py cmux/cmux.json

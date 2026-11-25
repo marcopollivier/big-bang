@@ -172,6 +172,7 @@ just bootstrap
 - `just automode` — write the Claude Code *auto mode* config ([`claude/automode.json`](./claude/automode.json)) into `~/.claude/settings.json`
 - `just gpg-agent` — point `gpg-agent` at `pinentry-mac` (GPG key passphrase in a macOS dialog, with the option to store it in the Keychain)
 - `just claude-hooks` — write the Claude Code hooks ([`claude/hooks.json`](./claude/hooks.json): dangerous-command blocking, gitleaks before commit, secret-file protection, formatting and notifications) into `~/.claude/settings.json`
+- `just claude-model` — write the default model (the `model` key of [`claude/settings.json`](./claude/settings.json)) as `env.ANTHROPIC_MODEL` into `~/.claude/settings.json`, which wins even over a default forced by the org (see [`claude/README.md`](./claude/README.md#modelo-padrão))
 - `just podman-machine` — create/start the podman Linux VM (on macOS containers run inside it)
 - `just report` — save the post-bootstrap inventory under `~/.big-bang/reports/`
 
@@ -264,6 +265,7 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 | `just seed` | copy the identity/secret templates (only if missing) |
 | `just automode` | re-apply the Claude Code auto mode config (repo + `~/.claude/automode.local.json`) |
 | `just claude-hooks` | re-apply the Claude Code hooks ([`claude/hooks.json`](./claude/hooks.json)) |
+| `just claude-model` | re-apply the Claude Code default model (`model` from [`claude/settings.json`](./claude/settings.json) → `env.ANTHROPIC_MODEL`) |
 | `just claude-mcp` | add the MCP servers from [`claude/mcp.json`](./claude/mcp.json) (user scope; at work: approved ones only) |
 | `just cmux-settings` | enable the cmux settings that only live in the UI (Extensions beta = plugins button) |
 | `just gpg-agent` | set `pinentry-mac` in `~/.gnupg/gpg-agent.conf` (only if no other pinentry is set) |
