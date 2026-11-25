@@ -48,7 +48,8 @@ da máquina (`CPU x% · MEM y%`), de [`../wezterm/sysinfo.sh`](../wezterm/sysinf
 `just seed` cria `~/.claude/settings.json`, `~/.claude/usage-budget` e
 `~/.claude/automode.local.json`; o `just automode` grava o auto mode; o `just link`
 symlinka `CLAUDE.md`, commands, agents, skills, output styles e keybindings; o
-`just claude-hooks` grava os hooks (tudo isso já roda no `just bootstrap`). O MCP é à
+`just claude-hooks` grava os hooks e o `just claude-model`, o modelo padrão (tudo isso
+já roda no `just bootstrap`). O MCP é à
 parte: `just claude-mcp`, só onde fizer sentido. Depois:
 
 1. Ajuste o limite mensal (US$) em `~/.claude/usage-budget` — varia por máquina
@@ -128,27 +129,27 @@ existem (não mexe nos já configurados). Fica **fora do `bootstrap`**, como o `
 ## Modelo padrão
 
 O modelo padrão fica na chave `model` do [`settings.json`](./settings.json) (ex.:
-`"model": "opus"`; aceita alias `opus` | `sonnet` | `haiku` ou o ID completo). O
-`just seed` leva isso para o `~/.claude/settings.json` de uma máquina nova. Como o
-seed **não sobrescreve**, numa máquina que já tem o arquivo é preciso pôr a chave à
-mão ou usar o `/model`, que grava nela.
+`"model": "opus"`; aceita alias `opus` | `sonnet` | `haiku` ou o ID completo) — é a
+**fonte única**. O `just claude-model` (no `bootstrap`) grava esse valor como
+`env.ANTHROPIC_MODEL` no `~/.claude/settings.json`, só essa entrada do `env` (as
+outras ficam), e o `just doctor` avisa se divergir. Para trocar o padrão de todas as
+máquinas: mude o `model` aqui e rode `just claude-model` em cada uma. Confira numa
+sessão nova com `/status`.
 
-**E a conta de organização?** Pela [documentação](https://code.claude.com/docs/en/model-config.md)
+**Por que a env, e não só a chave `model`?** Pela [documentação](https://code.claude.com/docs/en/model-config.md)
 (Claude Code ≥ 2.1.196), o *organization default* é só um ponto de partida: o
 `model` do settings do usuário **ganha** dele. A exceção é quando o admin liga o
 **override** do padrão da org. Aí o padrão da org passa a valer mais que o `model`
 do settings, o `/model` vale só para a sessão e aparece o aviso *"Your organization's
-default (…) applies on restart"*. Nesse caso, o que continua ganhando é a env:
+default (…) applies on restart"* (no `~/.claude.json`, aparece como
+`orgModelDefaultCache.override_user_selection: true`). A env `ANTHROPIC_MODEL`
+continua ganhando. No bloco `env` do settings ela vale para o Claude aberto por
+qualquer caminho (terminal, IDE, cmux), e não só por um shell que leu o `~/.zshrc`.
+Sem override, ela só repete o `model`.
 
-```zsh
-# ~/.zshrc.local — só na máquina onde a org força outro padrão
-export ANTHROPIC_MODEL=opus
-
-# ou, por sessão / via alias:
-claude --model opus
-```
-
-Abra um terminal novo e confira com `/status` dentro do Claude.
+Efeito colateral: como a env ganha do `model` que o `/model` grava, o `/model` passa
+a valer só para a sessão em **qualquer** máquina. Para um modelo pontual, use o
+`/model` ou `claude --model <alias>`; para mudar o padrão, mude o `model` aqui.
 
 > Se a org **restringe** os modelos (`availableModels` em managed settings, ou
 > modelo desabilitado no console), nada do lado do usuário contorna. Peça ao admin
