@@ -256,7 +256,7 @@ Run `just` (no arguments) to list all recipes. The most-used ones:
 |---|---|
 | `just` | list all available recipes |
 | `just bootstrap` | full new-machine setup (idempotent) |
-| `just doctor` | checks tools, symlinks, git identity + GPG key, configs/secrets (values never shown), Brewfile drift, Claude Code config (auto mode + hooks + statusline), cmux version and the podman VM |
+| `just doctor` | checks tools, symlinks, git identity + GPG key, configs/secrets (values never shown), missing Brewfile packages (outdated is just a warning), Claude Code config (auto mode + hooks + statusline), cmux version and the podman VM |
 | `just report` | machine inventory (status, version and origin of each item; conflicts with manually installed things) under `~/.big-bang/reports/` |
 | `just link` | re-apply symlinks (run after adding a new config) |
 | `just brew` | install/upgrade the [`Brewfile`](./Brewfile) packages |

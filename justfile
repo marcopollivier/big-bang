@@ -340,15 +340,21 @@ doctor:
     echo "## brew"
     bfs=("{{ repo }}/Brewfile")
     [[ -f "{{ brewfile_local }}" ]] && bfs+=("{{ brewfile_local }}")
+    # Só pacote FALTANDO derruba o doctor (--no-upgrade). Desatualizado é só aviso: não é
+    # erro de setup, e cask com auto_updates (VS Code, claude-code…) se atualiza sozinho,
+    # então o brew o vê desatualizado para sempre.
     for bf in "${bfs[@]}"; do
       name="$(basename "$bf")"
-      if brew bundle check --file="$bf" >/dev/null 2>&1; then
-        echo "  ok   $name satisfied"
+      if missing="$(brew bundle check --no-upgrade --verbose --file="$bf" 2>&1)"; then
+        echo "  ok   $name: nothing missing"
       else
-        echo "  DIVERGENT from $name (run: just brew). Missing:"
-        brew bundle check --verbose --file="$bf" 2>&1 | grep '^→' | sed 's/^→/   /'
+        echo "  MISSING from $name (run: just brew):"
+        grep '^→' <<<"$missing" | sed 's/^→/   /'
         fail=1
       fi
+      all="$(brew bundle check --verbose --file="$bf" 2>&1 | grep -c '^→' || true)"
+      n=$((all - $(grep -c '^→' <<<"$missing" || true)))
+      [[ $n -gt 0 ]] && echo "  info $name: $n outdated (just brew updates; self-updating apps may stay listed)"
     done
     echo "## claude"
     cs="{{ home }}/.claude/settings.json"
