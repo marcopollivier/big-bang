@@ -340,6 +340,16 @@ doctor:
       else
         echo "  Extensions (beta) OFF — no plugins button (Settings > enable; see cmux/README.md)"
       fi
+      # Aviso, não falha: ter o cursor-agent não implica usá-lo dentro do cmux.
+      if command -v cursor-agent >/dev/null 2>&1; then
+        if grep -q cmux ~/.cursor/hooks.json 2>/dev/null; then
+          echo "  ok   Cursor CLI hook installed — agent sessions resume on reopen"
+        else
+          echo "  Cursor CLI hook MISSING — agent won't resume in cmux (run: just cmux-settings)"
+        fi
+      else
+        echo "  skip Cursor CLI not on PATH"
+      fi
     else
       echo "  skip cmux not installed (it's in the Brewfile)"
     fi
@@ -371,13 +381,21 @@ claude-mcp:
     done < <(jq -r '.servers | to_entries[] | [.key, (.value | tojson)] | @tsv' "{{ repo }}/claude/mcp.json")
     echo "→ confira com: claude mcp list"
 
-# cmux: settings que só existem na UI (UserDefaults) e não têm chave no cmux.json —
-# hoje, o beta "Extensions" (botão de plugins na sidebar). Idempotente. Ver cmux/README.md.
+# cmux: o que não cabe no cmux.json — o beta "Extensions" (botão de plugins, só em
+# UserDefaults) e os hooks de resume de agentes fora do Claude (que vivem no config do
+# próprio agente, ex.: ~/.cursor/hooks.json). Idempotente. Ver cmux/README.md.
 cmux-settings:
     #!/usr/bin/env bash
     set -euo pipefail
     defaults write com.cmuxterm.app extensions.beta.enabled -bool true
     echo "ok     cmux: Extensions (beta) ligado (extensions.beta.enabled=1)"
+    # O Claude entra pelo wrapper do cmux; o Cursor CLI precisa do hook instalado.
+    if command -v cursor-agent >/dev/null 2>&1; then
+      cmux hooks setup cursor --yes >/dev/null
+      echo "ok     cmux: hooks do Cursor CLI em ~/.cursor/hooks.json (resume ao reabrir)"
+    else
+      echo "skip   cmux: cursor-agent não está no PATH (sem hook do Cursor)"
+    fi
     echo "→ Reabra o cmux (Cmd+Q e abrir de novo) pra aplicar."
 
 # --- internal helpers (hidden from --list) ---
